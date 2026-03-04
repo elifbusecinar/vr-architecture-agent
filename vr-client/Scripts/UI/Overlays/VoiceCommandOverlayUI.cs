@@ -26,6 +26,7 @@ namespace VRArchitecture.UI.Overlays
         private Button _cancelBtn;
         private VisualElement _orbCore;
         private List<VisualElement> _waveformBars;
+        private string _apiUrl = "http://localhost:5031";
 
         private string _lastIntentAction;
         private Dictionary<string, string> _lastParams;
