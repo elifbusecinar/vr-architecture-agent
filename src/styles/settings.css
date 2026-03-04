@@ -1,0 +1,530 @@
+/* ═══════════════════════════════════════════════════════
+   VR Architecture — Account Settings
+   ═══════════════════════════════════════════════════════ */
+
+.vr-app .settings-content {
+  flex: 1;
+  padding: 32px 28px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Settings nav */
+.vr-app .settings-nav {
+  position: sticky;
+  top: 84px;
+}
+
+.vr-app .sn-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 0.12s;
+  margin-bottom: 2px;
+}
+
+.vr-app .sn-item:hover {
+  background: var(--bg-hover);
+  color: var(--ink);
+}
+
+.vr-app .sn-item.active {
+  background: var(--bg-inset);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.vr-app .sn-icon {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  color: var(--ink-2);
+}
+
+.vr-app .sn-item.active .sn-icon {
+  opacity: 1;
+  color: var(--ink);
+}
+
+/* Sections */
+.vr-app .settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vr-app .settings-section {
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.vr-app .settings-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.vr-app .ss-header {
+  margin-bottom: 20px;
+}
+
+.vr-app .ss-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+
+.vr-app .ss-desc {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+/* Avatar section */
+.vr-app .avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.vr-app .big-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2D5BE3, #7C3AED);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.vr-app .av-edit-btn {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.vr-app .av-edit-btn:hover {
+  background: var(--bg-hover);
+}
+
+.vr-app .av-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.vr-app .av-email {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+}
+
+/* Form fields */
+.vr-app .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.vr-app .form-grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.vr-app .field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.vr-app .field-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.vr-app .field-input,
+.vr-app .field-select {
+  height: 36px;
+  padding: 0 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--ink);
+  font-family: var(--sans);
+  outline: none;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.vr-app .field-input:focus,
+.vr-app .field-select:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(26, 25, 23, 0.06);
+}
+
+.vr-app .field-input::placeholder {
+  color: var(--ink-4);
+}
+
+.vr-app .field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23A8A49F' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+.vr-app .field-hint {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+/* Notification toggles */
+.vr-app .toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  transition: background 0.12s;
+}
+
+.vr-app .toggle-row:hover {
+  background: var(--bg-hover);
+}
+
+.vr-app .tr-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vr-app .tr-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.vr-app .tr-desc {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.vr-app .toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.vr-app .toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.vr-app .toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-md);
+  transition: all 0.2s;
+}
+
+.vr-app .toggle input:checked~.toggle-track {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.vr-app .toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s;
+}
+
+.vr-app .toggle input:checked~.toggle-thumb {
+  transform: translateX(16px);
+}
+
+/* Sessions table */
+.vr-app .sessions-table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.vr-app .st-header {
+  display: grid;
+  grid-template-columns: 1fr 120px 100px 80px;
+  padding: 10px 16px;
+  background: var(--bg-inset);
+  border-bottom: 1px solid var(--border);
+}
+
+.vr-app .sth {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vr-app .st-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 100px 80px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  transition: background 0.12s;
+}
+
+.vr-app .st-row:last-child {
+  border-bottom: none;
+}
+
+.vr-app .st-row:hover {
+  background: var(--bg-hover);
+}
+
+.vr-app .str-device {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vr-app .str-dev-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  color: var(--ink-2);
+}
+
+.vr-app .str-dev-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.vr-app .str-dev-loc {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  margin-top: 1px;
+}
+
+.vr-app .str-date {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.vr-app .str-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.vr-app .badge-current {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.vr-app .badge-other {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-md);
+  color: var(--ink-3);
+}
+
+.vr-app .str-revoke {
+  font-size: 11px;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: color 0.12s;
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  padding: 0;
+}
+
+.vr-app .str-revoke:hover {
+  color: var(--red);
+}
+
+/* Danger zone */
+.vr-app .danger-box {
+  background: var(--red-soft);
+  border: 1px solid rgba(185, 28, 28, 0.15);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.vr-app .dz-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+}
+
+.vr-app .dz-desc {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+/* Unsaved changes bar */
+.vr-app .unsaved-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s;
+  z-index: 200;
+  white-space: nowrap;
+}
+
+.vr-app .unsaved-bar.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.vr-app .ub-text {
+  font-size: 12px;
+  color: rgba(245, 243, 239, 0.7);
+}
+
+.vr-app .ub-save {
+  height: 28px;
+  padding: 0 14px;
+  background: white;
+  color: var(--ink);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: opacity 0.12s;
+}
+
+.vr-app .ub-save:hover {
+  opacity: 0.88;
+}
+
+.vr-app .ub-discard {
+  height: 28px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(245, 243, 239, 0.6);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.12s;
+}
+
+.vr-app .ub-discard:hover {
+  color: rgba(245, 243, 239, 0.9);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vr-app .settings-content {
+    grid-template-columns: 1fr;
+    padding: 20px 16px;
+  }
+
+  .vr-app .settings-nav {
+    position: static;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .vr-app .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vr-app .avatar-row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .vr-app .st-header,
+  .vr-app .st-row {
+    grid-template-columns: 1fr 80px 70px 60px;
+    font-size: 11px;
+  }
+}

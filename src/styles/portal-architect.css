@@ -1,0 +1,750 @@
+/* 
+  ARCHITECT PORTAL DESIGN SYSTEM 
+  Strictly following the provided design spec.
+*/
+
+:root {
+    --arch-bg: #F5F3EF;
+    --arch-bg-card: #FAFAF8;
+    --arch-bg-hover: #F0EDE8;
+    --arch-bg-inset: #ECEAE4;
+    --arch-ink: #1A1917;
+    --arch-ink-2: #6B6760;
+    --arch-ink-3: #A8A49F;
+    --arch-ink-4: #D4D0CB;
+
+    --arch-blue: #2D5BE3;
+    --arch-blue-s: rgba(45, 91, 227, 0.08);
+    --arch-blue-b: rgba(45, 91, 227, 0.18);
+
+    --arch-green: #1A7A4A;
+    --arch-green-s: rgba(26, 122, 74, 0.08);
+    --arch-green-b: rgba(26, 122, 74, 0.18);
+
+    --arch-amber: #B45309;
+    --arch-amber-s: rgba(180, 83, 9, 0.08);
+    --arch-amber-b: rgba(180, 83, 9, 0.18);
+
+    --arch-red: #B91C1C;
+    --arch-red-s: rgba(185, 28, 28, 0.08);
+    --arch-red-b: rgba(185, 28, 28, 0.18);
+
+    --arch-purple: #6D28D9;
+    --arch-purple-s: rgba(109, 40, 217, 0.08);
+    --arch-purple-b: rgba(109, 40, 217, 0.18);
+
+    --arch-border: rgba(26, 25, 23, 0.07);
+    --arch-border-md: rgba(26, 25, 23, 0.12);
+    --arch-border-dk: rgba(26, 25, 23, 0.22);
+
+    --arch-sh-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    --arch-sh-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    --arch-sh-lg: 0 12px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+
+    --arch-r: 10px;
+    --arch-rs: 6px;
+    --arch-rl: 14px;
+
+    --arch-serif: 'Instrument Serif', Georgia, serif;
+    --arch-sans: 'Geist', system-ui, sans-serif;
+    --arch-mono: 'Geist Mono', monospace;
+}
+
+/* Base application wrapper for Architect role */
+.architect-dashboard {
+    font-family: var(--arch-sans);
+    background: var(--arch-bg);
+    color: var(--arch-ink);
+    -webkit-font-smoothing: antialiased;
+}
+
+.architect-dashboard .sidebar {
+    width: 228px;
+    flex-shrink: 0;
+    background: var(--arch-bg-card);
+    border-right: 1px solid var(--arch-border);
+    display: flex !important;
+    flex-direction: column;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
+}
+
+.architect-dashboard .sb-brand {
+    padding: 15px 16px 12px;
+    border-bottom: 1px solid var(--arch-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.architect-dashboard .sb-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--arch-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    color: white;
+}
+
+.architect-dashboard .sb-brand-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--arch-ink);
+    letter-spacing: -0.02em;
+}
+
+.architect-dashboard .sb-brand-sub {
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    color: var(--arch-ink-3);
+    margin-top: 1px;
+}
+
+.architect-dashboard .sb-user {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--arch-border);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: linear-gradient(135deg, rgba(180, 83, 9, 0.05), rgba(224, 112, 0, 0.03));
+}
+
+.architect-dashboard .sb-av {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #B45309, #E07000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.architect-dashboard .sb-user-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--arch-ink);
+}
+
+.architect-dashboard .sb-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-top: 3px;
+    padding: 1px 6px;
+    border-radius: 20px;
+    background: var(--arch-amber-s);
+    border: 1px solid var(--arch-amber-b);
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    color: var(--arch-amber);
+}
+
+.architect-dashboard .sb-focus {
+    margin: 8px;
+    padding: 9px 11px;
+    border-radius: var(--arch-rs);
+    background: var(--arch-bg-inset);
+    border: 1px solid var(--arch-border-md);
+}
+
+.architect-dashboard .sbf-label {
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    color: var(--arch-ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 5px;
+}
+
+.architect-dashboard .sbf-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--arch-ink-2);
+    padding: 3px 0;
+}
+
+.architect-dashboard .sbf-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.architect-dashboard .sb-nav {
+    flex: 1;
+    padding: 6px 8px;
+    overflow-y: auto;
+}
+
+.architect-dashboard .nav-group-label {
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    color: var(--arch-ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 8px 3px;
+}
+
+.architect-dashboard .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: var(--arch-rs);
+    font-size: 12px;
+    color: var(--arch-ink-2);
+    cursor: pointer;
+    transition: all .12s;
+    margin-bottom: 1px;
+    text-decoration: none;
+}
+
+.architect-dashboard .nav-item:hover {
+    background: var(--arch-bg-hover);
+    color: var(--arch-ink);
+}
+
+.architect-dashboard .nav-item.active {
+    background: var(--arch-bg-inset);
+    color: var(--arch-ink);
+    font-weight: 500;
+}
+
+.architect-dashboard .nav-icon {
+    font-size: 13px;
+    width: 17px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.architect-dashboard .nav-badge {
+    margin-left: auto;
+    min-width: 17px;
+    height: 17px;
+    border-radius: 9px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    font-weight: 600;
+}
+
+.architect-dashboard .nb-blue {
+    background: var(--arch-blue-s);
+    color: var(--arch-blue);
+    border: 1px solid var(--arch-blue-b);
+}
+
+.architect-dashboard .nb-amber {
+    background: var(--arch-amber-s);
+    color: var(--arch-amber);
+    border: 1px solid var(--arch-amber-b);
+}
+
+.architect-dashboard .nb-red {
+    background: var(--arch-red-s);
+    color: var(--arch-red);
+    border: 1px solid var(--arch-red-b);
+}
+
+.architect-dashboard .nb-green {
+    background: var(--arch-green-s);
+    color: var(--arch-green);
+    border: 1px solid var(--arch-green-b);
+}
+
+/* Project Pills */
+.architect-dashboard .sb-proj-pill {
+    margin: 0 8px 6px;
+    padding: 8px 10px;
+    border-radius: var(--arch-rs);
+    border: 1px solid var(--arch-border-md);
+    background: var(--arch-bg);
+    cursor: pointer;
+    transition: all .12s;
+}
+
+.architect-dashboard .sb-proj-pill:hover {
+    background: var(--arch-bg-hover);
+    border-color: var(--arch-border-dk);
+}
+
+.architect-dashboard .sb-proj-pill.active-proj {
+    border-color: var(--arch-blue-b);
+    background: var(--arch-blue-s);
+}
+
+.architect-dashboard .spp-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--arch-ink);
+}
+
+.architect-dashboard .spp-sub {
+    font-family: var(--arch-mono);
+    font-size: 9px;
+    color: var(--arch-ink-3);
+    margin-top: 2px;
+}
+
+.architect-dashboard .spp-bar {
+    height: 2px;
+    border-radius: 100px;
+    background: var(--arch-bg-inset);
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.architect-dashboard .spp-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--arch-blue);
+}
+
+.architect-dashboard .sb-bottom {
+    padding: 8px;
+    border-top: 1px solid var(--arch-border);
+}
+
+.architect-dashboard .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--arch-rs);
+    font-size: 12px;
+    color: var(--arch-ink-3);
+    cursor: pointer;
+    transition: all .12s;
+    width: 100%;
+}
+
+.architect-dashboard .logout-btn:hover {
+    background: var(--arch-red-s);
+    color: var(--arch-red);
+}
+
+/* Main Content Area */
+.architect-dashboard .main {
+    flex: 1;
+    overflow-y: auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.architect-dashboard .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 250, 248, 0.93);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--arch-border);
+    padding: 0 24px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.architect-dashboard .tb-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.architect-dashboard .tb-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--arch-ink);
+}
+
+.architect-dashboard .tb-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.architect-dashboard .cmd-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 11px;
+    border-radius: var(--arch-rs);
+    border: 1px solid var(--arch-border-md);
+    background: var(--arch-bg-card);
+    font-size: 11px;
+    color: var(--arch-ink-3);
+    cursor: pointer;
+    transition: all .12s;
+    min-width: 160px;
+}
+
+.architect-dashboard .cmd-pill:hover {
+    border-color: var(--arch-border-dk);
+    color: var(--arch-ink-2);
+}
+
+.architect-dashboard .kbd {
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: var(--arch-bg-inset);
+    border: 1px solid var(--arch-border-md);
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    color: var(--arch-ink-4);
+}
+
+.architect-dashboard .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--arch-rs);
+    border: 1px solid var(--arch-border-md);
+    background: var(--arch-bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .12s;
+    color: var(--arch-ink-2);
+    position: relative;
+}
+
+.architect-dashboard .icon-btn:hover {
+    background: var(--arch-bg-hover);
+    color: var(--arch-ink);
+}
+
+.architect-dashboard .notif-dot {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--arch-blue);
+    border: 1.5px solid var(--arch-bg-card);
+}
+
+/* Page Components */
+.architect-dashboard .page {
+    padding: 24px;
+}
+
+.architect-dashboard .page-title {
+    font-family: var(--arch-serif);
+    font-size: 25px;
+    letter-spacing: -0.01em;
+    color: var(--arch-ink);
+    line-height: 1.1;
+    margin-bottom: 3px;
+}
+
+.architect-dashboard .page-title em {
+    font-style: italic;
+    color: var(--arch-ink-2);
+}
+
+.architect-dashboard .page-sub {
+    font-size: 12px;
+    color: var(--arch-ink-3);
+    margin-bottom: 22px;
+}
+
+/* Grid Systems */
+.architect-dashboard .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 11px;
+}
+
+.architect-dashboard .cols-2-1 {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 14px;
+}
+
+/* Cards */
+.architect-dashboard .card {
+    background: var(--arch-bg-card);
+    border: 1px solid var(--arch-border);
+    border-radius: var(--arch-r);
+    overflow: hidden;
+    box-shadow: var(--arch-sh-sm);
+}
+
+.architect-dashboard .card-hd {
+    padding: 12px 14px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.architect-dashboard .card-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--arch-ink);
+}
+
+.architect-dashboard .card-body {
+    padding: 0 14px 14px;
+}
+
+/* KPI Component */
+.architect-dashboard .kpi {
+    background: var(--arch-bg-card);
+    border: 1px solid var(--arch-border);
+    border-radius: var(--arch-r);
+    padding: 14px 15px;
+    box-shadow: var(--arch-sh-sm);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .12s;
+}
+
+.architect-dashboard .kpi:hover {
+    box-shadow: var(--arch-sh-md);
+    transform: translateY(-1px);
+}
+
+.architect-dashboard .kpi-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: var(--arch-r) var(--arch-r) 0 0;
+}
+
+.architect-dashboard .kpi-label {
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    color: var(--arch-ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+}
+
+.architect-dashboard .kpi-val {
+    font-family: var(--arch-serif);
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    color: var(--arch-ink);
+    line-height: 1;
+}
+
+.architect-dashboard .kpi-sub {
+    font-size: 11px;
+    color: var(--arch-ink-3);
+    margin-top: 4px;
+}
+
+.architect-dashboard .kpi-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--arch-mono);
+    font-size: 8px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-top: 5px;
+}
+
+.architect-dashboard .d-up {
+    background: var(--arch-green-s);
+    color: var(--arch-green);
+}
+
+.architect-dashboard .d-warn {
+    background: var(--arch-amber-s);
+    color: var(--arch-amber);
+}
+
+.architect-dashboard .d-neu {
+    background: var(--arch-bg-inset);
+    color: var(--arch-ink-3);
+}
+
+/* Tags & Buttons */
+.architect-dashboard .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-family: var(--arch-mono);
+    font-size: 9px;
+    border: 1px solid transparent;
+}
+
+.architect-dashboard .tg-blue {
+    background: var(--arch-blue-s);
+    color: var(--arch-blue);
+    border-color: var(--arch-blue-b);
+}
+
+.architect-dashboard .tg-green {
+    background: var(--arch-green-s);
+    color: var(--arch-green);
+    border-color: var(--arch-green-b);
+}
+
+.architect-dashboard .tg-amber {
+    background: var(--arch-amber-s);
+    color: var(--arch-amber);
+    border-color: var(--arch-amber-b);
+}
+
+.architect-dashboard .tg-red {
+    background: var(--arch-red-s);
+    color: var(--arch-red);
+    border-color: var(--arch-red-b);
+}
+
+.architect-dashboard .tg-gray {
+    background: var(--arch-bg-inset);
+    color: var(--arch-ink-3);
+    border-color: var(--arch-border-md);
+}
+
+.architect-dashboard .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--arch-rs);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .12s;
+    border: none;
+    font-family: var(--arch-sans);
+}
+
+.architect-dashboard .btn-primary {
+    background: var(--arch-ink);
+    color: var(--arch-bg);
+}
+
+.architect-dashboard .btn-secondary {
+    background: var(--arch-bg-card);
+    color: var(--arch-ink-2);
+    border: 1px solid var(--arch-border-md);
+}
+
+.architect-dashboard .btn-blue {
+    background: var(--arch-blue-s);
+    color: var(--arch-blue);
+    border: 1px solid var(--arch-blue-b);
+}
+
+.architect-dashboard .btn-ghost {
+    background: transparent;
+    color: var(--arch-ink-2);
+    border: 1px solid var(--arch-border);
+}
+
+/* Activity Spine */
+.architect-dashboard .act-item {
+    display: flex;
+    gap: 9px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--arch-border);
+}
+
+.architect-dashboard .act-item:last-child {
+    border-bottom: none;
+}
+
+.architect-dashboard .act-spine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 17px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.architect-dashboard .act-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.architect-dashboard .act-line {
+    width: 1px;
+    flex: 1;
+    background: var(--arch-border);
+    margin-top: 3px;
+}
+
+.architect-dashboard .act-body {
+    flex: 1;
+}
+
+.architect-dashboard .act-text {
+    font-size: 11px;
+    color: var(--arch-ink-2);
+    line-height: 1.4;
+}
+
+.architect-dashboard .act-text strong {
+    color: var(--arch-ink);
+    font-weight: 500;
+}
+
+.architect-dashboard .act-time {
+    font-family: var(--arch-mono);
+    font-size: 9px;
+    color: var(--arch-ink-4);
+    margin-top: 2px;
+}
+
+/* Utilities */
+.architect-dashboard .mini-bar {
+    height: 3px;
+    border-radius: 100px;
+    background: var(--arch-bg-inset);
+    overflow: hidden;
+}
+
+.architect-dashboard .mini-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1.1s cubic-bezier(.4, 0, .2, 1);
+}
+
+@keyframes arch-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.architect-dashboard .pulse {
+    animation: arch-pulse 1.6s infinite;
+}

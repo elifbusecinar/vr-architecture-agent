@@ -1,0 +1,363 @@
+/* Client Portal Specific Styles */
+.client-portal .sidebar {
+    width: 224px;
+}
+
+.client-portal .sb-firm {
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.client-portal .sb-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.client-portal .sb-firm-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.client-portal .sb-firm-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+    margin-top: 1px;
+}
+
+.client-portal .sb-client {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--blue-soft);
+}
+
+.client-portal .sb-av {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1A7A4A, #22A05A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.client-portal .sb-client-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.client-portal .sb-client-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 3px;
+    padding: 1px 6px;
+    border-radius: 20px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-border);
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--blue);
+}
+
+.client-portal .sb-nav {
+    flex: 1;
+    padding: 10px 8px;
+    overflow-y: auto;
+}
+
+.client-portal .nav-group-label {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 8px 4px;
+}
+
+.client-portal .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all .12s;
+    margin-bottom: 1px;
+}
+
+.client-portal .nav-item:hover {
+    background: var(--bg-hover);
+    color: var(--ink);
+}
+
+.client-portal .nav-item.active {
+    background: var(--bg-inset);
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.client-portal .nav-icon {
+    font-size: 14px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.client-portal .nav-badge {
+    margin-left: auto;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.client-portal .nb-blue {
+    background: var(--blue-soft);
+    color: var(--blue);
+    border: 1px solid var(--blue-border);
+}
+
+.client-portal .nb-amber {
+    background: var(--amber-soft);
+    color: var(--amber);
+    border: 1px solid var(--amber-border);
+}
+
+.client-portal .nb-green {
+    background: var(--green-soft);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+}
+
+/* Hero Strip */
+.client-portal .hero-strip {
+    background: var(--ink);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.client-portal .hero-strip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.client-portal .hs-eyebrow {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: rgba(245, 243, 239, 0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.client-portal .hs-eyebrow::before {
+    content: '';
+    width: 16px;
+    height: 1px;
+    background: rgba(245, 243, 239, 0.2);
+}
+
+.client-portal .hs-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    color: rgba(245, 243, 239, 0.95);
+    line-height: 1.15;
+    margin-bottom: 10px;
+}
+
+.client-portal .hs-title em {
+    font-style: italic;
+    color: rgba(245, 243, 239, 0.55);
+}
+
+.client-portal .hs-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.client-portal .hs-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(245, 243, 239, 0.4);
+}
+
+/* Progress Ring */
+.client-portal .progress-ring {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+}
+
+.client-portal .pr-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+}
+
+.client-portal .pr-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.07);
+    stroke-width: 5;
+}
+
+.client-portal .pr-fill {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 245;
+    stroke-dashoffset: 74;
+    transition: stroke-dashoffset 1.2s cubic-bezier(.4, 0, .2, 1);
+}
+
+.client-portal .pr-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+}
+
+.client-portal .pr-val {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: rgba(245, 243, 239, 0.9);
+    line-height: 1;
+}
+
+.client-portal .pr-sub {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: rgba(245, 243, 239, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Grid Layouts */
+.client-portal .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.client-portal .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Other components from the template... */
+.client-portal .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.client-portal .sc-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+}
+
+.client-portal .sc-val {
+    font-family: var(--serif);
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+}
+
+.client-portal .sc-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 6px;
+}
+
+.client-portal .delta-green {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+.client-portal .delta-amber {
+    background: var(--amber-soft);
+    color: var(--amber);
+}
+
+/* Animation and UI effects */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.client-portal .page {
+    padding: 28px;
+}

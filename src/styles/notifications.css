@@ -1,0 +1,346 @@
+/* ═══════════════════════════════════════════════════════
+   VR Architecture — Notifications Page
+   ═══════════════════════════════════════════════════════ */
+
+/* Page layout */
+.vr-app .notif-page-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  overflow: hidden;
+}
+
+/* Notification list */
+.vr-app .notif-list {
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+/* Tabs */
+.vr-app .notif-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.vr-app .ntab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 14px 13px;
+  font-size: 13px;
+  color: var(--ink-3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.12s;
+  margin-bottom: -1px;
+}
+
+.vr-app .ntab:hover {
+  color: var(--ink-2);
+}
+
+.vr-app .ntab.active {
+  color: var(--ink);
+  font-weight: 500;
+  border-bottom-color: var(--ink);
+}
+
+.vr-app .ntab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--blue);
+  color: white;
+  font-family: var(--mono);
+  font-size: 10px;
+  border-radius: 20px;
+}
+
+/* Day group */
+.vr-app .day-label {
+  padding: 12px 20px 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  position: sticky;
+  top: 49px;
+  background: var(--bg);
+  z-index: 5;
+}
+
+/* Notification item */
+.vr-app .notif-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+}
+
+.vr-app .notif-item:hover {
+  background: var(--bg-hover);
+}
+
+.vr-app .notif-item.unread {
+  background: var(--bg-card);
+}
+
+.vr-app .notif-item.unread::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.vr-app .notif-item.selected {
+  background: var(--bg-inset);
+}
+
+.vr-app .ni-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.vr-app .ni-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.vr-app .ni-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.vr-app .ni-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vr-app .ni-time {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+
+.vr-app .ni-text {
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Avatar colours */
+.vr-app .av-blue {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.vr-app .av-green {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.vr-app .av-amber {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.vr-app .av-inset {
+  background: var(--bg-inset);
+  color: var(--ink-2);
+}
+
+/* Detail panel */
+.vr-app .notif-detail {
+  padding: 20px;
+  overflow-y: auto;
+  background: var(--bg-card);
+}
+
+.vr-app .nd-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+  text-align: center;
+  padding: 40px;
+  color: var(--ink-3);
+}
+
+.vr-app .nd-empty-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+}
+
+.vr-app .nd-empty-text {
+  font-size: 13px;
+}
+
+.vr-app .nd-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.vr-app .nd-big-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border-md);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vr-app .nd-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+
+.vr-app .nd-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+}
+
+.vr-app .nd-body {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.vr-app .nd-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.vr-app .ndc-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.vr-app .ndc-val {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.vr-app .nd-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vr-app .nd-btn {
+  width: 100%;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--sans);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.12s;
+}
+
+.vr-app .nd-btn-primary {
+  background: var(--ink);
+  color: white;
+}
+
+.vr-app .nd-btn-primary:hover {
+  background: #2F2D2A;
+}
+
+.vr-app .nd-btn-secondary {
+  background: var(--bg);
+  border: 1px solid var(--border-md);
+  color: var(--ink);
+}
+
+.vr-app .nd-btn-secondary:hover {
+  background: var(--bg-hover);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vr-app .notif-page-body {
+    grid-template-columns: 1fr;
+  }
+
+  .vr-app .notif-detail {
+    display: none;
+  }
+}

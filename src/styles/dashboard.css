@@ -1,0 +1,1402 @@
+/* ═══════════════════════════════════════════════════════
+   VR Architecture — Dashboard Design System
+   All rules scoped under .vr-app to override Tailwind
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── ROOT TOKENS ─────────────────────────────────── */
+:root {
+    --bg: #F5F3EF;
+    --bg-card: #FAFAF8;
+    --bg-hover: #F0EDE8;
+    --bg-inset: #ECEAE4;
+    --ink: #1A1917;
+    --ink-2: #6B6760;
+    --ink-3: #A8A49F;
+    --ink-4: #D4D0CB;
+    --accent: #1A1917;
+    --accent-2: #2F2D2A;
+    --blue: #2D5BE3;
+    --blue-soft: rgba(45, 91, 227, 0.08);
+    --green: #1A7A4A;
+    --green-soft: rgba(26, 122, 74, 0.08);
+    --amber: #B45309;
+    --amber-soft: rgba(180, 83, 9, 0.08);
+    --red: #B91C1C;
+    --red-soft: rgba(185, 28, 28, 0.08);
+    --purple: #7C3AED;
+    --purple-soft: rgba(124, 58, 237, 0.08);
+    --border: rgba(26, 25, 23, 0.08);
+    --border-md: rgba(26, 25, 23, 0.12);
+    --border-dk: rgba(26, 25, 23, 0.20);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Geist', system-ui, sans-serif;
+    --mono: 'Geist Mono', monospace;
+}
+
+/* ─── VR APP RESET — Override Tailwind ────────────── */
+.vr-app,
+.vr-app *,
+.vr-app *::before,
+.vr-app *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.vr-app {
+    font-family: var(--sans) !important;
+    background: var(--bg) !important;
+    color: var(--ink) !important;
+    min-height: 100vh;
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Kill Tailwind's a-tag styling inside vr-app */
+.vr-app a,
+.vr-app a:hover,
+.vr-app a:visited,
+.vr-app a:focus {
+    color: inherit !important;
+    text-decoration: none !important;
+    transition: none !important;
+}
+
+/* Kill Tailwind heading resets */
+.vr-app h1,
+.vr-app h2,
+.vr-app h3,
+.vr-app h4,
+.vr-app h5,
+.vr-app h6 {
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    color: inherit;
+    margin: 0;
+    letter-spacing: inherit;
+}
+
+/* Kill Tailwind table styles */
+.vr-app table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.vr-app button {
+    font-family: var(--sans);
+}
+
+/* ─── SIDEBAR ─────────────────────────────────── */
+.vr-app .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.vr-app .sidebar-logo {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vr-app .logo-mark {
+    width: 28px;
+    height: 28px;
+    background: var(--ink);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.vr-app .logo-mark svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--bg);
+}
+
+.vr-app .logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.vr-app .logo-name {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+}
+
+.vr-app .logo-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+}
+
+.vr-app .sidebar-section {
+    padding: 16px 10px 8px;
+}
+
+.vr-app .sidebar-section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 4px;
+}
+
+.vr-app .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-2) !important;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    position: relative;
+    text-decoration: none !important;
+}
+
+.vr-app .nav-link:hover {
+    background: var(--bg-hover);
+    color: var(--ink) !important;
+}
+
+.vr-app .nav-link.active {
+    background: var(--bg-inset);
+    color: var(--ink) !important;
+    font-weight: 500;
+}
+
+.vr-app .nav-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.5;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vr-app .nav-link.active .nav-icon {
+    opacity: 1;
+}
+
+.vr-app .nav-badge {
+    margin-left: auto;
+    background: var(--bg-inset);
+    border: 1px solid var(--border-md);
+    color: var(--ink-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.vr-app .nav-badge.live {
+    background: var(--green-soft);
+    border-color: rgba(26, 122, 74, 0.15);
+    color: var(--green);
+}
+
+.vr-app .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 10px;
+}
+
+.vr-app .sidebar-bottom {
+    margin-top: auto;
+    padding: 12px 10px;
+    border-top: 1px solid var(--border);
+}
+
+.vr-app .user-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.vr-app .user-row:hover {
+    background: var(--bg-hover);
+}
+
+.vr-app .user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2D5BE3, #7C3AED);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+    font-family: var(--sans);
+}
+
+.vr-app .user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.vr-app .user-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.vr-app .user-role {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 1px;
+}
+
+/* ─── MAIN ────────────────────────────────────── */
+.vr-app .main {
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    filter: blur(0);
+    transition: filter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vr-app .main.dimmed {
+    pointer-events: none;
+    /* Blur is handled by backdrop-filter on the command palette, 
+       but we can add a subtle scale or brightness change if desired */
+}
+
+/* ─── TOPBAR ──────────────────────────────────── */
+.vr-app .topbar {
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 12px;
+    background: var(--bg-card);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Search trigger in topbar */
+.vr-app .search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 12px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.12s;
+    min-width: 220px;
+    color: var(--ink-3);
+    font-size: 13px;
+}
+
+.vr-app .search-trigger:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-dk);
+    color: var(--ink-2);
+}
+
+.vr-app .st-icon {
+    opacity: 0.5;
+    font-size: 13px;
+}
+
+.vr-app .st-placeholder {
+    flex: 1;
+    font-size: 12px;
+}
+
+.vr-app .st-kbd {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: auto;
+}
+
+.vr-app .kbd {
+    height: 18px;
+    padding: 0 5px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dk);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+}
+
+.vr-app .topbar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    font-size: 13px;
+    color: var(--ink-3);
+}
+
+.vr-app .topbar-breadcrumb span {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.vr-app .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ─── BUTTONS ─────────────────────────────────── */
+.vr-app .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    border: none;
+    font-family: var(--sans);
+    white-space: nowrap;
+    box-shadow: none;
+    background: none;
+    color: inherit;
+}
+
+.vr-app .btn-primary {
+    background: var(--ink) !important;
+    color: var(--bg) !important;
+    box-shadow: var(--shadow-sm);
+}
+
+.vr-app .btn-primary:hover {
+    background: var(--accent-2) !important;
+    transform: translateY(-0.5px);
+    box-shadow: var(--shadow-md);
+}
+
+.vr-app .btn-secondary {
+    background: var(--bg-card) !important;
+    color: var(--ink) !important;
+    border: 1px solid var(--border-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.vr-app .btn-secondary:hover {
+    background: var(--bg-hover) !important;
+    border-color: var(--border-dk);
+}
+
+.vr-app .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid var(--border-md);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.12s;
+    position: relative;
+    color: var(--ink-2);
+}
+
+.vr-app .icon-btn:hover {
+    background: var(--bg-hover);
+    color: var(--ink);
+}
+
+.vr-app .notif-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    background: var(--blue);
+    border-radius: 50%;
+    border: 1.5px solid var(--bg-card);
+}
+
+/* ─── PAGE CONTENT ────────────────────────────── */
+.vr-app .page {
+    padding: 28px;
+    flex: 1;
+}
+
+.vr-app .page-header {
+    margin-bottom: 24px;
+}
+
+.vr-app .page-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.vr-app .page-title {
+    font-family: var(--serif) !important;
+    font-size: 28px !important;
+    font-weight: 400 !important;
+    color: var(--ink) !important;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 !important;
+}
+
+.vr-app .page-title em {
+    font-style: italic;
+    color: var(--ink-2);
+}
+
+/* ─── STAT CARDS ──────────────────────────────── */
+.vr-app .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.vr-app .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    cursor: default;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.vr-app .stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.vr-app .stat-card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.vr-app .stat-card-value {
+    font-family: var(--serif) !important;
+    font-size: 38px !important;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+}
+
+.vr-app .stat-card-meta {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.vr-app .stat-card-glow {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    opacity: 0.06;
+    pointer-events: none;
+}
+
+.vr-app .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.vr-app .delta.up {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+.vr-app .delta.down {
+    background: var(--amber-soft);
+    color: var(--amber);
+}
+
+.vr-app .delta.neutral {
+    background: var(--blue-soft);
+    color: var(--blue);
+}
+
+/* ─── MAIN GRID ───────────────────────────────── */
+.vr-app .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+/* ─── PANEL ───────────────────────────────────── */
+.vr-app .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.vr-app .panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.vr-app .panel-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+
+.vr-app .panel-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+}
+
+/* ─── TABLE ───────────────────────────────────── */
+.vr-app table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vr-app thead th {
+    text-align: left;
+    padding: 9px 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    font-weight: 400;
+}
+
+.vr-app tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+    cursor: pointer;
+}
+
+.vr-app tbody tr:last-child {
+    border-bottom: none;
+}
+
+.vr-app tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+.vr-app td {
+    padding: 13px 18px;
+    vertical-align: middle;
+}
+
+.vr-app .proj-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+
+.vr-app .proj-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+}
+
+/* ─── BADGES ──────────────────────────────────── */
+.vr-app .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    background: none;
+    line-height: 1.4;
+}
+
+.vr-app .badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.vr-app .badge-live {
+    background: var(--green-soft);
+    color: var(--green);
+    border-color: rgba(26, 122, 74, 0.12);
+}
+
+.vr-app .badge-live .badge-dot {
+    background: var(--green);
+    animation: livepulse 2s infinite;
+}
+
+.vr-app .badge-review {
+    background: var(--blue-soft);
+    color: var(--blue);
+    border-color: rgba(45, 91, 227, 0.12);
+}
+
+.vr-app .badge-review .badge-dot {
+    background: var(--blue);
+}
+
+.vr-app .badge-draft {
+    background: var(--bg-inset);
+    color: var(--ink-3);
+    border-color: var(--border);
+}
+
+.vr-app .badge-draft .badge-dot {
+    background: var(--ink-3);
+}
+
+.vr-app .badge-vr {
+    background: var(--amber-soft);
+    color: var(--amber);
+    border-color: rgba(180, 83, 9, 0.12);
+}
+
+.vr-app .badge-vr .badge-dot {
+    background: var(--amber);
+    animation: livepulse 1.5s infinite;
+}
+
+.vr-app .badge-premium {
+    background: var(--purple-soft);
+    color: var(--purple);
+    border-color: rgba(124, 58, 237, 0.15);
+}
+
+.vr-app .badge-premium::before {
+    content: '★';
+    margin-right: 4px;
+    font-size: 10px;
+}
+
+.vr-app .btn.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--bg-inset) !important;
+    color: var(--ink-3) !important;
+    border: 1px dashed var(--border-dk) !important;
+}
+
+.vr-app .btn.locked:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+@keyframes livepulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* ─── PROGRESS ────────────────────────────────── */
+.vr-app .progress-track {
+    height: 3px;
+    background: var(--bg-inset);
+    border-radius: 100px;
+    overflow: hidden;
+    width: 90px;
+}
+
+.vr-app .progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--ink);
+    transition: width 0.6s ease;
+}
+
+.vr-app .progress-fill.done {
+    background: var(--green);
+}
+
+.vr-app .progress-fill.mid {
+    background: var(--blue);
+}
+
+.vr-app .progress-fill.low {
+    background: var(--ink-3);
+}
+
+.vr-app .progress-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 4px;
+}
+
+/* ─── ROW ACTIONS ─────────────────────────────── */
+.vr-app .row-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.vr-app tbody tr:hover .row-actions {
+    opacity: 1;
+}
+
+.vr-app .row-action-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border-md);
+    background: var(--bg-card);
+    color: var(--ink-2);
+    transition: all 0.1s;
+}
+
+.vr-app .row-action-btn:hover {
+    background: var(--bg);
+    border-color: var(--border-dk);
+    color: var(--ink);
+}
+
+/* ─── VR SESSIONS ─────────────────────────────── */
+.vr-app .session-row {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.vr-app .session-row:last-child {
+    border-bottom: none;
+}
+
+.vr-app .session-row:hover {
+    background: var(--bg-hover);
+}
+
+.vr-app .session-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vr-app .session-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+}
+
+.vr-app .avatar-stack {
+    display: flex;
+}
+
+.vr-app .avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--bg-card);
+    margin-left: -5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 600;
+    color: white;
+    font-family: var(--sans);
+    flex-shrink: 0;
+}
+
+.vr-app .avatar:first-child {
+    margin-left: 0;
+}
+
+/* ─── TAG ─────────────────────────────────────── */
+.vr-app .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+}
+
+/* ─── BOTTOM GRID ─────────────────────────────── */
+.vr-app .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+}
+
+/* ─── ACTIVITY ────────────────────────────────── */
+.vr-app .activity-row {
+    display: flex;
+    gap: 12px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+}
+
+.vr-app .activity-row:last-child {
+    border-bottom: none;
+}
+
+.vr-app .activity-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+.vr-app .activity-content {
+    flex: 1;
+}
+
+.vr-app .activity-msg {
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.4;
+}
+
+.vr-app .activity-msg strong {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.vr-app .activity-time {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 3px;
+}
+
+/* ─── STORAGE ─────────────────────────────────── */
+.vr-app .storage-donut-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0 12px;
+    position: relative;
+}
+
+.vr-app .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.vr-app .donut-pct {
+    font-family: var(--serif);
+    font-size: 28px;
+    color: var(--ink);
+    line-height: 1;
+}
+
+.vr-app .donut-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+}
+
+.vr-app .storage-rows {
+    padding: 0 18px 14px;
+}
+
+.vr-app .storage-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+}
+
+.vr-app .storage-row:last-child {
+    border-bottom: none;
+}
+
+.vr-app .storage-type {
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.vr-app .storage-type-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.vr-app .storage-amt {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink);
+}
+
+/* ─── UPLOAD ──────────────────────────────────── */
+.vr-app .upload-area {
+    margin: 14px 16px;
+    border: 1.5px dashed var(--border-dk);
+    border-radius: var(--radius);
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+}
+
+.vr-app .upload-area:hover {
+    border-color: var(--ink-2);
+    background: var(--bg-hover);
+}
+
+.vr-app .upload-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 14px;
+}
+
+.vr-app .upload-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 3px;
+}
+
+.vr-app .upload-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+}
+
+/* ─── SCROLLBAR ───────────────────────────────── */
+.vr-app .sidebar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.vr-app .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.vr-app .sidebar::-webkit-scrollbar-thumb {
+    background: var(--ink-4);
+    border-radius: 4px;
+}
+
+/* ─── ANIMATIONS ──────────────────────────────── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.vr-app .stats-grid {
+    animation: fadeUp 0.35s ease both;
+}
+
+.vr-app .content-grid {
+    animation: fadeUp 0.35s 0.08s ease both;
+}
+
+.vr-app .bottom-grid {
+    animation: fadeUp 0.35s 0.16s ease both;
+}
+
+/* ─── SPINNER ─────────────────────────────────── */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── INPUT PLACEHOLDER ──────────────────────── */
+.vr-app input::placeholder {
+    color: var(--ink-4);
+    font-family: var(--sans);
+}
+
+/* ─── MODAL ────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(26, 25, 23, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.15s ease-out;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border-md);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    width: 500px;
+    max-width: 100%;
+    overflow: hidden;
+    animation: slideUp 0.2s ease-out;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--ink-3);
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* ─── FORMS ────────────────────────────────────── */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink);
+    transition: all 0.12s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--ink);
+    box-shadow: 0 0 0 2px var(--bg-inset);
+}
+
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B6760' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── COMMAND PALETTE ─────────────────────────── */
+.vr-app .palette-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 15vh;
+}
+
+.vr-app .palette-container {
+    width: 600px;
+    max-width: 90vw;
+    background: var(--bg-card);
+    border: 1px solid var(--border-md);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideDown 0.15s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.vr-app .palette-search {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vr-app .palette-search .search-icon {
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+.vr-app .palette-search input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    outline: none;
+}
+
+.vr-app .palette-search input::placeholder {
+    color: var(--ink-3);
+}
+
+.vr-app .shortcut-hint {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    padding: 2px 6px;
+    background: var(--bg-inset);
+    border-radius: 4px;
+}
+
+.vr-app .palette-results {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.vr-app .palette-message {
+    padding: 24px;
+    text-align: center;
+    color: var(--ink-3);
+    font-size: 13px;
+}
+
+.vr-app .palette-section-title {
+    padding: 8px 12px 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.vr-app .palette-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.vr-app .palette-item.active,
+.vr-app .palette-item:hover {
+    background: var(--bg-hover);
+}
+
+.vr-app .item-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--ink-2);
+}
+
+.vr-app .item-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.vr-app .item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+}
+
+.vr-app .item-meta {
+    font-size: 11px;
+    color: var(--ink-2);
+    font-family: var(--mono);
+}
+
+.vr-app .item-enter {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+}

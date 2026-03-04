@@ -1,0 +1,205 @@
+/* ============================================================
+   VR Architecture — Technical Improvements
+   Performance · Accessibility · Mobile · Print
+   No design changes — purely technical layer
+   ============================================================ */
+
+/* ── 1. FONT DISPLAY ──────────────────────────────────────── */
+/* Prevents invisible text during font load (FOIT) */
+@font-face { font-family: 'Geist';            font-display: swap; src: local('Geist'); }
+@font-face { font-family: 'Instrument Serif'; font-display: swap; src: local('Instrument Serif'); }
+@font-face { font-family: 'Geist Mono';       font-display: swap; src: local('Geist Mono'); }
+
+/* ── 2. GPU LAYER MANAGEMENT ─────────────────────────────── */
+/* Promote only actively-animated elements — saves memory vs blanket will-change */
+.stat-card,
+.project-card,
+.cp-item,
+.notif-item {
+  will-change: transform;
+}
+
+.stat-card:not(:hover),
+.project-card:not(:hover) {
+  will-change: auto;
+}
+
+/* ── 3. SCROLL PERFORMANCE ───────────────────────────────── */
+/* Prevents scroll chaining and enables momentum scrolling on iOS */
+.sidebar,
+.cp-body,
+.panel,
+.notif-list {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ── 4. PAINT ISOLATION ──────────────────────────────────── */
+/* Limits repaint scope — prevents sidebar/topbar repaints on content scroll */
+.vr-app .sidebar { contain: layout style; }
+.vr-app .topbar  { contain: layout style; }
+.vr-app .cp-modal { contain: layout style paint; }
+
+/* ── 5. REDUCED MOTION ───────────────────────────────────── */
+/* Respects OS-level accessibility preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── 6. KEYBOARD FOCUS ───────────────────────────────────── */
+/* :focus-visible = keyboard only, does NOT affect mouse clicks */
+.vr-app :focus {
+  outline: none;
+}
+
+.vr-app :focus-visible {
+  outline: 2px solid var(--blue, #2D5BE3);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── 7. WCAG AA CONTRAST FIX ─────────────────────────────── */
+/* --ink-3 (#A8A49F) = 3.4:1 contrast ratio, below the 4.5:1 AA minimum for text */
+.vr-app .sidebar-section-label,
+.vr-app .logo-sub,
+.vr-app .user-role,
+.vr-app .topbar-breadcrumb,
+.vr-app .field-hint,
+.vr-app .stat-card-meta {
+  color: #767270; /* 4.6:1 contrast ratio — WCAG AA ✓ */
+}
+
+/* ── 8. IMAGE OPTIMIZATION ───────────────────────────────── */
+.vr-app img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── 9. iOS SAFE AREA ────────────────────────────────────── */
+/* Support for notch/home-bar on iPhone */
+.vr-app {
+  padding-left:   env(safe-area-inset-left);
+  padding-right:  env(safe-area-inset-right);
+}
+
+/* ── 10. SELECTION COLOR ─────────────────────────────────── */
+::selection {
+  background: rgba(45, 91, 227, 0.15);
+  color: inherit;
+}
+
+/* ── 11. SCROLLBAR STYLING ───────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(26, 25, 23, 0.15); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26, 25, 23, 0.25); }
+
+/* ── 12. MOBILE SIDEBAR ──────────────────────────────────── */
+/* Topbar hamburger — hidden by default, shown on mobile */
+.vr-app .topbar-hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 1px solid var(--border-md, rgba(26, 25, 23, 0.12));
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--ink-2, #6B6760);
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* Sidebar backdrop — injected by React, hidden until open */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 299;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.sidebar-backdrop.visible {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .vr-app .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 260px;
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.15);
+    height: 100dvh;
+  }
+
+  .vr-app .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .vr-app .main {
+    width: 100%;
+  }
+
+  .vr-app .topbar-hamburger {
+    display: flex;
+  }
+
+  .vr-app .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vr-app .panel {
+    overflow-x: auto;
+  }
+
+  .vr-app .page-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vr-app .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vr-app .topbar {
+    padding: 0 14px;
+  }
+}
+
+/* ── 13. PRINT STYLES ────────────────────────────────────── */
+@media print {
+  .vr-app .sidebar,
+  .vr-app .topbar,
+  .vr-app .hud-actionbar,
+  .cp-backdrop,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  .vr-app .main {
+    width: 100% !important;
+  }
+
+  .vr-app .panel,
+  .vr-app .stat-card {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}

@@ -1,0 +1,157 @@
+/* ─────────────────────────────────────────────────────────
+   VR Architecture Design System — Shared CSS Variables
+   Use this in your index.css / global stylesheet.
+   Matches the reference dashboard design exactly.
+───────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap');
+
+:root {
+    /* ── Surfaces ─────────────────────────────────────── */
+    --bg: #F5F3EF;
+    /* page background — warm off-white */
+    --bg-card: #FAFAF8;
+    /* card / sidebar surface */
+    --bg-hover: #F0EDE8;
+    /* hover state */
+    --bg-inset: #ECEAE4;
+    /* inset / tag background */
+
+    /* ── Ink (typography) ─────────────────────────────── */
+    --ink: #1A1917;
+    /* primary text */
+    --ink-2: #6B6760;
+    /* secondary text */
+    --ink-3: #A8A49F;
+    /* muted text / labels */
+    --ink-4: #D4D0CB;
+    /* very muted / timestamps */
+
+    /* ── Brand accents ────────────────────────────────── */
+    --accent: #1A1917;
+    --accent-2: #2F2D2A;
+    /* hover of primary button */
+
+    /* ── Semantic colors ──────────────────────────────── */
+    --blue: #2D5BE3;
+    --blue-soft: rgba(45, 91, 227, 0.08);
+
+    --green: #1A7A4A;
+    --green-soft: rgba(26, 122, 74, 0.08);
+
+    --amber: #B45309;
+    --amber-soft: rgba(180, 83, 9, 0.08);
+
+    --red: #B91C1C;
+    --red-soft: rgba(185, 28, 28, 0.07);
+
+    /* ── Borders ──────────────────────────────────────── */
+    --border: rgba(26, 25, 23, 0.08);
+    --border-md: rgba(26, 25, 23, 0.12);
+    --border-dk: rgba(26, 25, 23, 0.20);
+
+    /* ── Shadows ──────────────────────────────────────── */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05);
+
+    /* ── Radii ────────────────────────────────────────── */
+    --radius: 10px;
+    --radius-sm: 6px;
+
+    /* ── Typography ───────────────────────────────────── */
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Geist', system-ui, sans-serif;
+    --mono: 'Geist Mono', monospace;
+}
+
+/* ── Reset ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 14px;
+}
+
+body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── HIDE default layout elements in integrated mode ── */
+html body .vr-app.portal-container.integrated-mode .sidebar,
+html body .vr-app.portal-container.integrated-mode .topbar,
+html body .vr-app.portal-container.integrated-mode>.main>.topbar,
+body.integrated-mode .sidebar,
+body.integrated-mode .topbar {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+.portal-container.integrated-mode .main {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.portal-container.integrated-mode .content-area {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+}
+
+/* ── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--ink-4);
+    border-radius: 4px;
+}
+
+/* ── Shared animation ───────────────────────────────── */
+@keyframes livepulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,846 @@
+/* ═══════════════════════════════════════════════════════
+   VR Architecture — Session Replay Page
+   All rules scoped under .vr-app
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── SESSION SELECTOR ────────────────────────────── */
+.vr-app .session-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.vr-app .ss-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-sm);
+}
+
+.vr-app .ss-item:hover {
+    border-color: var(--border-dk);
+    background: var(--bg-hover);
+}
+
+.vr-app .ss-item.active {
+    border-color: var(--ink);
+    background: var(--bg-card);
+}
+
+.vr-app .ss-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.vr-app .ss-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.vr-app .ss-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+}
+
+/* ─── SESSION HEADER ──────────────────────────────── */
+.vr-app .session-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 20px;
+}
+
+.vr-app .sh-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.vr-app .sh-title {
+    font-family: var(--serif);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+
+.vr-app .sh-title em {
+    font-style: italic;
+    color: var(--ink-2);
+}
+
+.vr-app .sh-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.vr-app .sh-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--ink-2);
+    font-family: var(--mono);
+}
+
+.vr-app .sh-actions {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+
+/* ─── CHIP/BADGE ──────────────────────────────────── */
+.vr-app .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.vr-app .chip-green {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+.vr-app .chip-blue {
+    background: var(--blue-soft);
+    color: var(--blue);
+}
+
+.vr-app .chip-amber {
+    background: var(--amber-soft);
+    color: var(--amber);
+}
+
+.vr-app .chip-red {
+    background: var(--red-soft);
+    color: var(--red);
+}
+
+.vr-app .chip-purple {
+    background: var(--purple-soft);
+    color: var(--purple);
+}
+
+/* ─── KPI ROW ─────────────────────────────────────── */
+.vr-app .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.vr-app .kpi {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+    cursor: default;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.vr-app .kpi:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.vr-app .kpi-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.vr-app .kpi-val {
+    font-family: var(--serif);
+    font-size: 32px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.vr-app .kpi-sub {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.vr-app .kpi-accent {
+    position: absolute;
+    bottom: -16px;
+    right: -10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    opacity: 0.07;
+    pointer-events: none;
+}
+
+/* ─── COMPARE BANNER ──────────────────────────────── */
+.vr-app .compare-banner {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 16px;
+}
+
+.vr-app .compare-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border-md);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.vr-app .compare-text {
+    flex: 1;
+}
+
+.vr-app .compare-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.vr-app .compare-sub {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 2px;
+}
+
+/* ─── HEATMAP ─────────────────────────────────────── */
+.vr-app .heatmap-wrap {
+    padding: 20px;
+    position: relative;
+}
+
+.vr-app .heatmap-canvas {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #1A1917;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.vr-app .zone {
+    position: absolute;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    transition: opacity 0.3s;
+}
+
+.vr-app .zone-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+.vr-app .heatmap-canvas .zone-pct {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: white;
+    line-height: 1;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.vr-app .heat-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(28px);
+    pointer-events: none;
+}
+
+.vr-app .path-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    transform: translate(-50%, -50%);
+}
+
+.vr-app .ann-pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+}
+
+.vr-app .ann-pin-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s;
+}
+
+.vr-app .ann-pin:hover .ann-pin-dot {
+    transform: rotate(-45deg) scale(1.2);
+}
+
+.vr-app .ann-pin-icon {
+    transform: rotate(45deg);
+    font-size: 10px;
+}
+
+/* Heatmap legend */
+.vr-app .heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 14px;
+    padding: 0 4px;
+}
+
+.vr-app .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--ink-2);
+}
+
+.vr-app .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.vr-app .heatmap-users {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.vr-app .heatmap-user-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.vr-app .heatmap-user-tag:hover {
+    border-color: var(--border-dk);
+    color: var(--ink);
+}
+
+.vr-app .heatmap-user-tag.active {
+    border-color: var(--border-dk);
+    background: var(--bg-card);
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.vr-app .hut-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ─── TIMELINE ────────────────────────────────────── */
+.vr-app .timeline-wrap {
+    padding: 18px 20px;
+}
+
+.vr-app .tl-track {
+    position: relative;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.vr-app .tl-axis {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-md);
+}
+
+.vr-app .tl-tick {
+    position: absolute;
+    bottom: 0;
+    height: 6px;
+    width: 1px;
+    background: var(--border-dk);
+    transform: translateX(-50%);
+}
+
+.vr-app .tl-tick-label {
+    position: absolute;
+    bottom: -18px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.vr-app .tl-lane {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 14px;
+    border-radius: 3px;
+}
+
+.vr-app .tl-event {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    cursor: pointer;
+}
+
+.vr-app .tl-event-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s;
+}
+
+.vr-app .tl-event:hover .tl-event-dot {
+    transform: scale(1.3);
+}
+
+.vr-app .tl-playhead {
+    position: absolute;
+    top: -8px;
+    bottom: -4px;
+    width: 2px;
+    background: var(--ink);
+    transform: translateX(-50%);
+    z-index: 10;
+    animation: srMovehead 8s ease-in-out infinite alternate;
+}
+
+.vr-app .tl-playhead::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ink);
+}
+
+.vr-app .tl-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.vr-app .tl-play-btn {
+    width: 32px;
+    height: 32px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    transition: transform 0.15s;
+    flex-shrink: 0;
+    border: none;
+}
+
+.vr-app .tl-play-btn:hover {
+    transform: scale(1.08);
+}
+
+.vr-app .tl-time {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink);
+    min-width: 90px;
+}
+
+.vr-app .tl-speed {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.vr-app .speed-btn {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: all 0.12s;
+    border: 1px solid transparent;
+    background: transparent;
+}
+
+.vr-app .speed-btn:hover {
+    color: var(--ink);
+    background: var(--bg-inset);
+}
+
+.vr-app .speed-btn.active {
+    color: var(--ink);
+    background: var(--bg-inset);
+    border-color: var(--border-md);
+}
+
+/* ─── ZONE BREAKDOWN ──────────────────────────────── */
+.vr-app .zone-list {
+    padding: 8px 0;
+}
+
+.vr-app .zone-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    cursor: default;
+    transition: background 0.12s;
+    border-bottom: 1px solid var(--border);
+}
+
+.vr-app .zone-row:last-child {
+    border-bottom: none;
+}
+
+.vr-app .zone-row:hover {
+    background: var(--bg-hover);
+}
+
+.vr-app .zone-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.vr-app .zone-info {
+    flex: 1;
+}
+
+.vr-app .zone-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.vr-app .zone-time {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 2px;
+}
+
+.vr-app .zone-bar-wrap {
+    width: 80px;
+}
+
+.vr-app .zone-bar-track {
+    height: 4px;
+    background: var(--bg-inset);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.vr-app .zone-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+}
+
+.vr-app .zone-pct-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 3px;
+    text-align: right;
+}
+
+/* ─── ANNOTATION LIST ─────────────────────────────── */
+.vr-app .ann-list {
+    padding: 8px 0;
+}
+
+.vr-app .ann-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.vr-app .ann-row:last-child {
+    border-bottom: none;
+}
+
+.vr-app .ann-row:hover {
+    background: var(--bg-hover);
+}
+
+.vr-app .ann-type-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+}
+
+.vr-app .ann-content {
+    flex: 1;
+}
+
+.vr-app .ann-user {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.vr-app .ann-text {
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-top: 2px;
+    line-height: 1.45;
+}
+
+.vr-app .ann-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.vr-app .ann-ts {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+}
+
+.vr-app .ann-zone-tag {
+    padding: 1px 6px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+}
+
+/* ─── PARTICIPANT CARDS ───────────────────────────── */
+.vr-app .participant-card {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.vr-app .participant-card:last-child {
+    border-bottom: none;
+}
+
+.vr-app .pc-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+}
+
+.vr-app .pc-info {
+    flex: 1;
+}
+
+.vr-app .pc-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.vr-app .pc-role {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 1px;
+}
+
+.vr-app .pc-stats {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.vr-app .pc-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-2);
+}
+
+.vr-app .pc-stat-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--bg-inset);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.vr-app .pc-stat-fill {
+    height: 100%;
+    border-radius: 100px;
+}
+
+.vr-app .pc-stat-val {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    width: 32px;
+    text-align: right;
+}
+
+/* ─── ENGAGEMENT CHART ────────────────────────────── */
+.vr-app .engagement-chart {
+    padding: 16px 18px;
+}
+
+.vr-app .ec-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 100px;
+    margin-bottom: 8px;
+}
+
+.vr-app .ec-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.vr-app .ec-bar {
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+    background: var(--bg-inset);
+    position: relative;
+    transition: background 0.2s;
+    cursor: pointer;
+    min-height: 4px;
+}
+
+.vr-app .ec-bar:hover {
+    background: var(--ink-4);
+}
+
+.vr-app .ec-bar.peak {
+    background: var(--ink);
+}
+
+.vr-app .ec-bar.peak:hover {
+    background: var(--ink-2);
+}
+
+.vr-app .ec-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+}
+
+/* ─── ANIMATIONS ──────────────────────────────────── */
+@keyframes srMovehead {
+    from {
+        left: 15%;
+    }
+
+    to {
+        left: 72%;
+    }
+}

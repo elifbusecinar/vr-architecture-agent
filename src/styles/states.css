@@ -1,0 +1,262 @@
+/* ═══════════════════════════════════════════════════════
+   VR Architecture — Banners · Empty · Error · Loading
+   ═══════════════════════════════════════════════════════ */
+
+/* ── BANNERS ─────────────────────────────────────────── */
+.vr-app .error-banner {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(185, 28, 28, 0.15);
+  background: var(--red-soft);
+}
+
+.vr-app .error-banner .eb-icon { font-size: 14px; flex-shrink: 0; }
+.vr-app .error-banner .eb-text { font-size: 12px; color: var(--red); flex: 1; line-height: 1.4; }
+.vr-app .error-banner .eb-action {
+  font-size: 11px; font-weight: 600; color: var(--red); cursor: pointer;
+  white-space: nowrap; text-decoration: underline; text-underline-offset: 2px;
+  background: none; border: none; font-family: var(--sans);
+}
+.vr-app .error-banner .eb-close {
+  font-size: 14px; color: var(--red); opacity: 0.5; cursor: pointer;
+  padding: 2px 4px; background: none; border: none; line-height: 1;
+}
+.vr-app .error-banner .eb-close:hover { opacity: 1; }
+
+.vr-app .warning-banner {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(180, 83, 9, 0.15);
+  background: var(--amber-soft);
+}
+
+.vr-app .warning-banner .wb-icon { font-size: 14px; flex-shrink: 0; }
+.vr-app .warning-banner .wb-text { font-size: 12px; color: var(--amber); flex: 1; line-height: 1.4; }
+.vr-app .warning-banner .wb-action {
+  font-size: 11px; font-weight: 600; color: var(--amber); cursor: pointer;
+  white-space: nowrap; text-decoration: underline; text-underline-offset: 2px;
+  background: none; border: none; font-family: var(--sans);
+}
+.vr-app .warning-banner .wb-close {
+  font-size: 14px; color: var(--amber); opacity: 0.5; cursor: pointer;
+  padding: 2px 4px; background: none; border: none; line-height: 1;
+}
+
+/* ── EMPTY STATES ────────────────────────────────────── */
+.vr-app .empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 40px 24px; gap: 0;
+}
+
+.vr-app .empty-state.sm { padding: 28px 20px; }
+
+.vr-app .empty-state-illustration {
+  width: 72px; height: 72px; border-radius: 16px;
+  background: var(--bg-inset); border: 1px solid var(--border-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 16px; position: relative;
+}
+
+.vr-app .empty-state-illustration.dashed {
+  background: transparent; border: 1.5px dashed var(--border-dk);
+}
+
+.vr-app .empty-state-illustration::after {
+  content: ''; position: absolute; inset: -8px; border-radius: 20px;
+  background: radial-gradient(circle, rgba(45, 91, 227, 0.04), transparent 70%);
+  pointer-events: none;
+}
+
+.vr-app .empty-state-title {
+  font-family: var(--serif); font-size: 18px; font-weight: 400;
+  color: var(--ink); letter-spacing: -0.01em; margin-bottom: 6px;
+}
+
+.vr-app .empty-state-desc {
+  font-size: 12px; color: var(--ink-3); line-height: 1.65;
+  max-width: 260px; margin-bottom: 20px;
+}
+
+.vr-app .empty-state-actions {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; justify-content: center;
+}
+
+.vr-app .empty-state-hint {
+  margin-top: 12px; font-family: var(--mono); font-size: 10px;
+  color: var(--ink-4); letter-spacing: 0.03em;
+}
+
+/* Ghost elements */
+.vr-app .ghost-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-bottom: 20px; opacity: 0.35;
+}
+
+.vr-app .ghost-card {
+  height: 52px; background: var(--bg-inset); border-radius: var(--radius-sm);
+  border: 1px dashed var(--border-dk);
+}
+
+.vr-app .ghost-timeline {
+  width: 100%; display: flex; flex-direction: column;
+  gap: 6px; margin-bottom: 20px; opacity: 0.3;
+}
+
+.vr-app .gt-row { display: flex; align-items: center; gap: 10px; }
+.vr-app .gt-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--bg-inset); border: 1px solid var(--border-md); flex-shrink: 0;
+}
+.vr-app .gt-line { height: 8px; border-radius: 4px; background: var(--bg-inset); }
+
+.vr-app .ghost-avatars { display: flex; margin-bottom: 18px; }
+.vr-app .ghost-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-inset); border: 2px solid var(--bg-card);
+  margin-left: -8px;
+}
+.vr-app .ghost-av:first-child { margin-left: 0; }
+.vr-app .ghost-av.add {
+  background: transparent; border: 1.5px dashed var(--border-dk);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--ink-4);
+}
+
+.vr-app .search-ghost {
+  display: flex; flex-direction: column; gap: 6px;
+  width: 100%; margin-bottom: 20px; opacity: 0.25;
+}
+.vr-app .sg-row {
+  height: 38px; border-radius: var(--radius-sm); background: var(--bg-inset);
+}
+
+/* Drop zone */
+.vr-app .drop-zone {
+  border: 1.5px dashed var(--border-dk); border-radius: var(--radius);
+  padding: 32px; display: flex; flex-direction: column;
+  align-items: center; gap: 10px; text-align: center;
+  transition: all 0.15s; cursor: pointer; background: transparent;
+}
+.vr-app .drop-zone:hover,
+.vr-app .drop-zone.drag-over {
+  border-color: var(--blue); background: var(--blue-soft);
+}
+.vr-app .dz-icon { font-size: 28px; opacity: 0.4; }
+.vr-app .dz-title { font-size: 13px; font-weight: 500; color: var(--ink); }
+.vr-app .dz-sub { font-size: 11px; color: var(--ink-3); }
+.vr-app .dz-formats { display: flex; gap: 5px; margin-top: 4px; }
+.vr-app .dz-fmt {
+  padding: 2px 7px; border-radius: 3px;
+  background: var(--bg-inset); border: 1px solid var(--border-md);
+  font-family: var(--mono); font-size: 9px; color: var(--ink-3);
+}
+
+/* ── ERROR STATES ────────────────────────────────────── */
+.vr-app .error-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 36px 24px; gap: 0;
+}
+
+.vr-app .error-state-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 14px; position: relative; flex-shrink: 0;
+}
+.vr-app .error-state-icon.red   { background: var(--red-soft);   border: 1px solid rgba(185, 28, 28, 0.15); }
+.vr-app .error-state-icon.amber { background: var(--amber-soft); border: 1px solid rgba(180, 83, 9, 0.15); }
+.vr-app .error-state-icon.blue  { background: var(--blue-soft);  border: 1px solid rgba(45, 91, 227, 0.15); }
+
+.vr-app .error-state-icon::before {
+  content: ''; position: absolute; inset: -6px; border-radius: 50%;
+  border: 1px solid currentColor; opacity: 0.15;
+  animation: errorPulse 2.5s ease-in-out infinite;
+}
+.vr-app .error-state-icon.red::before   { color: var(--red); }
+.vr-app .error-state-icon.amber::before { color: var(--amber); }
+.vr-app .error-state-icon.blue::before  { color: var(--blue); }
+
+@keyframes errorPulse {
+  0%, 100% { transform: scale(1); opacity: 0.15; }
+  50%      { transform: scale(1.12); opacity: 0.07; }
+}
+
+.vr-app .error-state-title {
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  margin-bottom: 5px; letter-spacing: -0.01em;
+}
+.vr-app .error-state-desc {
+  font-size: 12px; color: var(--ink-3); line-height: 1.65;
+  max-width: 240px; margin-bottom: 18px;
+}
+.vr-app .error-state-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.vr-app .error-state-code {
+  margin-top: 12px; padding: 5px 10px;
+  background: var(--bg-inset); border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+}
+
+/* Inline error */
+.vr-app .inline-error {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: var(--radius-sm);
+}
+.vr-app .inline-error.red   { background: var(--red-soft);   border: 1px solid rgba(185, 28, 28, 0.12); }
+.vr-app .inline-error.amber { background: var(--amber-soft); border: 1px solid rgba(180, 83, 9, 0.12); }
+.vr-app .inline-error.blue  { background: var(--blue-soft);  border: 1px solid rgba(45, 91, 227, 0.12); }
+
+.vr-app .inline-error .ie-icon { font-size: 15px; flex-shrink: 0; }
+.vr-app .inline-error .ie-text { font-size: 12px; line-height: 1.5; flex: 1; }
+.vr-app .inline-error.red .ie-text   { color: var(--red); }
+.vr-app .inline-error.amber .ie-text { color: var(--amber); }
+.vr-app .inline-error.blue .ie-text  { color: var(--blue); }
+.vr-app .inline-error .ie-action {
+  font-size: 11px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  text-decoration: underline; text-underline-offset: 2px;
+  background: none; border: none; font-family: var(--sans);
+}
+.vr-app .inline-error.red .ie-action   { color: var(--red); }
+.vr-app .inline-error.amber .ie-action { color: var(--amber); }
+.vr-app .inline-error.blue .ie-action  { color: var(--blue); }
+
+/* ── LOADING / SKELETON ──────────────────────────────── */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+
+.vr-app .skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-inset) 25%,
+    var(--bg-hover) 50%,
+    var(--bg-inset) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+.vr-app .skeleton.sk-line   { height: 12px; }
+.vr-app .skeleton.sk-title  { height: 18px; }
+.vr-app .skeleton.sk-avatar { border-radius: 50%; }
+.vr-app .skeleton.sk-card   { border-radius: var(--radius); }
+
+.vr-app .skeleton-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.vr-app .spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--border-md);
+  border-top-color: var(--ink);
+  animation: spin 0.8s linear infinite; flex-shrink: 0;
+}
+.vr-app .spinner.sm { width: 16px; height: 16px; border-width: 1.5px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
