@@ -23,10 +23,10 @@ export default function MainLayout() {
   // Dashboard paths that should use the integrated (premium) view
   const isDashboardPath = location.pathname.startsWith('/dashboard') ||
     location.pathname === '/' ||
-    ['/workboard', '/approvals', '/sessions', '/models', '/projects', '/files', '/clients', '/comments', '/annotations', '/settings', '/notifications'].includes(location.pathname);
+    ['/workboard', '/approvals', '/sessions', '/models', '/projects', '/files', '/clients', '/comments', '/annotations', '/settings', '/notifications', '/ai-assistant'].includes(location.pathname);
 
   const isArchitect = (role === ROLES.ARCHITECT) || (isStudio && isDashboardPath);
-  const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath;
+  const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath && location.pathname !== '/ai-assistant';
 
   // Close mobile sidebar on route change
   useEffect(() => {

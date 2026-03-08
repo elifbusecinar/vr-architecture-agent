@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useChat } from '@/context/ChatContext';
 import '@/styles/ai-components.css';
 
@@ -17,6 +17,9 @@ const VrAssistantChat: React.FC = () => {
     const [responseIdx, setResponseIdx] = useState(0);
     const navigate = useNavigate();
     const scrollRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
+
+    if (location.pathname === '/ai-assistant') return null;
 
     useEffect(() => {
         if (scrollRef.current) {

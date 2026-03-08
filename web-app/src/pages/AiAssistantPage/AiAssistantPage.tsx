@@ -102,29 +102,7 @@ export default function AiAssistantPage() {
 
     return (
         <div className="ai-assistant-page">
-            {/* Page Header (Breadcrumb handled by Layout in real app but here it matches mockup) */}
-            <div className="topbar">
-                <div className="breadcrumb">
-                    <span>VR Architecture</span>
-                    <span className="sep">/</span>
-                    <span className="cur">AI Assistant</span>
-                </div>
-                <div className="topbar-right">
-                    <button className="t-btn">
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
-                        Search or jump to…
-                        <span style={{ color: "var(--light)", fontSize: "10px", marginLeft: "2px" }}>⌘K</span>
-                    </button>
-                    <button className="t-btn">
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                        Upload GLB
-                    </button>
-                    <button className="t-btn p" onClick={startNew}>
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
-                        New Session
-                    </button>
-                </div>
-            </div>
+            {/* Standard breadcrumb is already in Topbar, so we remove the page-specific topbar to avoid redundancy */}
 
             <div className="chat-wrap" ref={chatWrapRef}>
                 <div className="chat-scroll">

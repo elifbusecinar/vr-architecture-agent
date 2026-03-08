@@ -301,6 +301,13 @@
     transition: filter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.vr-app .content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
 .vr-app .main.dimmed {
     pointer-events: none;
     /* Blur is handled by backdrop-filter on the command palette, 
