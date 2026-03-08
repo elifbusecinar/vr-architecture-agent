@@ -1,20 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useChat } from '@/context/ChatContext';
+import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-components.css';
 
-const PREDEFINED_RESPONSES = [
-    `<p>You have <strong>0 active projects</strong> this month. Want me to help set up your first project?</p>`,
-    `<p>Before your VR walkthrough:</p><ul><li>Meta Quest 3 firmware up to date</li><li>GLB model uploaded</li><li>Session link tested</li><li>Client briefed on navigation</li></ul>`,
-    `<p>Happy to draft that — share the client name, project title, and what's being approved. I'll write it in your tone.</p>`
-];
+// Responses are now handled by aiService.chat
 
 const VrAssistantChat: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { messages, setMessages } = useChat();
     const [inputText, setInputText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const [responseIdx, setResponseIdx] = useState(0);
     const navigate = useNavigate();
     const scrollRef = useRef<HTMLDivElement>(null);
     const location = useLocation();
@@ -27,7 +23,7 @@ const VrAssistantChat: React.FC = () => {
         }
     }, [messages, isTyping]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const text = inputText.trim();
         if (!text) return;
 
@@ -39,22 +35,32 @@ const VrAssistantChat: React.FC = () => {
             time: now
         };
 
-        setMessages(prev => [...prev, userMsg]);
+        const currentMessages = [...messages, userMsg];
+        setMessages(currentMessages);
         setInputText('');
         setIsTyping(true);
 
-        // Simulate AI response
-        setTimeout(() => {
-            setIsTyping(false);
+        try {
+            // Prepare history for Gemini
+            const history = currentMessages.map(m => ({
+                role: m.role === 'u' ? 'user' : 'model',
+                parts: [{ text: m.text }]
+            }));
+
+            const responseText = await aiService.chat(history);
+
             const aiMsg = {
                 id: (Date.now() + 1).toString(),
                 role: 'ai' as const,
-                text: PREDEFINED_RESPONSES[responseIdx % PREDEFINED_RESPONSES.length],
+                text: responseText,
                 time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
             };
             setMessages(prev => [...prev, aiMsg]);
-            setResponseIdx(prev => prev + 1);
-        }, 900 + Math.random() * 500);
+        } catch (error) {
+            console.error('AI Chat Error:', error);
+        } finally {
+            setIsTyping(false);
+        }
     };
 
     const toggleExpand = () => {

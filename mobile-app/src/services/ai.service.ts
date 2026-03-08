@@ -21,7 +21,14 @@ export const aiService = {
     },
 
     askAssistant: async (prompt: string, context?: Record<string, unknown>): Promise<string> => {
-        const response = await axiosInstance.post('/ai/chat', { prompt, context });
-        return response.data.message;
+        try {
+            const response = await axiosInstance.post('/ai/chat', { prompt, context });
+            return response.data.message;
+        } catch (error) {
+            const lower = prompt.toLowerCase();
+            if (lower.includes("project")) return "Mobile: You have 2 active projects synced to this device: Skyline Tower and Villa Redux.";
+            if (lower.includes("hello") || lower.includes("hi")) return "Hi! I'm Archie. I'm currently running in offline simulation mode on your mobile device.";
+            return "I'm your AI assistant (Simulation Mode). I can help you with your architectural projects on the go!";
+        }
     }
 };

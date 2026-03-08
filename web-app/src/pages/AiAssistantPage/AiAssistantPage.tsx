@@ -1,19 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useChat } from '@/context/ChatContext';
+import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-assistant.css';
 
-const PREDEFINED_RESPONSES = [
-    `<p>You currently have <strong>0 active projects</strong> this month, with 0.0 GB storage used and no pending VR sessions.</p><p>Want me to help set up your first project? I can walk you through uploading a GLB model and sending a client invite.</p>`,
-    `<p>Before your VR walkthrough, here's what I'd recommend checking:</p><ul><li>Meta Quest 3 firmware is up to date</li><li>Final .GLB model is uploaded and processed</li><li>Session link tested with a colleague</li><li>Client briefed on basic headset navigation</li><li>Annotation mode enabled for real-time markup</li></ul>`,
-    `<p>Some directions worth exploring for residential work:</p><ul><li><strong>Warm Brutalism</strong> — raw concrete with oak accents and aged brass</li><li><strong>Biophilic Neutral</strong> — linen, pale travertine, matte terracotta</li><li><strong>Contemporary Dark</strong> — matte black steel, walnut, smoked glass</li></ul><p>Share the project brief and I can go deeper on any of these.</p>`,
-    `<p>Happy to draft that. A few quick questions:</p><ul><li>Client name and project title?</li><li>What's being approved — facade, materials, or layout?</li><li>Any deadline or meeting date to reference?</li></ul><p>Once I have those I'll write a clean email in your tone.</p>`
-];
+// Responses are now handled by aiService.chat
 
 export default function AiAssistantPage() {
     const { messages, setMessages } = useChat();
     const [inputText, setInputText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const [responseIdx, setResponseIdx] = useState(0);
 
     const chatWrapRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -39,7 +34,7 @@ export default function AiAssistantPage() {
         return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const text = inputText.trim();
         if (!text) return;
 
@@ -50,24 +45,41 @@ export default function AiAssistantPage() {
             time: getTime()
         };
 
-        setMessages(prev => [...prev, userMsg]);
+        const currentMessages = [...messages, userMsg];
+        setMessages(currentMessages);
         setInputText('');
         if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
         setIsTyping(true);
 
-        // Simulate AI response
-        setTimeout(() => {
-            setIsTyping(false);
+        try {
+            // Prepare history for Gemini
+            const history = currentMessages.map(m => ({
+                role: m.role === 'u' ? 'user' : 'model',
+                parts: [{ text: m.text }]
+            }));
+
+            const responseText = await aiService.chat(history);
+
             const aiMsg = {
                 id: (Date.now() + 1).toString(),
                 role: 'ai' as const,
-                text: PREDEFINED_RESPONSES[responseIdx % PREDEFINED_RESPONSES.length],
+                text: responseText,
                 time: getTime()
             };
             setMessages(prev => [...prev, aiMsg]);
-            setResponseIdx(prev => prev + 1);
-        }, 900 + Math.random() * 600);
+        } catch (error) {
+            console.error('AI Chat Error:', error);
+            const errorMsg = {
+                id: (Date.now() + 1).toString(),
+                role: 'ai' as const,
+                text: "I'm having trouble connecting right now. Let me try again in a moment.",
+                time: getTime()
+            };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
+            setIsTyping(false);
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {

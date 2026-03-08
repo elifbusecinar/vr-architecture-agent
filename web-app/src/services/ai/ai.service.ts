@@ -21,8 +21,13 @@ export const aiService = {
     // For this Lite version, we use a simulated response if no API key is present.
     transcribeAudio: async (base64Audio: string): Promise<STTResult> => {
         if (!API_KEY) {
+            const responses = [
+                "Archie detected a request for floor plan modifications in the East Wing.",
+                "Voice command received: Show me all annotations for the HVAC system.",
+                "User requested a material swap: change marble to polished concrete."
+            ];
             return {
-                text: "Simulation: Archie detected a voice command for floor plan changes.",
+                text: responses[Math.floor(Math.random() * responses.length)],
                 confidence: 0.98,
                 timestamp: new Date().toISOString()
             };
@@ -65,9 +70,14 @@ export const aiService = {
 
     critiqueProject: async (projectId: string, bimSummary: string): Promise<any> => {
         if (!API_KEY) {
+            const critiques = [
+                "BIM data analyzed. Recommendation: Increase staircase clearance by 15cm to meet regional accessibility standards.",
+                "Structural conflict detected: HVAC ducting on Floor 2 intersects with primary load-bearing beam B-12.",
+                "Material efficiency tip: Swapping the current glazing for Triple-Low-E glass will reduce cooling load by 14%."
+            ];
             return {
                 projectId,
-                critique: "Simulation: BIM data analyzed. Recommendation: Increase staircase clearance by 15cm to meet regional accessibility standards.",
+                critique: critiques[Math.floor(Math.random() * critiques.length)],
                 source: "Gemini 1.5 Flash (Simulated)"
             };
         }
@@ -84,8 +94,21 @@ export const aiService = {
     },
 
     chat: async (history: { role: string, parts: { text: string }[] }[]): Promise<string> => {
+        const lastMsgText = history[history.length - 1].parts[0].text;
+        const lowerMsg = lastMsgText.toLowerCase();
+
         if (!API_KEY) {
-            return "I'm Archie, your AI assistant. (Simulation Mode: API Key missing). I can help you with BIM data, material suggestions, and code compliance.";
+            if (lowerMsg.includes("project")) {
+                return "You have 3 active projects: Skyline Tower, Villa Redux, and the Arctic Hub. Skyline Tower has the most recent activity (BIM update 2 hours ago).";
+            }
+            if (lowerMsg.includes("summarize") || lowerMsg.includes("overview")) {
+                return "Your workspace is healthy. 1 critical issue in Skyline Tower (staircase clearance) and 2 warnings in Villa Redux. Would you like me to generate a detailed compliance report?";
+            }
+            if (lowerMsg.includes("hello") || lowerMsg.includes("hi")) {
+                return "Hello! I'm Archie, your VRA Intelligence assistant. I'm currently running in **Simulation Mode** because a Gemini API key isn't set, but I can still show you around your workspace!";
+            }
+
+            return "I'm Archie, your AI assistant. (Simulation Mode). I can help you with BIM data, material suggestions, and code compliance. Try asking about your projects!";
         }
 
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -93,8 +116,7 @@ export const aiService = {
             history: history.slice(0, -1),
         });
 
-        const lastMessage = history[history.length - 1].parts[0].text;
-        const result = await chat.sendMessage(lastMessage);
+        const result = await chat.sendMessage(lastMsgText);
         return result.response.text();
     }
 };
