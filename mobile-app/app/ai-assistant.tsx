@@ -82,7 +82,7 @@ export default function AIAssistantPage() {
             timestamp: getTime(),
         };
 
-        setMessages((prev) => [...prev, userMsg]);
+        setMessages((prev: Message[]) => [...prev, userMsg]);
         setInput('');
         setIsTyping(true);
 
@@ -95,7 +95,7 @@ export default function AIAssistantPage() {
                 sender: 'ai',
                 timestamp: getTime(),
             };
-            setMessages((prev) => [...prev, aiMsg]);
+            setMessages((prev: Message[]) => [...prev, aiMsg]);
         } catch (e) {
             console.error(e);
         } finally {
