@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { useChat } from '@/context/ChatContext';
 import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-assistant.css';
@@ -109,37 +109,15 @@ export default function AiAssistantPage() {
 
     return (
         <div className="ai-assistant-page">
-            {/* Page Header */}
-            <div className="topbar">
-                <div className="breadcrumb">
-                    <span>VR Architecture</span>
-                    <span className="sep">/</span>
-                    <span className="cur">AI Assistant</span>
-                </div>
-                <div className="topbar-right">
-                    <button className="t-btn">
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
-                        Search or jump to…
-                        <span style={{ color: "var(--light)", fontSize: "10px", marginLeft: "2px" }}>⌘K</span>
-                    </button>
-                    <button className="t-btn">
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                        Upload GLB
-                    </button>
-                    <button className="t-btn p" onClick={() => setMessages([])}>
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
-                        New Chat
-                    </button>
-                </div>
-            </div>
+            {/* Standard breadcrumb is already in Topbar, so we remove the page-specific topbar to avoid redundancy */}
 
             <div className="chat-wrap" ref={chatWrapRef}>
                 <div className="chat-scroll">
                     {messages.length === 0 ? (
                         <div className="welcome">
-                            <div className="w-eye">— AI Assistant</div>
+                            <div className="w-eye">ÔÇö AI Assistant</div>
                             <h1 className="w-title">Ask anything about<br />your <em>workspace.</em></h1>
-                            <p className="w-sub">Projects, models, clients, VR sessions — everything in your workspace is within reach.</p>
+                            <p className="w-sub">Projects, models, clients, VR sessions ÔÇö everything in your workspace is within reach.</p>
                             <div className="sugs">
                                 <div className="sug" onClick={() => useSug('Summarize my projects')}>
                                     <div className="sug-t">Summarize my projects</div>
@@ -207,7 +185,7 @@ export default function AiAssistantPage() {
                                 value={inputText}
                                 onChange={handleInput}
                                 onKeyDown={handleKeyDown}
-                                placeholder="Message AI Assistant…"
+                                placeholder="Message AI AssistantÔÇĞ"
                                 rows={1}
                             />
                             <button className="send-btn" disabled={!inputText.trim()} onClick={handleSend}>
@@ -234,7 +212,7 @@ export default function AiAssistantPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="ihint">VRA AI has context about your workspace · projects, clients & models</div>
+                    <div className="ihint">VRA AI has context about your workspace ┬À projects, clients & models</div>
                 </div>
             </div>
         </div>

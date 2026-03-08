@@ -25,11 +25,8 @@ export default function MainLayout() {
     location.pathname === '/' ||
     ['/workboard', '/approvals', '/sessions', '/models', '/projects', '/files', '/clients', '/comments', '/annotations', '/settings', '/notifications', '/ai-assistant'].includes(location.pathname);
 
-  // AI Assistant should show the standard navbar/sidebar
-  const isAiAssistant = location.pathname === '/ai-assistant';
-
-  const isArchitect = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath;
-  const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath && !isAiAssistant;
+  const isArchitect = (role === ROLES.ARCHITECT) || (isStudio && isDashboardPath);
+  const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath;
 
   // Close mobile sidebar on route change
   useEffect(() => {

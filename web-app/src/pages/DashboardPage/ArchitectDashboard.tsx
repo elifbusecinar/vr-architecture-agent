@@ -11,6 +11,7 @@ import ThreeDViewer from "@/components/project/ThreeDViewer/ThreeDViewer";
 
 import { useNavigate } from "react-router-dom";
 // import { SettingsPage, NotificationsPage } from "@/pages"; // removed
+import { AiAssistantPage } from "@/pages";
 import CreateProjectModal from '@/components/dashboard/CreateProjectModal';
 // import AiInsightsPanel from '@/components/dashboard/AiInsightsPanel'; // removed
 import VrAssistantChat from '@/components/dashboard/VrAssistantChat';
@@ -757,8 +758,7 @@ export default function ArchitectDashboard({ firstName, activeTab, projects = []
             case "models": return <ModelsPage />;
             case "clients": return <ClientsPage />;
             case "ai-assistant" as Page:
-                navigate("/ai-assistant");
-                return null;
+                return <AiAssistantPage />;
             default: return <PlaceholderPage title={p.charAt(0).toUpperCase() + p.slice(1)} />;
         }
     };

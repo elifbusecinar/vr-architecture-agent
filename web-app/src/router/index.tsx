@@ -13,8 +13,7 @@ import {
   AboutPage,
   ProjectsListPage,
   SessionPreviewPage,
-  VRInterfacePage,
-  AiAssistantPage,
+  VRInterfacePage
 } from '@/pages';
 
 import { MainLayout, ProtectedRoute } from '@/components';
@@ -44,7 +43,7 @@ export const router = createBrowserRouter([
       { path: '/clients', element: <DashboardPage /> },
       { path: '/comments', element: <DashboardPage /> },
       { path: '/project/:id', element: <ProjectPage /> },
-      { path: '/ai-assistant', element: <AiAssistantPage /> },
+      { path: '/ai-assistant', element: <DashboardPage /> },
       { path: '/projects', element: <ProjectsListPage /> },
 
       { path: '/session/:id/replay', element: <SessionReplayPage /> },

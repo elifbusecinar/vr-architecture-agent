@@ -1,0 +1,90 @@
+﻿
+  -
+       return (
+           <div className="ai-assistant-page">
+>              {/* Standard breadcrumb is already in Topbar, so we remov
+e the page-specific topbar to avoid redundancy */}
+  
+  commit 2acb44e97bd19360f3dde4af0775057e42406b8b
+  Author: buse <elfbusecinar@gmail.com>
+  Date:   Sun Mar 8 21:29:05 2026 +0300
+  
+      feat(core): enable functional AI chat with robust simulation fallb
+acks for web and mobile
+  
+  diff --git a/web-app/src/pages/AiAssistantPage/AiAssistantPage.tsx b/w
+eb-app/src/pages/AiAssistantPage/AiAssistantPage.tsx
+  index f336009..2ad51a8 100644
+  --- a/web-app/src/pages/AiAssistantPage/AiAssistantPage.tsx
+       return (
+           <div className="ai-assistant-page">
+  -            {/* Page Header (Breadcrumb handled by Layout in real app
+ but here it matches mockup) */}
+> -            <div className="topbar">
+  -                <div className="breadcrumb">
+  -                    <span>VR Architecture</span>
+  -                    <span className="sep">/</span>
+  -                    <span className="cur">AI Assistant</span>
+  -                </div>
+> -                <div className="topbar-right">
+  -                    <button className="t-btn">
+  -                        <svg fill="none" stroke="currentColor" stroke
+Width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m
+21 21-4.35-4.35" /></svg>
+  -                        Search or jump toÔÇĞ
+  -                        <span style={{ color: "var(--light)", fontSiz
+e: "10px", marginLeft: "2px" }}>ÔîİK</span>
+  -                    </button>
+  -                    <button className="t-btn">
+  -                        <svg fill="none" stroke="currentColor" stroke
+Width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 
+1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="
+12" y2="15" /></svg>
+  -                        Upload GLB
+  -                    </button>
+  -                    <button className="t-btn p" onClick={startNew}>
+  -                    </button>
+  -                </div>
+  -            </div>
+> +            {/* Standard breadcrumb is already in Topbar, so we remov
+e the page-specific topbar to avoid redundancy */}
+   
+               <div className="chat-wrap" ref={chatWrapRef}>
+                   <div className="chat-scroll">
+  
+  commit 13e520dc317cfa69e0275e6a5013097a70772d7e
+  Author: buse <elfbusecinar@gmail.com>
+  Date:   Sun Mar 8 19:53:31 2026 +0300
+  
+      chore: move web application files to web-app/ directory for projec
+t organization
+  
+  +    return (
+  +        <div className="ai-assistant-page">
+  +            {/* Page Header (Breadcrumb handled by Layout in real app
+ but here it matches mockup) */}
+> +            <div className="topbar">
+  +                <div className="breadcrumb">
+  +                    <span>VR Architecture</span>
+  +                    <span className="sep">/</span>
+  +                    <span className="cur">AI Assistant</span>
+  +                </div>
+> +                <div className="topbar-right">
+  +                    <button className="t-btn">
+  +                        <svg fill="none" stroke="currentColor" stroke
+Width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m
+21 21-4.35-4.35" /></svg>
+  +                        Search or jump toÔÇĞ
+  +                        <span style={{ color: "var(--light)", fontSiz
+e: "10px", marginLeft: "2px" }}>ÔîİK</span>
+  +                    </button>
+  +                    <button className="t-btn">
+  +                        <svg fill="none" stroke="currentColor" stroke
+Width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 
+1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="
+12" y2="15" /></svg>
+  +                        Upload GLB
+  +                    </button>
+  +                    <button className="t-btn p" onClick={startNew}>
+
+
