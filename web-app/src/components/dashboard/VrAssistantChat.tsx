@@ -15,13 +15,13 @@ const VrAssistantChat: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const location = useLocation();
 
-    if (location.pathname === '/ai-assistant') return null;
-
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages, isTyping]);
+
+    if (location.pathname === '/ai-assistant') return null;
 
     const handleSend = async () => {
         const text = inputText.trim();
