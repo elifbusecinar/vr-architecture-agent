@@ -16,28 +16,26 @@ This repository contains the **Draft Version** of the VR Architecture website, b
 - **3D Engine:** Three.js / @react-three/fiber (Web Preview)
 - **Backend (Proposed):** .NET 8 (ASP.NET Core API) + PostgreSQL
 - **AI Engine (Proposed):** OpenAI GPT-4o Vision + Whisper STT
+# VR Architecture Platform
 
-### 3. Setup and Run Instructions
-To run this project locally, ensure you have **Node.js 18+** installed.
+A high-fidelity project management and VR visualization platform for architects and clients. 
 
-```bash
-# Clone the repository
-git clone https://github.com/[YOUR_USER]/vr-architecture-agent.git
+## Project Structure
 
-# Enter the directory
-cd vr-architecture-agent
+This project is organized into a monorepo structure:
 
-# Install dependencies
-npm install
+-   **`web-app/`**: The core web platform (React + Vite). High-end dashboard, project management, and AI assistant.
+-   **`mobile-app/`**: The companion mobile application (Expo + React Native). On-the-go project tracking and AI assistant.
+-   **`vr-client/`**: VR visualization specialized modules.
+-   **`docs/`**: Platform documentation and internal roadmap.
 
-# Run the development server
-npm run dev
-```
-The site will be available at `http://localhost:5173`.
+## Getting Started
 
----
+In the root directory, you can use the following commands:
 
-## 🧠 AI Agent Integration
+-   `npm run dev`: Start the **Web App** (default)
+-   `npm run dev:mobile`: Start the **Mobile App** (Expo)
+-   `npm run install:all`: Install dependencies for both projects
 The **AI Agent Planning Document** describing the future integration of "Archie AI" (Architecture Assistant) can be found in the `docs/` folder:
 
 - [📄 AI Agent Planning Document (Markdown)](./docs/AI_AGENT_PLAN.md)

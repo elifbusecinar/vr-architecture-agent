@@ -1,0 +1,22 @@
+{
+    "name": "vr-architecture-agent",
+    "version": "1.0.0",
+    "description": "VR Architecture Platform - Monorepo structure for Web and Mobile apps",
+    "scripts": {
+        "dev": "npm run dev:web",
+        "dev:web": "npm --prefix web-app run dev",
+        "dev:mobile": "npm --prefix mobile-app run start",
+        "web": "npm --prefix web-app run dev",
+        "mobile": "npm --prefix mobile-app run start",
+        "install:all": "npm install --prefix web-app && npm install --prefix mobile-app"
+    },
+    "keywords": [
+        "vr",
+        "architecture",
+        "react",
+        "react-native",
+        "expo"
+    ],
+    "author": "",
+    "license": "ISC"
+}
