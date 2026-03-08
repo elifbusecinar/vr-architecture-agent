@@ -107,11 +107,6 @@ export default function AiAssistantPage() {
         }, 1500);
     };
 
-    const startNew = () => {
-        setMessages([]);
-        setResponseIdx(0);
-    };
-
     return (
         <div className="ai-assistant-page">
             {/* Standard breadcrumb is already in Topbar, so we remove the page-specific topbar to avoid redundancy */}
