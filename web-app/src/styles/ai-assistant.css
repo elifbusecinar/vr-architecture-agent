@@ -4,13 +4,13 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .ai-assistant-page {
-    --bg: #ebebea;
-    --surface: #f8f7f5;
-    --border: #e0ddd9;
-    --border-soft: #ece9e5;
-    --text: #1c1c1a;
-    --muted: #8c8983;
-    --light: #b8b4af;
+    --bg: #F5F3EF;
+    --surface: #FAFAF8;
+    --border: rgba(26, 25, 23, 0.12);
+    --border-soft: rgba(26, 25, 23, 0.08);
+    --text: var(--ink);
+    --muted: var(--ink-3);
+    --light: var(--ink-4);
 
     font-family: 'Inter', sans-serif;
     background: var(--bg);
