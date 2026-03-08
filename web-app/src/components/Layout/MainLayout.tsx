@@ -25,8 +25,11 @@ export default function MainLayout() {
     location.pathname === '/' ||
     ['/workboard', '/approvals', '/sessions', '/models', '/projects', '/files', '/clients', '/comments', '/annotations', '/settings', '/notifications', '/ai-assistant'].includes(location.pathname);
 
-  const isArchitect = (role === ROLES.ARCHITECT) || (isStudio && isDashboardPath);
-  const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath && location.pathname !== '/ai-assistant';
+  // AI Assistant should show the standard navbar/sidebar
+  const isAiAssistant = location.pathname === '/ai-assistant';
+
+  const isArchitect = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath && !isAiAssistant;
+  const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath && !isAiAssistant;
 
   // Close mobile sidebar on route change
   useEffect(() => {
@@ -73,6 +76,7 @@ export default function MainLayout() {
   const getTitle = () => {
     const path = location.pathname.substring(1);
     if (!path || path === 'dashboard') return 'Workboard';
+    if (path === 'ai-assistant') return 'AI Assistant';
     return path.charAt(0).toUpperCase() + path.slice(1);
   };
 
