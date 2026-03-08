@@ -44,6 +44,7 @@ export const router = createBrowserRouter([
       { path: '/comments', element: <DashboardPage /> },
       { path: '/project/:id', element: <ProjectPage /> },
       { path: '/ai-assistant', element: <DashboardPage /> },
+      { path: '/ai-insights', element: <DashboardPage /> },
       { path: '/projects', element: <ProjectsListPage /> },
 
       { path: '/session/:id/replay', element: <SessionReplayPage /> },

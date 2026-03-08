@@ -11,9 +11,8 @@ import ThreeDViewer from "@/components/project/ThreeDViewer/ThreeDViewer";
 
 import { useNavigate } from "react-router-dom";
 // import { SettingsPage, NotificationsPage } from "@/pages"; // removed
-import { AiAssistantPage } from "@/pages";
+import { AiAssistantPage, AiInsightsPage } from "@/pages";
 import CreateProjectModal from '@/components/dashboard/CreateProjectModal';
-// import AiInsightsPanel from '@/components/dashboard/AiInsightsPanel'; // removed
 import VrAssistantChat from '@/components/dashboard/VrAssistantChat';
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────
@@ -757,6 +756,8 @@ export default function ArchitectDashboard({ firstName, activeTab, projects = []
             case "sessions": return <SessionsPage activeSessions={activeSessions || []} />;
             case "models": return <ModelsPage />;
             case "clients": return <ClientsPage />;
+            case "ai-insights" as Page:
+                return <AiInsightsPage />;
             case "ai-assistant" as Page:
                 return <AiAssistantPage />;
             default: return <PlaceholderPage title={p.charAt(0).toUpperCase() + p.slice(1)} />;

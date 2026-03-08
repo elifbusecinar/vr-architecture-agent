@@ -15,4 +15,4 @@ export { default as SettingsPage } from './SettingsPage/SettingsPage';
 export { default as NotificationsPage } from './NotificationsPage/NotificationsPage';
 export { default as VRInterfacePage } from './VRInterfacePage/VRInterfacePage';
 export { default as AiAssistantPage } from './AiAssistantPage/AiAssistantPage';
-
+export { default as AiInsightsPage } from './AiInsightsPage/AiInsightsPage';
