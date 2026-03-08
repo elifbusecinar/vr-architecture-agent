@@ -28,7 +28,7 @@ export default function MainLayout() {
   // AI Assistant should show the standard navbar/sidebar
   const isAiAssistant = location.pathname === '/ai-assistant';
 
-  const isArchitect = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath && !isAiAssistant;
+  const isArchitect = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath;
   const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath && !isAiAssistant;
 
   // Close mobile sidebar on route change
