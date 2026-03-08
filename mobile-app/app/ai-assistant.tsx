@@ -16,7 +16,7 @@ import { useRouter } from 'expo-router';
 import Svg, { Path, Circle, Line, Rect, Polygon } from 'react-native-svg';
 import { aiService } from '../src/services/ai.service';
 import { useAuth } from '../src/context/AuthContext';
-import { useFonts, DM_Sans_400Regular, DM_Sans_500Medium, DM_Sans_700Bold } from '@expo-google-fonts/dm-sans';
+import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
 import { PlayfairDisplay_400Regular, PlayfairDisplay_400Regular_Italic } from '@expo-google-fonts/playfair-display';
 
 const COLORS = {
@@ -43,9 +43,9 @@ export default function AIAssistantPage() {
     const { user } = useAuth();
 
     const [fontsLoaded] = useFonts({
-        DM_Sans_400Regular,
-        DM_Sans_500Medium,
-        DM_Sans_700Bold,
+        DMSans_400Regular,
+        DMSans_500Medium,
+        DMSans_700Bold,
         PlayfairDisplay_400Regular,
         PlayfairDisplay_400Regular_Italic,
     });
