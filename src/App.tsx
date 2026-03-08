@@ -3,12 +3,16 @@ import { router } from './router';
 import { AuthProvider } from './context';
 import { useTechnicalImprovements } from '@/hooks';
 
+import { ChatProvider } from './context/ChatContext';
+
 function App() {
   useTechnicalImprovements();
 
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ChatProvider>
+        <RouterProvider router={router} />
+      </ChatProvider>
     </AuthProvider>
   );
 }

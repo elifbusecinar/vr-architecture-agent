@@ -7,6 +7,8 @@ import CreateProjectModal from '@/components/dashboard/CreateProjectModal';
 import { useAuth } from '@/context/AuthContext';
 import { isStudioRole, ROLES } from '@/constants/roles';
 
+import VrAssistantChat from '@/components/dashboard/VrAssistantChat';
+
 export default function MainLayout() {
   const { user } = useAuth();
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
@@ -34,8 +36,8 @@ export default function MainLayout() {
   // Close mobile sidebar on wider viewports
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 769px)');
-    const handler = (e: MediaQueryListEvent) => {
-      if (e.matches) setIsSidebarOpen(false);
+    const handler = () => {
+      if (mq.matches) setIsSidebarOpen(false);
     };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
@@ -103,6 +105,9 @@ export default function MainLayout() {
         isOpen={isNewProjectModalOpen}
         onClose={() => setIsNewProjectModalOpen(false)}
       />
+
+      {/* Floating AI Assistant — Accessible everywhere in MainLayout */}
+      <VrAssistantChat />
     </div>
   );
 }

@@ -280,18 +280,22 @@ const NavLink: React.FC<{
     <div
         onClick={onClick}
         style={{
-            display: "flex", alignItems: "center", gap: 9, padding: "7px 8px",
-            borderRadius: "var(--radius-sm)", fontSize: 13, fontWeight: active ? 500 : 400,
-            color: active ? "var(--ink)" : "var(--ink-2)", cursor: "pointer",
-            background: active ? "var(--bg-inset)" : "transparent",
-            transition: "background 0.12s, color 0.12s",
+            display: "flex", alignItems: "center", gap: 9, padding: "6px 10px",
+            borderRadius: "5px", fontSize: 13, fontWeight: active ? 400 : 400,
+            color: active ? "#d4d1cd" : "#585552", cursor: "pointer",
+            background: "transparent",
+            transition: "all 0.12s",
         }}
-        onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "var(--bg-hover)"; (e.currentTarget as HTMLDivElement).style.color = "var(--ink)"; } }}
-        onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "transparent"; (e.currentTarget as HTMLDivElement).style.color = "var(--ink-2)"; } }}
+        onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "#1a1918"; (e.currentTarget as HTMLDivElement).style.color = "#a09d99"; } }}
+        onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "transparent"; (e.currentTarget as HTMLDivElement).style.color = "#585552"; } }}
     >
-        <div style={{ width: 16, height: 16, opacity: active ? 1 : 0.5, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {item.icon}
-        </div>
+        {active ? (
+            <span style={{ fontSize: 11.5, color: "#d4d1cd", flexShrink: 0, width: 16, textAlign: "center", lineHeight: 1 }}>✓</span>
+        ) : (
+            <div style={{ width: 16, height: 16, opacity: 0.5, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {item.icon}
+            </div>
+        )}
         {item.label}
         {item.badge && (
             <span style={{
@@ -301,7 +305,7 @@ const NavLink: React.FC<{
                     ? { background: "var(--green-soft)", color: "var(--green)", border: "1px solid rgba(26,122,74,0.15)" }
                     : item.badgeVariant === "warn"
                         ? { background: "rgba(185,28,28,0.07)", color: "#B91C1C", border: "1px solid rgba(185,28,28,0.12)" }
-                        : { background: "var(--bg-inset)", border: "1px solid var(--border-md)", color: "var(--ink-2)" })
+                        : { background: "#1a1918", border: "1px solid #252422", color: "#6b6863" })
             }}>
                 {item.badge}
             </span>
@@ -866,21 +870,17 @@ export default function OwnerDashboard({ firstName, activeTab, analytics, active
 
     return (
         <div style={{ display: "flex", fontFamily: "var(--sans)", background: "var(--bg)", color: "var(--ink)", height: "100vh", position: "relative", overflow: "hidden" }}>
-            <aside style={{
-                width: 240, minHeight: "100vh", background: "var(--bg-card)",
-                borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column",
-                flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto",
-            }}>
+            <aside style={{ width: 200, minHeight: "100vh", background: "#141412", borderRight: "1px solid #252422", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", color: "#e8e6e3" }}>
                 {/* Logo */}
-                <div style={{ padding: "20px 18px 16px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 28, height: 28, background: "var(--ink)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--bg)">
+                <div style={{ padding: "15px 16px 12px", borderBottom: "1px solid #252422", display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 28, height: 28, background: "#fff", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#141412">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                         </svg>
                     </div>
                     <div>
-                        <div style={{ fontFamily: "var(--sans)", fontSize: 13, fontWeight: 600, color: "var(--ink)", letterSpacing: "-0.01em", lineHeight: 1 }}>VR Architecture</div>
-                        <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--ink-3)", letterSpacing: "0.04em", marginTop: 2 }}>v2.4.1 — Owner</div>
+                        <div style={{ fontFamily: "var(--sans)", fontSize: 13, fontWeight: 500, color: "#e8e6e3", letterSpacing: "-0.01em", lineHeight: 1 }}>VR Architecture</div>
+                        <div style={{ fontFamily: "var(--mono)", fontSize: 8, color: "#6b6863", letterSpacing: "0.04em", marginTop: 2 }}>Owner Portal</div>
                     </div>
                 </div>
 
@@ -890,9 +890,9 @@ export default function OwnerDashboard({ firstName, activeTab, analytics, active
                 <div style={{ flex: 1 }}>
                     {OWNER_NAV.map((section, si) => (
                         <div key={section.section}>
-                            {si > 0 && <div style={{ height: 1, background: "var(--border)", margin: "8px 10px" }} />}
+                            {si > 0 && <div style={{ height: 1, background: "#252422", margin: "8px 10px" }} />}
                             <div style={{ padding: "16px 10px 8px" }}>
-                                <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--ink-3)", letterSpacing: "0.06em", textTransform: "uppercase", padding: "0 8px", marginBottom: 4 }}>
+                                <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "#6b6863", letterSpacing: "0.06em", textTransform: "uppercase", padding: "0 8px", marginBottom: 4 }}>
                                     {section.section}
                                 </div>
                                 {section.items.map(item => (
@@ -904,7 +904,7 @@ export default function OwnerDashboard({ firstName, activeTab, analytics, active
                 </div>
 
                 {/* User */}
-                <div style={{ marginTop: "auto", padding: "12px 10px", borderTop: "1px solid var(--border)", position: "relative" }}>
+                <div style={{ marginTop: "auto", padding: "12px 10px", borderTop: "1px solid #252422", position: "relative" }}>
                     {showUserMenu && (
                         <div style={{ position: "absolute", bottom: "calc(100% + 8px)", left: 10, right: 10, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", boxShadow: "0 8px 30px rgba(0,0,0,0.12)", padding: 4, zIndex: 1000, animation: "fadeUp 0.15s ease" }}>
                             {[

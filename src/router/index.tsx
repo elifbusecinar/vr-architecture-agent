@@ -14,7 +14,9 @@ import {
   ProjectsListPage,
   SessionPreviewPage,
   VRInterfacePage,
+  AiAssistantPage,
 } from '@/pages';
+
 import { MainLayout, ProtectedRoute } from '@/components';
 import NotFoundPage from '@/pages/NotFoundPage/NotFoundPage';
 
@@ -42,7 +44,9 @@ export const router = createBrowserRouter([
       { path: '/clients', element: <DashboardPage /> },
       { path: '/comments', element: <DashboardPage /> },
       { path: '/project/:id', element: <ProjectPage /> },
+      { path: '/ai-assistant', element: <AiAssistantPage /> },
       { path: '/projects', element: <ProjectsListPage /> },
+
       { path: '/session/:id/replay', element: <SessionReplayPage /> },
       { path: '/session/:id/preview', element: <SessionPreviewPage /> },
       { path: '/sessions', element: <SessionReplayPage /> },

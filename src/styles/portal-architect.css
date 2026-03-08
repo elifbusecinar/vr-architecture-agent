@@ -4,14 +4,14 @@
 */
 
 :root {
-    --arch-bg: #F5F3EF;
+    --arch-bg: #ebebea;
     --arch-bg-card: #FAFAF8;
     --arch-bg-hover: #F0EDE8;
     --arch-bg-inset: #ECEAE4;
-    --arch-ink: #1A1917;
+    --arch-ink: #1C1C1A;
     --arch-ink-2: #6B6760;
-    --arch-ink-3: #A8A49F;
-    --arch-ink-4: #D4D0CB;
+    --arch-ink-3: #8C8983;
+    --arch-ink-4: #B8B4AF;
 
     --arch-blue: #2D5BE3;
     --arch-blue-s: rgba(45, 91, 227, 0.08);
@@ -59,16 +59,18 @@
 }
 
 .architect-dashboard .sidebar {
-    width: 228px;
+    width: 200px;
     flex-shrink: 0;
-    background: var(--arch-bg-card);
-    border-right: 1px solid var(--arch-border);
+    background: #141412;
+    border-right: 1px solid #252422;
     display: flex !important;
     flex-direction: column;
     height: 100vh;
     position: sticky;
     top: 0;
     overflow: hidden;
+    color: #e8e6e3;
+    font-family: 'Inter', sans-serif;
 }
 
 .architect-dashboard .sb-brand {
@@ -93,10 +95,10 @@
 }
 
 .architect-dashboard .sb-brand-name {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--arch-ink);
-    letter-spacing: -0.02em;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #e8e6e3;
+    letter-spacing: -0.01em;
 }
 
 .architect-dashboard .sb-brand-sub {
@@ -108,11 +110,11 @@
 
 .architect-dashboard .sb-user {
     padding: 11px 14px;
-    border-bottom: 1px solid var(--arch-border);
+    border-bottom: 1px solid #252422;
     display: flex;
     align-items: center;
     gap: 9px;
-    background: linear-gradient(135deg, rgba(180, 83, 9, 0.05), rgba(224, 112, 0, 0.03));
+    background: transparent;
 }
 
 .architect-dashboard .sb-av {
@@ -201,10 +203,10 @@
     display: flex;
     align-items: center;
     gap: 9px;
-    padding: 8px 10px;
-    border-radius: var(--arch-rs);
-    font-size: 12px;
-    color: var(--arch-ink-2);
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12.5px;
+    color: #585552;
     cursor: pointer;
     transition: all .12s;
     margin-bottom: 1px;
@@ -212,14 +214,28 @@
 }
 
 .architect-dashboard .nav-item:hover {
-    background: var(--arch-bg-hover);
-    color: var(--arch-ink);
+    background: #1a1918;
+    color: #a09d99;
 }
 
 .architect-dashboard .nav-item.active {
-    background: var(--arch-bg-inset);
-    color: var(--arch-ink);
-    font-weight: 500;
+    background: transparent;
+    color: #d4d1cd;
+    font-weight: 400;
+}
+
+.architect-dashboard .nav-item.active::before {
+    content: '✓';
+    font-size: 11.5px;
+    color: #d4d1cd;
+    flex-shrink: 0;
+    width: 13px;
+    text-align: center;
+    line-height: 1;
+}
+
+.architect-dashboard .nav-item.active .nav-icon {
+    display: none;
 }
 
 .architect-dashboard .nav-icon {

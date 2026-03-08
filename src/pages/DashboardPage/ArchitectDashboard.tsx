@@ -10,9 +10,9 @@ import { NotificationDrawer, BellIcon } from "@/components/dashboard/Notificatio
 import ThreeDViewer from "@/components/project/ThreeDViewer/ThreeDViewer";
 
 import { useNavigate } from "react-router-dom";
-import { SettingsPage, NotificationsPage } from "@/pages";
+// import { SettingsPage, NotificationsPage } from "@/pages"; // removed
 import CreateProjectModal from '@/components/dashboard/CreateProjectModal';
-import AiInsightsPanel from '@/components/dashboard/AiInsightsPanel';
+// import AiInsightsPanel from '@/components/dashboard/AiInsightsPanel'; // removed
 import VrAssistantChat from '@/components/dashboard/VrAssistantChat';
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────
@@ -199,11 +199,15 @@ const Btn: React.FC<{ variant?: "primary" | "secondary" | "ghost"; onClick?: () 
 interface NavItemDef { id: Page; label: string; badge?: string; badgeVariant?: BadgeVariant; icon: React.ReactNode }
 
 const NavLink: React.FC<{ item: NavItemDef; active: boolean; onClick: () => void }> = ({ item, active, onClick }) => (
-    <div onClick={onClick} style={{ display: "flex", alignItems: "center", gap: 9, padding: "7px 8px", borderRadius: "var(--radius-sm)", fontSize: 13, fontWeight: active ? 500 : 400, color: active ? "var(--ink)" : "var(--ink-2)", cursor: "pointer", background: active ? "var(--bg-inset)" : "transparent", transition: "background 0.12s, color 0.12s" }}
-        onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "var(--bg-hover)"; (e.currentTarget as HTMLDivElement).style.color = "var(--ink)"; } }}
-        onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "transparent"; (e.currentTarget as HTMLDivElement).style.color = "var(--ink-2)"; } }}
+    <div onClick={onClick} style={{ display: "flex", alignItems: "center", gap: 9, padding: "6px 10px", borderRadius: "5px", fontSize: 12.5, fontWeight: active ? 400 : 400, color: active ? "#d4d1cd" : "#585552", cursor: "pointer", background: "transparent", transition: "all 0.12s" }}
+        onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "#1a1918"; (e.currentTarget as HTMLDivElement).style.color = "#a09d99"; } }}
+        onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "transparent"; (e.currentTarget as HTMLDivElement).style.color = "#585552"; } }}
     >
-        <div style={{ width: 16, height: 16, opacity: active ? 1 : 0.5, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.icon}</div>
+        {active ? (
+            <span style={{ fontSize: 11.5, color: "#d4d1cd", flexShrink: 0, width: 13, textAlign: "center", lineHeight: 1 }}>✓</span>
+        ) : (
+            <div style={{ width: 16, height: 16, opacity: 0.5, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.icon}</div>
+        )}
         {item.label}
         {item.badge && (
             <span style={{
@@ -247,6 +251,7 @@ const ARCH_NAV: { section: string; items: NavItemDef[] }[] = [
             { id: "sessions", label: "VR Sessions", icon: <VRIcon /> },
             { id: "annotations", label: "Annotations", icon: <PinIcon /> },
             { id: "ai-insights", label: "AI Insights", icon: <WarningIcon /> },
+            { id: "ai-assistant" as Page, label: "AI Assistant", icon: <ChatIcon /> },
         ],
     },
     {
@@ -751,9 +756,9 @@ export default function ArchitectDashboard({ firstName, activeTab, projects = []
             case "sessions": return <SessionsPage activeSessions={activeSessions || []} />;
             case "models": return <ModelsPage />;
             case "clients": return <ClientsPage />;
-            case "ai-insights": return <AiInsightsPanel />;
-            case "settings": return <SettingsPage />;
-            case "notifications": return <NotificationsPage />;
+            case "ai-assistant" as Page:
+                navigate("/ai-assistant");
+                return null;
             default: return <PlaceholderPage title={p.charAt(0).toUpperCase() + p.slice(1)} />;
         }
     };
@@ -762,22 +767,22 @@ export default function ArchitectDashboard({ firstName, activeTab, projects = []
 
     return (
         <div style={{ display: "flex", fontFamily: "var(--sans)", background: "var(--bg)", color: "var(--ink)", height: "100vh", position: "relative", overflow: "hidden" }}>
-            <aside style={{ width: 240, minHeight: "100vh", background: "var(--bg-card)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto" }}>
+            <aside style={{ width: 200, minHeight: "100vh", background: "#141412", borderRight: "1px solid #252422", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", color: "#e8e6e3" }}>
                 {/* Logo */}
-                <div style={{ padding: "20px 18px 16px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 28, height: 28, background: "var(--ink)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--bg)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
+                <div style={{ padding: "15px 16px 12px", borderBottom: "1px solid #252422", display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 28, height: 28, background: "#fff", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#141412"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
                     </div>
                     <div>
-                        <div style={{ fontFamily: "var(--sans)", fontSize: 13, fontWeight: 600, color: "var(--ink)", letterSpacing: "-0.01em", lineHeight: 1 }}>VR Architecture</div>
-                        <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--ink-3)", letterSpacing: "0.04em", marginTop: 2 }}>Architect Portal</div>
+                        <div style={{ fontFamily: "var(--sans)", fontSize: 13, fontWeight: 500, color: "#e8e6e3", letterSpacing: "-0.01em", lineHeight: 1 }}>VR Architecture</div>
+                        <div style={{ fontFamily: "var(--mono)", fontSize: 8, color: "#6b6863", letterSpacing: "0.04em", marginTop: 2 }}>Architect Portal</div>
                     </div>
                 </div>
 
                 {/* Today focus */}
-                <div style={{ margin: "8px 10px", padding: "9px 11px", borderRadius: "var(--radius-sm)", background: "var(--bg-inset)", border: "1px solid var(--border-md)" }}>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: 8, color: "var(--ink-4)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 5 }}>Today's focus</div>
-                    <div style={{ fontSize: 11, color: "var(--ink-4)", fontStyle: "italic" }}>No tasks for today</div>
+                <div style={{ margin: "8px", padding: "9px 11px", borderRadius: "5px", background: "#1a1918", border: "1px solid #252422" }}>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 8, color: "#6b6863", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 5 }}>Today's focus</div>
+                    <div style={{ fontSize: 11, color: "#6b6863", fontStyle: "italic" }}>No tasks for today</div>
                 </div>
 
                 {/* Nav */}
