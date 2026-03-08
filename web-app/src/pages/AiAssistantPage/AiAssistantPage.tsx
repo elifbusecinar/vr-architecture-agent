@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useChat } from '@/context/ChatContext';
-import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-assistant.css';
 
-// Responses are now handled by aiService.chat
+const R = [
+    `<p>You currently have <strong>0 active projects</strong> this month, with 0.0 GB storage used and no pending VR sessions.</p><p>Want me to help set up your first project? I can walk you through uploading a GLB model and sending a client invite.</p>`,
+    `<p>Before your VR walkthrough, here's what I'd recommend checking:</p><ul><li>Meta Quest 3 firmware is up to date</li><li>Final .GLB model is uploaded and processed</li><li>Session link tested with a colleague</li><li>Client briefed on basic headset navigation</li><li>Annotation mode enabled for real-time markup</li></ul>`,
+    `<p>Some directions worth exploring for residential work:</p><ul><li><strong>Warm Brutalism</strong> — raw concrete with oak accents and aged brass</li><li><strong>Biophilic Neutral</strong> — linen, pale travertine, matte terracotta</li><li><strong>Contemporary Dark</strong> — matte black steel, walnut, smoked glass</li></ul><p>Share the project brief and I can go deeper on any of these.</p>`,
+    `<p>Happy to draft that. A few quick questions:</p><ul><li>Client name and project title?</li><li>What's being approved — facade, materials, or layout?</li><li>Any deadline or meeting date to reference?</li></ul><p>Once I have those I'll write a clean email in your tone.</p>`
+];
+
+let mainIdx = 0;
 
 export default function AiAssistantPage() {
     const { messages, setMessages } = useChat();
@@ -34,7 +40,7 @@ export default function AiAssistantPage() {
         return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
     };
 
-    const handleSend = async () => {
+    const handleSend = () => {
         const text = inputText.trim();
         if (!text) return;
 
@@ -52,34 +58,17 @@ export default function AiAssistantPage() {
 
         setIsTyping(true);
 
-        try {
-            // Prepare history for Gemini
-            const history = currentMessages.map(m => ({
-                role: m.role === 'u' ? 'user' : 'model',
-                parts: [{ text: m.text }]
-            }));
-
-            const responseText = await aiService.chat(history);
-
+        setTimeout(() => {
+            setIsTyping(false);
             const aiMsg = {
                 id: (Date.now() + 1).toString(),
                 role: 'ai' as const,
-                text: responseText,
+                text: R[mainIdx % R.length],
                 time: getTime()
             };
             setMessages(prev => [...prev, aiMsg]);
-        } catch (error) {
-            console.error('AI Chat Error:', error);
-            const errorMsg = {
-                id: (Date.now() + 1).toString(),
-                role: 'ai' as const,
-                text: "I'm having trouble connecting right now. Let me try again in a moment.",
-                time: getTime()
-            };
-            setMessages(prev => [...prev, errorMsg]);
-        } finally {
-            setIsTyping(false);
-        }
+            mainIdx++;
+        }, 900 + Math.random() * 600);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -101,7 +90,7 @@ export default function AiAssistantPage() {
         navigator.clipboard.writeText(text).catch(() => { });
         const btn = e.currentTarget as HTMLButtonElement;
         const originalContent = btn.innerHTML;
-        btn.textContent = 'Copied';
+        btn.innerHTML = `<svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="11" height="11"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copied`;
         setTimeout(() => {
             btn.innerHTML = originalContent;
         }, 1500);
@@ -126,9 +115,9 @@ export default function AiAssistantPage() {
                         <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
                         Upload GLB
                     </button>
-                    <button className="t-btn p" onClick={() => setMessages([])}>
+                    <button className="t-btn p" onClick={() => { setMessages([]); mainIdx = 0; }}>
                         <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
-                        New Chat
+                        New Session
                     </button>
                 </div>
             </div>
@@ -141,20 +130,20 @@ export default function AiAssistantPage() {
                             <h1 className="w-title">Ask anything about<br />your <em>workspace.</em></h1>
                             <p className="w-sub">Projects, models, clients, VR sessions — everything in your workspace is within reach.</p>
                             <div className="sugs">
-                                <div className="sug" onClick={() => useSug('Summarize my projects')}>
-                                    <div className="sug-t">Summarize my projects</div>
+                                <div className="sug" onClick={() => useSug('Summarize my active projects')}>
+                                    <div className="sug-t">Summarize my active projects</div>
                                     <div className="sug-s">Active status & next steps</div>
                                 </div>
-                                <div className="sug" onClick={() => useSug('Prepare VR walkthrough')}>
-                                    <div className="sug-t">Prepare VR walkthrough</div>
+                                <div className="sug" onClick={() => useSug('Prepare VR walkthrough checklist')}>
+                                    <div className="sug-t">Prepare VR walkthrough checklist</div>
                                     <div className="sug-s">Pre-session checklist</div>
                                 </div>
                                 <div className="sug" onClick={() => useSug('Material palette ideas')}>
                                     <div className="sug-t">Material palette ideas</div>
                                     <div className="sug-s">For residential projects</div>
                                 </div>
-                                <div className="sug" onClick={() => useSug('Draft client email')}>
-                                    <div className="sug-t">Draft client email</div>
+                                <div className="sug" onClick={() => useSug('Draft a client approval email')}>
+                                    <div className="sug-t">Draft a client approval email</div>
                                     <div className="sug-s">Approval request</div>
                                 </div>
                             </div>

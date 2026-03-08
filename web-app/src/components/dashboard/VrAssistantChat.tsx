@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useChat } from '@/context/ChatContext';
-import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-components.css';
 
-// Responses are now handled by aiService.chat
+const wR = [
+    `<p>You have <strong>0 active projects</strong> this month. Want me to help set up your first project?</p>`,
+    `<p>Before your VR walkthrough:</p><ul><li>Meta Quest 3 firmware up to date</li><li>GLB model uploaded</li><li>Session link tested</li><li>Client briefed on navigation</li></ul>`,
+    `<p>Happy to draft that — share the client name, project title, and what's being approved. I'll write it in your tone.</p>`
+];
+
+let wIdx = 0;
 
 const VrAssistantChat: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -23,16 +28,19 @@ const VrAssistantChat: React.FC = () => {
 
     if (location.pathname === '/ai-assistant') return null;
 
-    const handleSend = async () => {
+    const getTime = () => {
+        return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const handleSend = () => {
         const text = inputText.trim();
         if (!text) return;
 
-        const now = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
         const userMsg = {
             id: Date.now().toString(),
             role: 'u' as const,
             text,
-            time: now
+            time: getTime()
         };
 
         const currentMessages = [...messages, userMsg];
@@ -40,27 +48,17 @@ const VrAssistantChat: React.FC = () => {
         setInputText('');
         setIsTyping(true);
 
-        try {
-            // Prepare history for Gemini
-            const history = currentMessages.map(m => ({
-                role: m.role === 'u' ? 'user' : 'model',
-                parts: [{ text: m.text }]
-            }));
-
-            const responseText = await aiService.chat(history);
-
+        setTimeout(() => {
+            setIsTyping(false);
             const aiMsg = {
                 id: (Date.now() + 1).toString(),
                 role: 'ai' as const,
-                text: responseText,
-                time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+                text: wR[wIdx % wR.length],
+                time: getTime()
             };
             setMessages(prev => [...prev, aiMsg]);
-        } catch (error) {
-            console.error('AI Chat Error:', error);
-        } finally {
-            setIsTyping(false);
-        }
+            wIdx++;
+        }, 900 + Math.random() * 500);
     };
 
     const toggleExpand = () => {
@@ -80,6 +78,24 @@ const VrAssistantChat: React.FC = () => {
             e.preventDefault();
             handleSend();
         }
+    };
+
+    const useSug = (title: string) => {
+        setInputText(title);
+        // Focus and trigger send in next tick
+        setTimeout(() => {
+            handleSend();
+        }, 0);
+    };
+
+    const copyToClipboard = (text: string, e: React.MouseEvent) => {
+        navigator.clipboard.writeText(text).catch(() => { });
+        const btn = e.currentTarget as HTMLButtonElement;
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="11" height="11"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copied`;
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+        }, 1500);
     };
 
     return (
@@ -120,9 +136,9 @@ const VrAssistantChat: React.FC = () => {
                             <div className="w-welcome-title">How can I<br />help you <em>today?</em></div>
                             <p className="w-welcome-sub">Ask about your projects, clients, or anything workspace-related.</p>
                             <div className="w-chips">
-                                <div className="w-chip" onClick={() => { setInputText('Summarize my active projects'); setTimeout(handleSend, 0); }}>Summarize my active projects</div>
-                                <div className="w-chip" onClick={() => { setInputText('Prepare VR walkthrough checklist'); setTimeout(handleSend, 0); }}>Prepare VR walkthrough checklist</div>
-                                <div className="w-chip" onClick={() => { setInputText('Draft a client approval email'); setTimeout(handleSend, 0); }}>Draft a client approval email</div>
+                                <div className="w-chip" onClick={() => useSug('Summarize my active projects')}>Summarize my active projects</div>
+                                <div className="w-chip" onClick={() => useSug('Prepare VR walkthrough checklist')}>Prepare VR walkthrough checklist</div>
+                                <div className="w-chip" onClick={() => useSug('Draft a client approval email')}>Draft a client approval email</div>
                             </div>
                         </div>
                     ) : (
@@ -131,6 +147,17 @@ const VrAssistantChat: React.FC = () => {
                                 <div key={m.id} className={`wm ${m.role === 'u' ? 'wu' : 'wai'}`}>
                                     <div className="wm-head">{m.role === 'u' ? 'You' : 'VRA Intelligence'} · {m.time}</div>
                                     <div className="wm-bubble" dangerouslySetInnerHTML={{ __html: m.text }} />
+                                    {m.role === 'ai' && (
+                                        <div className="macts" style={{ marginTop: 2, display: 'flex', gap: 2, opacity: 0.9 }}>
+                                            <button className="abt" onClick={(e) => copyToClipboard(m.text.replace(/<[^>]*>/g, ''), e)} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '3px 8px', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4, fontSize: 11, color: '#b8b4af' }}>
+                                                <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="11" height="11">
+                                                    <rect x="9" y="9" width="13" height="13" rx="1" />
+                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                                </svg>
+                                                Copy
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                             {isTyping && (
