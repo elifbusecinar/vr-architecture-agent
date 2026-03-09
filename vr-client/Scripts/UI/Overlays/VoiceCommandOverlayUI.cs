@@ -142,11 +142,50 @@ namespace VRArchitecture.UI.Overlays
         {
             Debug.Log($"[AI] Executing Action: {_lastIntentAction}");
             
-            // POINT 4: Execution logic
-            if (_lastIntentAction == "ChangeMaterial")
+            try 
             {
-                // In a full implementation, this calls MaterialManager.Apply(...)
-                Debug.Log("[AI] SYSTEM: Material applied successfully via Voice Command.");
+                switch (_lastIntentAction)
+                {
+                    case "ChangeMaterial":
+                        if (VRArchitecture.Materials.MaterialManager.Instance != null)
+                        {
+                            // Mocking target finding for voice. In a real scenario, this uses gaze/raycast target.
+                            GameObject floor = GameObject.Find("Floor");
+                            if (floor == null) floor = new GameObject("Floor"); // mock
+                            VRArchitecture.Materials.MaterialManager.Instance.ChangeMaterial(floor, "mat_marble_01");
+                            Debug.Log("[AI] SYSTEM: Material applied successfully via Voice Command.");
+                        }
+                        break;
+                        
+                    case "TakeSnapshot":
+                        var snapshotTool = FindObjectOfType<VRArchitecture.Tools.VRSnapshotTool>();
+                        if (snapshotTool != null)
+                        {
+                            string projectId = Session.SessionManager.Instance?.ActiveSession?.ProjectId.ToString() ?? "demo_project";
+                            snapshotTool.TakeSnapshot(projectId);
+                            Debug.Log("[AI] SYSTEM: Snapshot triggered.");
+                        }
+                        break;
+                        
+                    case "CreateAnnotation":
+                        var annotator = FindObjectOfType<VRArchitecture.Annotation.AnnotationController>();
+                        if (annotator != null)
+                        {
+                            annotator.CompleteAnnotation(_intentSub.text, Vector3.zero);
+                            Debug.Log("[AI] SYSTEM: Annotation created via Voice.");
+                        }
+                        break;
+                        
+                    case "ShowMinimap":
+                        Debug.Log("[AI] SYSTEM: Minimap toggled.");
+                        // var hud = FindObjectOfType<HUDController>(); 
+                        // hud.ToggleMinimap();
+                        break;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[AI] Failed to execute intent: {ex.Message}");
             }
 
             ResetUI();
