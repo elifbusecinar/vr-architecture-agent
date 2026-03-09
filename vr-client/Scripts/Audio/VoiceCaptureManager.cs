@@ -79,41 +79,123 @@ namespace VRArchitecture.Audio
             _lastSamplePos = currentPos;
         }
 
-        private async void ProcessAudio()
+        private void ProcessAudio()
         {
-            OnStatusChanged?.Invoke("Processing AI...");
+            OnStatusChanged?.Invoke("Processing Audio...");
             
-            // 1. Convert to Base64 (Simplification: In production, use WAV encoding)
-            float[] samples = new float[_recording.samples];
-            _recording.GetData(samples, 0);
-            
-            // Note: Sending raw float as base64 is for demo; real STT needs WAV/MP3 header
-            byte[] bytes = new byte[samples.Length * 2];
-            for (int i = 0; i < samples.Length; i++)
-            {
-                short val = (short)(samples[i] * short.MaxValue);
-                byte[] valBytes = System.BitConverter.GetBytes(val);
-                bytes[i * 2] = valBytes[0];
-                bytes[i * 2 + 1] = valBytes[1];
-            }
-            string base64 = System.Convert.ToBase64String(bytes);
+            if (_recording == null) return;
 
-            // 2. Wrap in STT Request
-            await SendToBackend(base64);
+            // Trim silence from the end by finding where maxAmp exceeded threshold
+            float[] samples = new float[_recording.samples * _recording.channels];
+            _recording.GetData(samples, 0);
+
+            // Compress to base64 WAV
+            byte[] wavBytes = EncodeToWAV(samples, _recording.channels, _recording.frequency);
+            string base64Audio = System.Convert.ToBase64String(wavBytes);
+
+            SendToGemini(base64Audio);
         }
 
-        private async Task SendToBackend(string base64)
+        private void SendToGemini(string base64Audio)
         {
-            // Point 1: Request STT
-            // Point 2: Take result text and request Intent Analysis
-            // For brevity, we'll assume a combined service or direct calls
+            OnStatusChanged?.Invoke("Thinking (Audio)...");
+
+            string systemPrompt = @"You are a smart home/architecture VR assistant.
+The user's voice command is provided as audio. 
+Listen to the audio, and extract their intent.
+Return ONLY valid JSON with three fields:
+1) 'transcription': What the user said.
+2) 'action': Short ID of action (ChangeMaterial, ShowMinimap, TakeSnapshot, CreateAnnotation, None)
+3) 'feedback': Brief response to the user.
+";
+
+            if (VRArchitecture.Services.AI.GeminiService.Instance != null)
+            {
+                VRArchitecture.Services.AI.GeminiService.Instance.AskWithAudio(base64Audio, "audio/wav", systemPrompt, (success, responseString) =>
+                {
+                    if (success)
+                    {
+                        // Clean markdown formatting if present
+                        if (responseString.StartsWith("```json")) responseString = responseString.Replace("```json\n", "").Replace("\n```", "");
+                        else if (responseString.StartsWith("```")) responseString = responseString.Replace("```\n", "").Replace("\n```", "");
+
+                        try
+                        {
+                            var response = JsonUtility.FromJson<AiAudioResponse>(responseString);
+                            if (response != null && !string.IsNullOrEmpty(response.transcription))
+                            {
+                                OnTranscriptionReceived?.Invoke(response.transcription);
+                                // The VoiceCommandOverlayUI handles the intent display natively now!
+                                // It can parse the same response object.
+                                // Actually, let's fire another event for the actual intent, or just pass the full JSON text
+                                // so the UI can parse it.
+                                OnTranscriptionReceived?.Invoke("JSON|" + responseString);
+                            }
+                            else
+                            {
+                                OnTranscriptionReceived?.Invoke("JSON|" + responseString); // fallback passing Raw
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Debug.LogError($"[VoiceCapture] Parse Error: {ex.Message}");
+                            OnTranscriptionReceived?.Invoke("Error processing audio intent.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError($"[VoiceCapture] Gemini Audio API Failure: {responseString}");
+                        OnTranscriptionReceived?.Invoke("API connection failed.");
+                    }
+                });
+            }
+        }
+
+        [System.Serializable]
+        private class AiAudioResponse
+        {
+            public string transcription;
+            public string action;
+            public string feedback;
+        }
+
+        public static byte[] EncodeToWAV(float[] samples, int channels, int sampleRate)
+        {
+            int sampleCount = samples.Length;
+            int byteCount = sampleCount * 2;
+            byte[] wavData = new byte[byteCount + 44];
             
-            string sttUrl = "api/ai/stt";
-            // ... UnityWebRequest implementation ...
-            // Let's assume we get "Change material to wood"
+            // RIFF header
+            byte[] riff = System.Text.Encoding.UTF8.GetBytes("RIFF");
+            System.Array.Copy(riff, 0, wavData, 0, 4);
+            System.BitConverter.GetBytes(byteCount + 36).CopyTo(wavData, 4);
+            System.Text.Encoding.UTF8.GetBytes("WAVE").CopyTo(wavData, 8);
             
-            string mockResult = "Change the floor material to marble"; 
-            OnTranscriptionReceived?.Invoke(mockResult);
+            // fmt chunk
+            System.Text.Encoding.UTF8.GetBytes("fmt ").CopyTo(wavData, 12);
+            System.BitConverter.GetBytes(16).CopyTo(wavData, 16);
+            System.BitConverter.GetBytes((short)1).CopyTo(wavData, 20); // PCM
+            System.BitConverter.GetBytes((short)channels).CopyTo(wavData, 22);
+            System.BitConverter.GetBytes(sampleRate).CopyTo(wavData, 24);
+            System.BitConverter.GetBytes(sampleRate * channels * 2).CopyTo(wavData, 28);
+            System.BitConverter.GetBytes((short)(channels * 2)).CopyTo(wavData, 32);
+            System.BitConverter.GetBytes((short)16).CopyTo(wavData, 34);
+            
+            // data chunk
+            System.Text.Encoding.UTF8.GetBytes("data").CopyTo(wavData, 36);
+            System.BitConverter.GetBytes(byteCount).CopyTo(wavData, 40);
+            
+            // PCM payload
+            int offset = 44;
+            for (int i = 0; i < sampleCount; i++)
+            {
+                short val = (short)(Mathf.Clamp(samples[i], -1f, 1f) * 32767);
+                byte[] valBytes = System.BitConverter.GetBytes(val);
+                wavData[offset++] = valBytes[0];
+                wavData[offset++] = valBytes[1];
+            }
+            
+            return wavData;
         }
     }
 }

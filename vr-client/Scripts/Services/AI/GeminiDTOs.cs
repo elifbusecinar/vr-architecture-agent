@@ -50,6 +50,14 @@ namespace VRArchitecture.Services.AI
     public class Part
     {
         public string text;
+        public InlineData inlineData;
+    }
+
+    [Serializable]
+    public class InlineData
+    {
+        public string mimeType;
+        public string data;
     }
 
     [Serializable]

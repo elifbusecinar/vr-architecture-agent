@@ -86,80 +86,30 @@ namespace VRArchitecture.UI.Overlays
 
         private void HandleTranscription(string text)
         {
-            _transcriptLabel.text = text;
-            _statusLabel.text = "Analyzing Intent...";
-
-            // Call API: api/ai/voice-command
-            ProcessIntent(text);
-        }
-
-        [System.Serializable]
-        private class IntentResponse
-        {
-            public string action;
-            public string feedback;
-            public List<KeyValuePair<string, string>> parameters; // Simpler for Unity JSON
-        }
-
-        private void ProcessIntent(string text)
-        {
-            _statusLabel.text = "Thinking...";
-            
-            // POINT 4: Backend Integration via Gemini
-            string systemPrompt = @"You are a smart home / architecture VR assistant.
-Analyze this user voice command and extract intent.
-Return ONLY a valid JSON with two fields:
-1) 'action': short ID of action (ChangeMaterial, ShowMinimap, TakeSnapshot, CreateAnnotation, None)
-2) 'feedback': brief response to the user.
-
-Command: """ + text + @"""";
-
-            if (Services.AI.GeminiService.Instance != null)
+            if (text.StartsWith("JSON|"))
             {
-                Services.AI.GeminiService.Instance.Ask(systemPrompt, (success, responseString) => 
+                string jsonBody = text.Substring(5);
+                try
                 {
-                    if (success)
+                    var response = JsonUtility.FromJson<AiServiceResponse>(jsonBody);
+                    if (response != null && !string.IsNullOrEmpty(response.action))
                     {
-                        try 
-                        {
-                            // Strip markdown block if Gemini adds it
-                            if (responseString.StartsWith("```json"))
-                            {
-                                responseString = responseString.Replace("```json\n", "").Replace("\n```", "");
-                            }
-                            else if (responseString.StartsWith("```"))
-                            {
-                                responseString = responseString.Replace("```\n", "").Replace("\n```", "");
-                            }
-
-                            var response = JsonUtility.FromJson<AiServiceResponse>(responseString);
-                            if (response != null && !string.IsNullOrEmpty(response.action))
-                            {
-                                ShowResult(response.action, response.feedback, response.action);
-                            }
-                            else
-                            {
-                                HandleFallback(text);
-                            }
-                        }
-                        catch (System.Exception ex)
-                        {
-                            Debug.LogError($"[VoiceUI] JSON Parse Error: {ex.Message} on '{responseString}'");
-                            HandleFallback(text);
-                        }
+                        ShowResult(response.action, response.feedback, response.action);
                     }
                     else
                     {
-                        Debug.LogError($"[AI] API Failure: {responseString}");
-                        HandleFallback(text);
+                        _statusLabel.text = "Could not parse intent.";
                     }
-                });
+                }
+                catch
+                {
+                    _statusLabel.text = "Command Error";
+                }
+                return;
             }
-            else
-            {
-                Debug.LogWarning("[VoiceUI] GeminiService not initialized.");
-                HandleFallback(text);
-            }
+
+            // Normal transcription text updates
+            _transcriptLabel.text = text;
         }
 
         private void HandleFallback(string text)

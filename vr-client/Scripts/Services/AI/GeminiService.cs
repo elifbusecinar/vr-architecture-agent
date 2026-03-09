@@ -105,5 +105,70 @@ namespace VRArchitecture.Services.AI
                 }
             }
         }
+        public void AskWithAudio(string base64Audio, string mimeType, string prompt, Action<bool, string> callback)
+        {
+            if (_config == null)
+            {
+                Debug.LogError("[GeminiService] Config is missing. Please assign a GeminiConfig asset.");
+                callback?.Invoke(false, "Config missing.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_config.apiKey))
+            {
+                Debug.LogError("[GeminiService] API Key is missing in GeminiConfig.");
+                callback?.Invoke(false, "API Key missing.");
+                return;
+            }
+
+            StartCoroutine(SendAudioCoroutine(base64Audio, mimeType, prompt, callback));
+        }
+
+        private IEnumerator SendAudioCoroutine(string base64Audio, string mimeType, string prompt, Action<bool, string> callback)
+        {
+            // Build custom JSON to avoid Null/Empty issues with JsonUtility
+            string safePrompt = prompt.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "");
+            string json = $@"{{
+                ""contents"": [{{
+                    ""parts"": [
+                        {{ ""text"": ""{safePrompt}"" }},
+                        {{ ""inlineData"": {{ ""mimeType"": ""{mimeType}"", ""data"": ""{base64Audio}"" }} }}
+                    ]
+                }}]
+            }}";
+
+            string url = $"https://generativelanguage.googleapis.com/v1beta/models/{_config.modelName}:generateContent?key={_config.apiKey}";
+
+            using (var request = new UnityWebRequest(url, "POST"))
+            {
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
+
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    try
+                    {
+                        var response = JsonUtility.FromJson<GeminiResponse>(request.downloadHandler.text);
+                        var content = response?.candidates?[0]?.content?.parts?[0]?.text ?? "No response.";
+                        callback?.Invoke(true, content);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[GeminiService] Parsing failed: {ex.Message}");
+                        callback?.Invoke(false, "Parsing Error.");
+                    }
+                }
+                else
+                {
+                    string errorMsg = $"[{request.responseCode}] {request.error}";
+                    Debug.LogError($"[GeminiService] Audio Request failed: {errorMsg}\n{request.downloadHandler.text}");
+                    callback?.Invoke(false, errorMsg);
+                }
+            }
+        }
     }
 }
