@@ -44,7 +44,7 @@ namespace VRArchitecture.Services
         //  Configuration
         // ──────────────────────────────────────────────
         [Header("API Configuration")]
-        [SerializeField] private string _baseUrl = "http://localhost:5246/api";
+        [SerializeField] private string _baseUrl = "http://localhost:5004/api";
         [SerializeField] private float _requestTimeout = 30f;
 
         public string BaseUrl

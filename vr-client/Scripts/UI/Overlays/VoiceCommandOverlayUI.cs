@@ -2,9 +2,6 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using VRArchitecture.Audio;
-using System.Threading.Tasks;
-using UnityEngine.Networking;
-using System.Text;
 
 namespace VRArchitecture.UI.Overlays
 {
@@ -26,10 +23,7 @@ namespace VRArchitecture.UI.Overlays
         private Button _cancelBtn;
         private VisualElement _orbCore;
         private List<VisualElement> _waveformBars;
-        private string _apiUrl = "http://localhost:5031";
-
         private string _lastIntentAction;
-        private Dictionary<string, string> _lastParams;
 
         private void OnEnable()
         {
