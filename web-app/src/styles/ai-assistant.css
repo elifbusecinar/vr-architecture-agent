@@ -1,6 +1,5 @@
 .ai-assistant-page {
-    --bg: #ebebea;
-    --surface: #f8f7f5;
+    --surface: #FAFAF8;
     --border: #e0ddd9;
     --border-soft: #ece9e5;
     --text: #1c1c1a;
@@ -19,7 +18,7 @@
 
 .ai-assistant-page .topbar {
     height: 50px;
-    background: var(--bg);
+    background: var(--bg-card);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -452,7 +451,9 @@
     flex: 1;
     background: transparent;
     border: none;
-    outline: none;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
     font-family: 'Inter', sans-serif;
     font-size: 13.5px;
     color: var(--text);

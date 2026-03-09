@@ -33,7 +33,7 @@ export const aiService = {
             };
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
         const result = await model.generateContent([
             "Transcribe this audio signal contextually for an architecture app",
             { inlineData: { data: base64Audio, mimeType: "audio/wav" } }
@@ -55,7 +55,7 @@ export const aiService = {
             };
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
         const result = await model.generateContent([
             "Analyze this architectural snapshot and find one key layout or material issue.",
             { inlineData: { data: imageBase64, mimeType: "image/jpeg" } }
@@ -82,7 +82,7 @@ export const aiService = {
             };
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-pro-latest" });
         const prompt = `As 'Archie', an AI Architecture Specialist, critique this BIM data summary for Project ${projectId}: ${bimSummary}`;
 
         const result = await model.generateContent(prompt);
@@ -111,7 +111,7 @@ export const aiService = {
             return "I'm Archie, your AI assistant. (Simulation Mode). I can help you with BIM data, material suggestions, and code compliance. Try asking about your projects!";
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
         const chat = model.startChat({
             history: history.slice(0, -1),
         });

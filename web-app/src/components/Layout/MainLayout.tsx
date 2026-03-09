@@ -23,7 +23,7 @@ export default function MainLayout() {
   // Dashboard paths that should use the integrated (premium) view
   const isDashboardPath = location.pathname.startsWith('/dashboard') ||
     location.pathname === '/' ||
-    ['/workboard', '/approvals', '/sessions', '/models', '/projects', '/files', '/clients', '/comments', '/annotations', '/settings', '/notifications', '/ai-assistant'].includes(location.pathname);
+    ['/workboard', '/approvals', '/sessions', '/models', '/projects', '/files', '/clients', '/comments', '/annotations', '/settings', '/notifications', '/ai-chat'].includes(location.pathname);
 
   const isArchitect = (role === ROLES.ARCHITECT) || (isStudio && isDashboardPath);
   const isIntegrated = (role === ROLES.ARCHITECT || role === ROLES.ADMIN) && isDashboardPath;
@@ -73,7 +73,7 @@ export default function MainLayout() {
   const getTitle = () => {
     const path = location.pathname.substring(1);
     if (!path || path === 'dashboard') return 'Workboard';
-    if (path === 'ai-assistant') return 'AI Assistant';
+    if (path === 'ai-chat') return 'AI Chat';
     return path.charAt(0).toUpperCase() + path.slice(1);
   };
 

@@ -53,8 +53,8 @@
     right: 28px;
     width: 340px;
     height: 480px;
-    background: #f8f7f5;
-    border: 1px solid #e0ddd9;
+    background: var(--bg, #F5F3EF);
+    border: 1px solid var(--border, #e0ddd9);
     border-radius: 16px;
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
     z-index: 999;

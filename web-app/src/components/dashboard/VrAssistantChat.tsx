@@ -1,15 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useChat } from '@/context/ChatContext';
+import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-components.css';
 
-const wR = [
-    `<p>You have <strong>0 active projects</strong> this month. Want me to help set up your first project?</p>`,
-    `<p>Before your VR walkthrough:</p><ul><li>Meta Quest 3 firmware up to date</li><li>GLB model uploaded</li><li>Session link tested</li><li>Client briefed on navigation</li></ul>`,
-    `<p>Happy to draft that — share the client name, project title, and what's being approved. I'll write it in your tone.</p>`
-];
-
-let wIdx = 0;
+// Mock indices removed as we use real AI service now.
 
 const VrAssistantChat: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -26,13 +21,13 @@ const VrAssistantChat: React.FC = () => {
         }
     }, [messages, isTyping]);
 
-    if (location.pathname === '/ai-assistant') return null;
+    if (location.pathname === '/ai-chat') return null;
 
     const getTime = () => {
         return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const text = inputText.trim();
         if (!text) return;
 
@@ -48,22 +43,37 @@ const VrAssistantChat: React.FC = () => {
         setInputText('');
         setIsTyping(true);
 
-        setTimeout(() => {
-            setIsTyping(false);
+        try {
+            const history = currentMessages.map(m => ({
+                role: m.role === 'u' ? 'user' : 'model',
+                parts: [{ text: m.text }]
+            }));
+            const response = await aiService.chat(history);
+
             const aiMsg = {
                 id: (Date.now() + 1).toString(),
                 role: 'ai' as const,
-                text: wR[wIdx % wR.length],
+                text: response,
                 time: getTime()
             };
             setMessages(prev => [...prev, aiMsg]);
-            wIdx++;
-        }, 900 + Math.random() * 500);
+        } catch (error: any) {
+            console.error("Widget Chat Error:", error);
+            const aiMsg = {
+                id: (Date.now() + 1).toString(),
+                role: 'ai' as const,
+                text: "I'm having trouble connecting to my brain right now. Please check your internet connection or API key.",
+                time: getTime()
+            };
+            setMessages(prev => [...prev, aiMsg]);
+        } finally {
+            setIsTyping(false);
+        }
     };
 
     const toggleExpand = () => {
         setIsOpen(false);
-        navigate('/ai-assistant');
+        navigate('/ai-chat');
     };
 
     const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

@@ -29,7 +29,8 @@ export type ArchitectTab =
     | "comments"
     | "settings"
     | "notifications"
-    | "ai-insights";
+    | "ai-insights"
+    | "ai-chat";
 
 type Page = ArchitectTab;
 
@@ -203,11 +204,7 @@ const NavLink: React.FC<{ item: NavItemDef; active: boolean; onClick: () => void
         onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "#1a1918"; (e.currentTarget as HTMLDivElement).style.color = "#a09d99"; } }}
         onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLDivElement).style.background = "transparent"; (e.currentTarget as HTMLDivElement).style.color = "#585552"; } }}
     >
-        {active ? (
-            <span style={{ fontSize: 11.5, color: "#d4d1cd", flexShrink: 0, width: 13, textAlign: "center", lineHeight: 1 }}>✓</span>
-        ) : (
-            <div style={{ width: 16, height: 16, opacity: 0.5, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.icon}</div>
-        )}
+        <div style={{ width: 16, height: 16, opacity: active ? 1 : 0.5, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", color: active ? "#d4d1cd" : "inherit" }}>{item.icon}</div>
         {item.label}
         {item.badge && (
             <span style={{
@@ -251,7 +248,7 @@ const ARCH_NAV: { section: string; items: NavItemDef[] }[] = [
             { id: "sessions", label: "VR Sessions", icon: <VRIcon /> },
             { id: "annotations", label: "Annotations", icon: <PinIcon /> },
             { id: "ai-insights", label: "AI Insights", icon: <WarningIcon /> },
-            { id: "ai-assistant" as Page, label: "AI Assistant", icon: <ChatIcon /> },
+            { id: "ai-chat" as Page, label: "AI Chat", icon: <ChatIcon /> },
         ],
     },
     {
@@ -758,7 +755,7 @@ export default function ArchitectDashboard({ firstName, activeTab, projects = []
             case "clients": return <ClientsPage />;
             case "ai-insights" as Page:
                 return <AiInsightsPage />;
-            case "ai-assistant" as Page:
+            case "ai-chat" as Page:
                 return <AiAssistantPage />;
             default: return <PlaceholderPage title={p.charAt(0).toUpperCase() + p.slice(1)} />;
         }
@@ -809,7 +806,7 @@ export default function ArchitectDashboard({ firstName, activeTab, projects = []
                                 name={p.title}
                                 client={`${p.clientName} · ${new Date(p.createdAt).toLocaleDateString()}`}
                                 progress={p.progress}
-                                active={page === 'projects'}
+                                active={false}
                                 onClick={() => setPage("projects")}
                             />
                         ))

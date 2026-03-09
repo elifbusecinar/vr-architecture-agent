@@ -1,15 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useChat } from '@/context/ChatContext';
+import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-assistant.css';
 
-const R = [
-    `<p>You currently have <strong>0 active projects</strong> this month, with 0.0 GB storage used and no pending VR sessions.</p><p>Want me to help set up your first project? I can walk you through uploading a GLB model and sending a client invite.</p>`,
-    `<p>Before your VR walkthrough, here's what I'd recommend checking:</p><ul><li>Meta Quest 3 firmware is up to date</li><li>Final .GLB model is uploaded and processed</li><li>Session link tested with a colleague</li><li>Client briefed on basic headset navigation</li><li>Annotation mode enabled for real-time markup</li></ul>`,
-    `<p>Some directions worth exploring for residential work:</p><ul><li><strong>Warm Brutalism</strong> — raw concrete with oak accents and aged brass</li><li><strong>Biophilic Neutral</strong> — linen, pale travertine, matte terracotta</li><li><strong>Contemporary Dark</strong> — matte black steel, walnut, smoked glass</li></ul><p>Share the project brief and I can go deeper on any of these.</p>`,
-    `<p>Happy to draft that. A few quick questions:</p><ul><li>Client name and project title?</li><li>What's being approved — facade, materials, or layout?</li><li>Any deadline or meeting date to reference?</li></ul><p>Once I have those I'll write a clean email in your tone.</p>`
-];
-
-let mainIdx = 0;
 
 export default function AiAssistantPage() {
     const { messages, setMessages } = useChat();
@@ -40,7 +33,7 @@ export default function AiAssistantPage() {
         return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const text = inputText.trim();
         if (!text) return;
 
@@ -58,17 +51,36 @@ export default function AiAssistantPage() {
 
         setIsTyping(true);
 
-        setTimeout(() => {
-            setIsTyping(false);
+        try {
+            // Prepare history for Gemini
+            const history = currentMessages.map(m => ({
+                role: m.role === 'u' ? 'user' : 'model',
+                parts: [{ text: m.text }]
+            }));
+
+            const response = await aiService.chat(history);
+
             const aiMsg = {
                 id: (Date.now() + 1).toString(),
                 role: 'ai' as const,
-                text: R[mainIdx % R.length],
+                text: response,
                 time: getTime()
             };
             setMessages(prev => [...prev, aiMsg]);
-            mainIdx++;
-        }, 900 + Math.random() * 600);
+        } catch (error: any) {
+            console.error("AI Chat Error Detail:", error);
+            const errorMsg = {
+                id: (Date.now() + 1).toString(),
+                role: 'ai' as const,
+                text: `I'm having trouble connecting to my brain right now. 
+                <br/><br/><strong>Technical Detail:</strong> ${error.message || 'Unknown error'}
+                <br/><br/>Please check your internet connection and verify your API key in the .env file.`,
+                time: getTime()
+            };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
+            setIsTyping(false);
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -115,7 +127,7 @@ export default function AiAssistantPage() {
                         <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
                         Upload GLB
                     </button>
-                    <button className="t-btn p" onClick={() => { setMessages([]); mainIdx = 0; }}>
+                    <button className="t-btn p" onClick={() => { setMessages([]); }}>
                         <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
                         New Session
                     </button>
@@ -126,7 +138,7 @@ export default function AiAssistantPage() {
                 <div className="chat-scroll">
                     {messages.length === 0 ? (
                         <div className="welcome">
-                            <div className="w-eye">— AI Assistant</div>
+                            <div className="w-eye">— AI Chat</div>
                             <h1 className="w-title">Ask anything about<br />your <em>workspace.</em></h1>
                             <p className="w-sub">Projects, models, clients, VR sessions — everything in your workspace is within reach.</p>
                             <div className="sugs">
