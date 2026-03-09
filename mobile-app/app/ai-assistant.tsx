@@ -276,10 +276,10 @@ export default function AIAssistantPage() {
 
             {/* ─── BOTTOM NAV ─── */}
             <View style={styles.bottomNav}>
-                <NavItem label="Overview" icon="home" />
-                <NavItem label="Projects" icon="projects" />
-                <NavItem label="AI" icon="chat" active />
-                <NavItem label="Clients" icon="users" />
+                <NavItem label="Overview" icon="home" onPress={() => router.replace('/dashboard' as any)} />
+                <NavItem label="Projects" icon="projects" onPress={() => router.replace('/projects' as any)} />
+                <NavItem label="AI" icon="chat" active onPress={() => { }} />
+                <NavItem label="Clients" icon="users" onPress={() => router.replace('/clients' as any)} />
             </View>
         </SafeAreaView>
     );
@@ -472,9 +472,9 @@ function SuggestionChip({ title, sub, onPress }: { title: string; sub: string; o
     );
 }
 
-function NavItem({ label, icon, active }: { label: string; icon: string; active?: boolean }) {
+function NavItem({ label, icon, active, onPress }: { label: string; icon: string; active?: boolean; onPress?: () => void }) {
     return (
-        <TouchableOpacity style={styles.navItem} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.navItem} activeOpacity={0.7} onPress={onPress}>
             <Svg viewBox="0 0 20 20" width={20} height={20} fill={active ? COLORS.black : 'none'} stroke={active ? 'none' : COLORS.grayLight} strokeWidth="1.4">
                 {icon === 'home' && <Path d="M3 10L10 3l7 7v7H13v-4H7v4H3V10Z" fill={active ? COLORS.black : COLORS.grayLight} stroke="none" />}
                 {icon === 'projects' && <Rect x="2" y="4" width="16" height="12" rx="2" />}

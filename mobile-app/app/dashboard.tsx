@@ -278,7 +278,7 @@ export default function DashboardPage() {
 
                 {/* Bottom Nav */}
                 <View style={styles.bottomNav}>
-                    <TouchableOpacity style={styles.navItem}>
+                    <TouchableOpacity style={styles.navItem} activeOpacity={0.7} onPress={() => { }}>
                         <Svg viewBox="0 0 20 20" width={20} height={20}>
                             <Path d="M3 10L10 3l7 7v7H13v-4H7v4H3V10Z" fill={COLORS.black} />
                         </Svg>
@@ -286,7 +286,7 @@ export default function DashboardPage() {
                         <View style={styles.navItemDot} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.navItem} onPress={() => router.push('/projects' as any)}>
+                    <TouchableOpacity style={styles.navItem} activeOpacity={0.7} onPress={() => router.replace('/projects')}>
                         <Svg viewBox="0 0 20 20" width={18} height={18}>
                             <Rect x="2" y="4" width="16" height="12" rx="2" fill="none" stroke={COLORS.grayLight} strokeWidth="1.4" />
                             <Path d="M7 4v12M13 4v12M2 10h16" stroke={COLORS.grayLight} strokeWidth="1.2" />
@@ -294,15 +294,14 @@ export default function DashboardPage() {
                         <Text style={styles.navItemText}>Projects</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.navItem}>
+                    <TouchableOpacity style={styles.navItem} activeOpacity={0.7} onPress={() => router.replace('/ai-assistant')}>
                         <Svg viewBox="0 0 20 20" width={20} height={20}>
-                            <Circle cx="10" cy="10" r="7" fill="none" stroke={COLORS.grayLight} strokeWidth="1.4" />
-                            <Path d="M10 6v4l3 3" stroke={COLORS.grayLight} strokeWidth="1.4" strokeLinecap="round" fill="none" />
+                            <Path d="M18 13a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z" fill="none" stroke={COLORS.grayLight} strokeWidth="1.4" />
                         </Svg>
-                        <Text style={styles.navItemText}>Sessions</Text>
+                        <Text style={styles.navItemText}>AI</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.navItem}>
+                    <TouchableOpacity style={styles.navItem} activeOpacity={0.7} onPress={() => router.replace('/clients')}>
                         <Svg viewBox="0 0 20 20" width={20} height={20}>
                             <Circle cx="10" cy="7" r="3" fill="none" stroke={COLORS.grayLight} strokeWidth="1.4" />
                             <Path d="M4 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke={COLORS.grayLight} strokeWidth="1.4" strokeLinecap="round" fill="none" />

@@ -40,6 +40,8 @@ export default function Layout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="login" options={{ animation: 'fade' }} />
         <Stack.Screen name="dashboard" options={{ animation: 'fade' }} />
+        <Stack.Screen name="projects" options={{ animation: 'fade' }} />
+        <Stack.Screen name="clients" options={{ animation: 'fade' }} />
         <Stack.Screen name="ai-assistant" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
         <Stack.Screen name="+not-found" />
       </Stack>
