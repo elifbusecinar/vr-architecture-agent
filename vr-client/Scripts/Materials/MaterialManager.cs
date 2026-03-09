@@ -20,11 +20,11 @@ namespace VRArchitecture.Materials
             // Subscribe to remote material changes
             if (VRSignalRService.Instance != null)
             {
-                VRSignalRService.Instance.OnSignalReceived += HandleRemoteMaterialChange;
+                VRSignalRService.Instance.OnEnvironmentSynced += HandleRemoteMaterialChange;
             }
         }
 
-        private void HandleRemoteMaterialChange(string sender, string jsonData)
+        private void HandleRemoteMaterialChange(string jsonData)
         {
             if (jsonData.Contains("MaterialUpdate"))
             {
@@ -46,7 +46,7 @@ namespace VRArchitecture.Materials
                 objectId = objectId, 
                 materialId = materialId 
             };
-            VRSignalRService.Instance?.BroadcastSignal(JsonUtility.ToJson(update));
+            VRSignalRService.Instance?.BroadcastEnvironment(JsonUtility.ToJson(update));
         }
 
         private void ApplyMaterialLocal(string objectName, string materialId)

@@ -129,8 +129,8 @@ namespace VRArchitecture.UI.Overlays
                 var meta = row.Q<Label>("ann-meta");
                 var priority = row.Q<Label>("ann-priority");
 
-                if (text != null) text.text = a.Note;
-                if (meta != null) meta.text = $"{a.LocationLabel} · {a.AuthorName}";
+                if (text != null) text.text = a.Text;
+                if (meta != null) meta.text = $"{a.Room} · {a.CreatedBy}";
                 if (priority != null)
                 {
                     priority.text = a.Priority.ToString().ToLower();
