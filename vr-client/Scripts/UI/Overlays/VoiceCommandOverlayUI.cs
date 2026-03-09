@@ -84,13 +84,13 @@ namespace VRArchitecture.UI.Overlays
                 _orbCore.style.scale = new StyleScale(new Vector2(1f + amplitude, 1f + amplitude));
         }
 
-        private async void HandleTranscription(string text)
+        private void HandleTranscription(string text)
         {
             _transcriptLabel.text = text;
             _statusLabel.text = "Analyzing Intent...";
 
             // Call API: api/ai/voice-command
-            await ProcessIntent(text);
+            ProcessIntent(text);
         }
 
         [System.Serializable]
@@ -101,43 +101,74 @@ namespace VRArchitecture.UI.Overlays
             public List<KeyValuePair<string, string>> parameters; // Simpler for Unity JSON
         }
 
-        private async Task ProcessIntent(string text)
+        private void ProcessIntent(string text)
         {
             _statusLabel.text = "Thinking...";
             
-            // POINT 4: Backend Integration
-            string url = $"{_apiUrl}/api/ai/voice-command";
-            string body = JsonUtility.ToJson(new { CommandText = text });
-            
-            using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
+            // POINT 4: Backend Integration via Gemini
+            string systemPrompt = @"You are a smart home / architecture VR assistant.
+Analyze this user voice command and extract intent.
+Return ONLY a valid JSON with two fields:
+1) 'action': short ID of action (ChangeMaterial, ShowMinimap, TakeSnapshot, CreateAnnotation, None)
+2) 'feedback': brief response to the user.
+
+Command: """ + text + @"""";
+
+            if (Services.AI.GeminiService.Instance != null)
             {
-                byte[] bodyRaw = Encoding.UTF8.GetBytes(body);
-                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                www.downloadHandler = new DownloadHandlerBuffer();
-                www.SetRequestHeader("Content-Type", "application/json");
-
-                string token = PlayerPrefs.GetString("jwt_token", "");
-                if (!string.IsNullOrEmpty(token)) 
-                    www.SetRequestHeader("Authorization", $"Bearer {token}");
-
-                var op = www.SendWebRequest();
-                while (!op.isDone) await Task.Yield();
-
-                if (www.result == UnityWebRequest.Result.Success)
+                Services.AI.GeminiService.Instance.Ask(systemPrompt, (success, responseString) => 
                 {
-                    var response = JsonUtility.FromJson<AiServiceResponse>(www.downloadHandler.text);
-                    ShowResult(response.action, response.feedback, response.action);
-                }
-                else
-                {
-                    Debug.LogError($"[AI] API Failure: {www.error}");
-                    // Local fallback for demo
-                    if (text.ToLower().Contains("material")) 
-                        ShowResult("Change Material", "Applying Marble to Floor", "ChangeMaterial");
-                    else 
-                        ShowResult("Error", "Could not process command.", "None");
-                }
+                    if (success)
+                    {
+                        try 
+                        {
+                            // Strip markdown block if Gemini adds it
+                            if (responseString.StartsWith("```json"))
+                            {
+                                responseString = responseString.Replace("```json\n", "").Replace("\n```", "");
+                            }
+                            else if (responseString.StartsWith("```"))
+                            {
+                                responseString = responseString.Replace("```\n", "").Replace("\n```", "");
+                            }
+
+                            var response = JsonUtility.FromJson<AiServiceResponse>(responseString);
+                            if (response != null && !string.IsNullOrEmpty(response.action))
+                            {
+                                ShowResult(response.action, response.feedback, response.action);
+                            }
+                            else
+                            {
+                                HandleFallback(text);
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Debug.LogError($"[VoiceUI] JSON Parse Error: {ex.Message} on '{responseString}'");
+                            HandleFallback(text);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError($"[AI] API Failure: {responseString}");
+                        HandleFallback(text);
+                    }
+                });
             }
+            else
+            {
+                Debug.LogWarning("[VoiceUI] GeminiService not initialized.");
+                HandleFallback(text);
+            }
+        }
+
+        private void HandleFallback(string text)
+        {
+            // Local fallback for demo
+            if (text.ToLower().Contains("material")) 
+                ShowResult("Change Material", "Applying Marble to Floor", "ChangeMaterial");
+            else 
+                ShowResult("Assistance", "I'm here to help.", "None");
         }
 
         [System.Serializable]
