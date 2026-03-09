@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System;
 using System.Collections.Generic;
 
 namespace VRArchitecture.UI
@@ -10,6 +11,8 @@ namespace VRArchitecture.UI
     /// </summary>
     public class VRKeyboardController : MonoBehaviour
     {
+        public static event Action<string> OnKeyTyped;
+
         [Header("UI Refs")]
         [SerializeField] private TMP_InputField _targetField;
         [SerializeField] private GameObject    _keyPrefab;
@@ -55,6 +58,8 @@ namespace VRArchitecture.UI
             {
                 _targetField.text += character;
             }
+
+            OnKeyTyped?.Invoke(character);
         }
     }
 }

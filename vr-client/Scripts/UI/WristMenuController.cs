@@ -13,6 +13,7 @@ namespace VRArchitecture.UI
         [Header("UI Reference")]
         [SerializeField] private UIDocument _uiDocument;
         [SerializeField] private Transform  _parentModel;
+        [SerializeField] private GameObject _aiChatOverlay;
 
         private VisualElement _root;
         private bool _isMenuVisible = false;
@@ -30,7 +31,24 @@ namespace VRArchitecture.UI
             var buttons = _root.Query<Button>().ToList();
             foreach (var btn in buttons)
             {
-                btn.clicked += () => ToggleLayer(btn.name);
+                if (btn.name == "btn-ai-chat")
+                {
+                    btn.clicked += ToggleAIChat;
+                }
+                else
+                {
+                    string targetName = btn.name;
+                    btn.clicked += () => ToggleLayer(targetName);
+                }
+            }
+        }
+
+        private void ToggleAIChat()
+        {
+            if (_aiChatOverlay != null)
+            {
+                _aiChatOverlay.SetActive(!_aiChatOverlay.activeSelf);
+                if (_aiChatOverlay.activeSelf) SetMenuVisibility(false);
             }
         }
 
