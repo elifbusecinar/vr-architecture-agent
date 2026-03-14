@@ -1,0 +1,8 @@
+node_modules
+web-app
+vr-client
+docs
+.git
+.vercel
+*.pdf
+eslint-report.json

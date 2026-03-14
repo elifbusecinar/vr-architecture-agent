@@ -1,0 +1,9 @@
+node_modules
+.expo
+.eas
+dist
+app-archive
+web-app
+vr-client
+docs
+*.pdf
