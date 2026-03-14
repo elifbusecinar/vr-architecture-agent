@@ -28,7 +28,12 @@ axiosInstance.interceptors.request.use(async (config) => {
 axiosInstance.interceptors.response.use((response) => response, async (error) => {
     const originalRequest = error.config;
 
-    // Check if error is 401 array and original request wasn't already retried
+    // If there's no response at all (network error / no backend), just reject quietly
+    if (!error.response) {
+        return Promise.reject(error);
+    }
+
+    // Check if error is 401 and original request wasn't already retried
     if (error.response?.status === 401 && !originalRequest._retry) {
         const requestUrl = originalRequest.url || '';
         const isAuthEndpoint = AUTH_ENDPOINTS.some((ep) => requestUrl.includes(ep));

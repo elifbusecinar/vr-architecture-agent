@@ -52,13 +52,19 @@ export default function DashboardPage() {
                     setStats(statsRes);
                     setLoading(false);
 
-                    // Setup realtime & notifications
-                    await notificationService.requestPermissions();
+                    // Setup notifications (safe - won't crash)
+                    try { await notificationService.requestPermissions(); } catch (e) { console.log('Notifications skipped'); }
+
                     const projectIds = projRes.data?.map(p => p.id) || [];
                     if (projectIds.length > 0) {
-                        await signalRService.startConnection(projectIds);
-                        const insights = await aiService.getDashboardInsights(projRes.data);
-                        if (isMounted) setAiInsights(insights);
+                        // SignalR - may fail if no backend, that's OK
+                        try { await signalRService.startConnection(projectIds); } catch (e) { console.log('SignalR skipped - no backend'); }
+
+                        // AI Insights - may fail if no API key, that's OK
+                        try {
+                            const insights = await aiService.getDashboardInsights(projRes.data);
+                            if (isMounted) setAiInsights(insights);
+                        } catch (e) { console.log('AI insights skipped'); }
                     }
                 }
             } catch (err) {

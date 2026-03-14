@@ -95,7 +95,7 @@ export default function LoginPage() {
                             </Svg>
                         </TouchableOpacity>
                         <Text style={styles.topbarHint}>New to VRarch?</Text>
-                        <TouchableOpacity onPress={() => router.push('/create-account')}>
+                        <TouchableOpacity onPress={() => { /* Create account page coming soon */ }}>
                             <Text style={styles.signupLink}>Create account</Text>
                         </TouchableOpacity>
                     </View>
