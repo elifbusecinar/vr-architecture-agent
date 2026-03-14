@@ -74,4 +74,3 @@ graph TD
 - **Phase 3 (Proposed):** Voice-activated material swapping and real-time regulatory checking in VR.
 
 ---
-*Prepared by [USER_NAME]*

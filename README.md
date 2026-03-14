@@ -3,6 +3,8 @@
 
 **VR Architecture** is a cutting-edge platform for architects and real estate developers to experience their projects in full 1:1 scale VR via Meta Quest 3, integrated with an intelligent AI operations agent.
 
+🌍 **Live Demo:** [https://vr-architecture-agent.vercel.app](https://vr-architecture-agent.vercel.app)
+
 ---
 
 ## 🚀 Getting Started
