@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AiInsightsPage.css';
+import CrewAiPanel from './CrewAiPanel';
 
 const AiInsightsPage: React.FC = () => {
+    const [activeTab, setActiveTab] = useState<'insights' | 'crew' | 'history'>('insights');
+
     useEffect(() => {
         // Animate bar chart
         const data = [22, 31, 38, 45, 20];
@@ -38,6 +41,99 @@ const AiInsightsPage: React.FC = () => {
             </h1>
             <p className="page-sub">Updated just now · Based on 5 projects, 156 VR sessions, 4 active clients</p>
 
+            {/* Main Tabs */}
+            <div className="ai-main-tabs">
+                <button
+                    className={`ai-main-tab ${activeTab === 'insights' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('insights')}
+                >
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
+                    AI Insights
+                </button>
+                <button
+                    className={`ai-main-tab crew-tab ${activeTab === 'crew' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('crew')}
+                >
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="4" cy="8" r="2.5"/><circle cx="12" cy="5" r="2.5"/><circle cx="12" cy="11" r="2.5"/><path d="M6.5 8h1.5M8 5l2 1.5M8 11l2-1.5"/></svg>
+                    Crew Audit
+                    <span className="tab-new-badge">NEW</span>
+                </button>
+                <button
+                    className={`ai-main-tab history-tab ${activeTab === 'history' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('history')}
+                >
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M8 2v4l3 3M2 8a6 6 0 1012 0A6 6 0 002 8z"/></svg>
+                    Audit History
+                    <span className="tab-count-badge">3</span>
+                </button>
+            </div>
+
+            {/* Crew AI Tab */}
+            {activeTab === 'crew' && <CrewAiPanel />}
+
+            {/* History Tab */}
+            {activeTab === 'history' && (
+                <div className="audit-history-list">
+                    <div className="history-header">
+                        <div className="h-header-left">
+                            <div className="h-title">Audit <em>Archive</em></div>
+                            <div className="h-sub">Browse and compare previous Crew AI design assessments</div>
+                        </div>
+                        <div className="h-header-right">
+                            <span className="h-count">3 audits</span>
+                        </div>
+                    </div>
+                    
+                    <div className="history-cards">
+                        {[
+                            { name: 'Skyline Tower v3.1', date: 'Apr 02, 2026 · 14:22', score: 78, grade: 'B+', agents: ['🏗️','⚖️','💰','📋'], status: 'Completed', statusBg: 'rgba(74,124,89,0.08)', statusColor: '#4a7c59', statusBorder: 'rgba(74,124,89,0.2)', violations: '1 critical · 2 warnings', cost: '$59,456' },
+                            { name: 'Villa Redux Rev.2', date: 'Mar 28, 2026 · 11:30', score: 84, grade: 'B+', agents: ['🏗️','⚖️','💰'], status: 'Issues Found', statusBg: 'rgba(192,120,58,0.08)', statusColor: '#c0783a', statusBorder: 'rgba(192,120,58,0.2)', violations: '0 critical · 3 warnings', cost: '$41,220' },
+                            { name: 'Arctic Hub Concept', date: 'Mar 15, 2026 · 09:12', score: 92, grade: 'A', agents: ['🏗️','⚖️','💰','📋'], status: 'Excellent', statusBg: 'rgba(74,124,89,0.08)', statusColor: '#4a7c59', statusBorder: 'rgba(74,124,89,0.2)', violations: '0 critical · 0 warnings', cost: '$87,300' }
+                        ].map((item, idx) => (
+                            <div key={idx} className="h-card">
+                                <div className="h-card-left">
+                                    <div className="h-card-score-ring">
+                                        <svg viewBox="0 0 40 40" width="40" height="40">
+                                            <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(26,25,23,0.06)" strokeWidth="3" />
+                                            <circle cx="20" cy="20" r="16" fill="none" stroke={item.statusColor} strokeWidth="3"
+                                                strokeDasharray={`${item.score} ${100 - item.score}`} strokeDashoffset="25" strokeLinecap="round" />
+                                        </svg>
+                                        <span className="h-card-score-num">{item.score}</span>
+                                    </div>
+                                </div>
+                                <div className="h-card-center">
+                                    <div className="h-card-name">{item.name}</div>
+                                    <div className="h-card-meta">
+                                        <span className="h-card-date">{item.date}</span>
+                                        <span className="h-card-sep">·</span>
+                                        <span className="h-card-detail">{item.violations}</span>
+                                        <span className="h-card-sep">·</span>
+                                        <span className="h-card-detail">{item.cost}</span>
+                                    </div>
+                                    <div className="h-card-agents-row">
+                                        {item.agents.map((emoji, i) => (
+                                            <div key={i} className="h-card-agent">{emoji}</div>
+                                        ))}
+                                        <span className="h-card-agent-label">{item.agents.length} agents</span>
+                                    </div>
+                                </div>
+                                <div className="h-card-right">
+                                    <span className="h-status-pill" style={{ background: item.statusBg, color: item.statusColor, border: `1px solid ${item.statusBorder}` }}>
+                                        {item.status}
+                                    </span>
+                                    <button className="h-view-btn">
+                                        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
+                                        View Report
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* AI Insights Tab */}
+            {activeTab === 'insights' && <>
             {/* Period tabs */}
             <div className="period-tabs">
                 <button className="ptab">7 days</button>
@@ -579,6 +675,7 @@ const AiInsightsPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+            </>}
         </div>
     );
 };
