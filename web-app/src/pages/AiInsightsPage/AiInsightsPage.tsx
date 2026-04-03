@@ -188,7 +188,7 @@ const AiInsightsPage: React.FC = () => {
           <div className="history-cards">
             {MOCK_PROJECTS.data.slice(0, 3).map((p, idx) => {
               const score = Math.floor(p.progress * 0.9 + 10);
-              const grade = score > 85 ? "A" : score > 75 ? "B+" : "B";
+
               const date = p.createdAt.slice(0, 10);
               const violations =
                 idx === 0
