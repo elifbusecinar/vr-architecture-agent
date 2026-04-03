@@ -118,15 +118,6 @@ export default function AiAssistantPage() {
                     <span className="cur">AI Assistant</span>
                 </div>
                 <div className="topbar-right">
-                    <button className="t-btn">
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
-                        Search or jump to…
-                        <span style={{ color: "var(--light)", fontSize: "10px", marginLeft: "2px" }}>⌘K</span>
-                    </button>
-                    <button className="t-btn">
-                        <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                        Upload GLB
-                    </button>
                     <button className="t-btn p" onClick={() => { setMessages([]); }}>
                         <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
                         New Session
@@ -178,12 +169,6 @@ export default function AiAssistantPage() {
                                                 </svg>
                                                 Copy
                                             </button>
-                                            <button className="abt">
-                                                <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z" />
-                                                </svg>
-                                                Helpful
-                                            </button>
                                         </div>
                                     )}
                                 </div>
@@ -217,22 +202,6 @@ export default function AiAssistantPage() {
                                     <polygon points="22 2 15 22 11 13 2 9 22 2" />
                                 </svg>
                             </button>
-                        </div>
-                        <div className="ibar">
-                            <button className="ibb">
-                                <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" /></svg>
-                                Attach file
-                            </button>
-                            <div className="isep"></div>
-                            <button className="ibb">
-                                <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>
-                                Link project
-                            </button>
-                            <div className="mpill">
-                                <span className="live"></span>
-                                VRA Intelligence
-                                <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" width="9" height="9"><path d="m6 9 6 6 6-6" /></svg>
-                            </div>
                         </div>
                     </div>
                     <div className="ihint">VRA AI has context about your workspace · projects, clients & models</div>
