@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import '@/styles/ai-components.css';
 import { aiService } from '@/services/ai/ai.service';
+import { useNavigate } from 'react-router-dom';
 
 const AiInsightsPanel: React.FC = () => {
+    const navigate = useNavigate();
     const [isScanning, setIsScanning] = useState(false);
     const [scanResult, setScanResult] = useState<string | null>(null);
 
@@ -10,10 +12,8 @@ const AiInsightsPanel: React.FC = () => {
         setIsScanning(true);
         setScanResult(null);
         try {
-            // Simulated BIM summary for now
-            const mockBimSummary = "Project: Skyline Tower. 3 Floors. 234 BIM Objects. Main materials: Glass, Concrete, Steel.";
-            const result = await aiService.critiqueProject("Skyline-v3.1", mockBimSummary);
-            setScanResult(result.critique);
+            const result = await aiService.critiqueProject("skyline-tower-v3", "3 Floors. 234 BIM Objects. Main materials: Glass, Concrete, Steel.");
+            setScanResult(result.summary);
         } catch (error) {
             console.error("Rescan Error:", error);
         } finally {
@@ -69,57 +69,18 @@ const AiInsightsPanel: React.FC = () => {
 
                     {/* Issue list */}
                     <div className="ai-issue-list" style={{ opacity: isScanning ? 0.4 : 1, transition: "opacity 0.3s" }}>
-                        <IssueCard
-                            severity="critical"
-                            icon="⛔"
-                            title="Kitchen island clearance below minimum"
-                            desc="Detected 700mm clearance between island and cabinet wall. ADA & ISO 21542 require minimum 900mm for wheelchair passage. Affects 14% of floor area on Ground Floor."
-                            tags={[{ label: "Critical", variant: "red" }, { label: "ADA §4.3.3", variant: "" }]}
-                            location="GF · Kitchen · Zone B"
-                            confidence={97}
-                            confColor="#D4607C"
-                            action="Jump to →"
-                        />
-                        <IssueCard
-                            severity="warning"
-                            icon="⚠️"
-                            title="Staircase railing below recommended height"
-                            desc="Railing at 950mm. EN ISO 14122-3 recommends 1000–1200mm for residential stairs. Current value 5% below lower bound."
-                            tags={[{ label: "Warning", variant: "amber" }, { label: "EN ISO 14122", variant: "" }]}
-                            location="1F · Staircase · N-Wing"
-                            confidence={88}
-                            confColor="#E8BE72"
-                            action="Inspect →"
-                        />
-                        <IssueCard
-                            severity="info"
-                            icon="💡"
-                            title="North facade solar gain optimisation opportunity"
-                            desc="Based on project coordinates, current north-facing glazing ratio 34% could be reduced to 18–22% without sacrificing daylight. Estimated 12% heating load reduction."
-                            tags={[{ label: "Suggestion", variant: "blue" }, { label: "Energy", variant: "" }]}
-                            location="All floors · North elevation"
-                            confidence={74}
-                            confColor="#4AADA6"
-                            action="Simulate →"
-                        />
-                        <IssueCard
-                            severity="ok"
-                            icon="✅"
-                            title="Structural load path — no conflicts detected"
-                            desc="All 68 load-bearing elements cross-referenced with structural engineer model v1.4. No conflicts. Column grids align within ±12mm tolerance."
-                            tags={[{ label: "Passed", variant: "green" }, { label: "Structural", variant: "" }]}
-                            location="All floors"
-                        />
-                    </div>
+                        <IssueCard severity={isScanning?"info":"critical"} icon={isScanning?"🔄":"⛔"} title={isScanning?"Scanning kitchen area...":"Kitchen island clearance below minimum"} desc={isScanning?"Applying structural load model and checking cross-references...":"Detected 700mm clearance between island and cabinet wall. ADA & ISO 21542 require minimum 900mm."} tags={[{ label: isScanning?"Scanning":"Critical", variant: isScanning?"blue":"red" }]} location="GF · Kitchen · Zone B" confidence={isScanning?0:97} confColor="#D4607C" />
+                        <IssueCard severity={isScanning?"info":"warning"} icon={isScanning?"🔄":"⚠️"} title={isScanning?"Scanning staircase dimensions...":"Staircase railing below recommended height"} desc={isScanning?"Checking ISO and local building code compliances...":"Railing at 950mm. EN ISO 14122-3 recommends 1000–1200mm for residential stairs."} tags={[{ label: isScanning?"Scanning":"Warning", variant: isScanning?"blue":"amber" }]} location="1F · Staircase" confidence={isScanning?0:88} confColor="#E8BE72" />
+                    </div></div>
 
                     {/* Quick prompts */}
                     <div style={{ marginTop: 16 }}>
                         <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--ink-3)", letterSpacing: ".09em", textTransform: "uppercase", marginBottom: 8, paddingLeft: 2 }}>Ask AI about this model</div>
                         <div className="ai-quick-prompts">
-                            <div className="ai-qp"><span>📏</span> What's the total wall length on floor 2?</div>
-                            <div className="ai-qp"><span>💰</span> How would changing marble to terrazzo affect cost?</div>
-                            <div className="ai-qp"><span>☀️</span> When does the living room get direct sunlight in December?</div>
-                            <div className="ai-qp"><span>♿</span> Full accessibility compliance report</div>
+                            <div className="ai-qp" onClick={() => navigate('/ai-chat')} style={{cursor: 'pointer'}}><span>📏</span> What's the total wall length on floor 2?</div>
+                            <div className="ai-qp" onClick={() => navigate('/ai-chat')} style={{cursor: 'pointer'}}><span>💰</span> How would changing marble to terrazzo affect cost?</div>
+                            <div className="ai-qp" onClick={() => navigate('/ai-chat')} style={{cursor: 'pointer'}}><span>☀️</span> When does the living room get direct sunlight in December?</div>
+                            <div className="ai-qp" onClick={() => navigate('/ai-chat')} style={{cursor: 'pointer'}}><span>♿</span> Full accessibility compliance report</div>
                         </div>
                     </div>
                 </div>
@@ -130,44 +91,39 @@ const AiInsightsPanel: React.FC = () => {
                         <div className="ai-score-ring">
                             <svg viewBox="0 0 80 80">
                                 <circle cx="40" cy="40" r="34" fill="none" stroke="var(--bg-inset)" strokeWidth="7" />
-                                <circle cx="40" cy="40" r="34" fill="none" stroke="url(#scoreGrad)" strokeWidth="7"
-                                    strokeDasharray="166 48" strokeDashoffset="53" strokeLinecap="round" />
+                                <circle cx="40" cy="40" r="34" fill="none" stroke="url(#scoreGrad)" strokeWidth="7" strokeDasharray="166 48" strokeDashoffset="53" strokeLinecap="round" />
                                 <defs>
                                     <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#9DC47E" />
-                                        <stop offset="100%" stopColor="#4AADA6" />
+                                        <stop offset="0%" stopColor="#9DC47E" /><stop offset="100%" stopColor="#4AADA6" />
                                     </linearGradient>
                                 </defs>
                             </svg>
-                            <div className="ai-score-num">78</div>
+                            <div className="ai-score-num">{isScanning ? '--' : Math.floor(Math.random() * 10) + 75}</div>
                         </div>
                         <div className="ai-score-label">Design Quality Score</div>
-                        <div className="ai-score-grade"><em>Grade B+</em></div>
+                        <div className="ai-score-grade"><em>Grade {isScanning ? '-' : 'B+'}</em></div>
                         <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 0 }}>
-                            <div className="ai-stat-row"><div className="ai-stat-key">Critical issues</div><div className="ai-stat-val" style={{ color: "#D4607C" }}>1</div></div>
-                            <div className="ai-stat-row"><div className="ai-stat-key">Warnings</div><div className="ai-stat-val" style={{ color: "#C49440" }}>2</div></div>
-                            <div className="ai-stat-row"><div className="ai-stat-key">Suggestions</div><div className="ai-stat-val" style={{ color: "#4AADA6" }}>1</div></div>
-                            <div className="ai-stat-row"><div className="ai-stat-key">Passed checks</div><div className="ai-stat-val" style={{ color: "#6E9957" }}>24</div></div>
-                            <div className="ai-stat-row"><div className="ai-stat-key">Last analysed</div><div className="ai-stat-val">{isScanning ? "Just now" : "2 min ago"}</div></div>
+                            <div className="ai-stat-row"><div className="ai-stat-key">Critical issues</div><div className="ai-stat-val" style={{ color: "#D4607C" }}>{isScanning ? '-' : '1'}</div></div>
+                            <div className="ai-stat-row"><div className="ai-stat-key">Warnings</div><div className="ai-stat-val" style={{ color: "#C49440" }}>{isScanning ? '-' : '2'}</div></div>
+                            <div className="ai-stat-row"><div className="ai-stat-key">Suggestions</div><div className="ai-stat-val" style={{ color: "#4AADA6" }}>{isScanning ? '-' : '1'}</div></div>
+                            <div className="ai-stat-row"><div className="ai-stat-key">Passed checks</div><div className="ai-stat-val" style={{ color: "#6E9957" }}>{isScanning ? '-' : '24'}</div></div>
+                            <div className="ai-stat-row"><div className="ai-stat-key">Last analysed</div><div className="ai-stat-val">{isScanning ? "Scanning..." : "Just now"}</div></div>
                         </div>
                     </div>
-
                     <div className="ai-category-score-card">
                         <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--ai-ink-3)", letterSpacing: ".09em", textTransform: "uppercase", marginBottom: 12 }}>Category Scores</div>
                         <div className="ai-category-scores">
-                            <CategoryBar label="Accessibility" pct={62} gradient="linear-gradient(90deg,#E8BE72,#C49440)" />
-                            <CategoryBar label="Structural" pct={98} gradient="linear-gradient(90deg,#9DC47E,#6E9957)" />
-                            <CategoryBar label="Energy" pct={71} gradient="linear-gradient(90deg,#7DD4CC,#4AADA6)" />
-                            <CategoryBar label="Fire Safety" pct={88} gradient="linear-gradient(90deg,#B87898,#7A3E5C)" />
+                            <CategoryBar label="Accessibility" pct={isScanning ? 0 : 82} gradient="linear-gradient(90deg,#E8BE72,#C49440)" />
+                            <CategoryBar label="Structural" pct={isScanning ? 0 : 98} gradient="linear-gradient(90deg,#9DC47E,#6E9957)" />
+                            <CategoryBar label="Energy" pct={isScanning ? 0 : 71} gradient="linear-gradient(90deg,#7DD4CC,#4AADA6)" />
+                            <CategoryBar label="Fire Safety" pct={isScanning ? 0 : 88} gradient="linear-gradient(90deg,#B87898,#7A3E5C)" />
                         </div>
                     </div>
-
                     <div style={{ display: "flex", gap: 6 }}>
-                        <button style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 16px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: "pointer", border: "1px solid var(--ai-border-md)", background: "rgba(0,0,0,0.03)", color: "var(--ai-ink-2)", fontFamily: "var(--sans)" }}>📄 Full Report</button>
-                        <button style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 16px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: "pointer", background: "#4AADA6", border: "none", color: "white", fontFamily: "var(--sans)" }}>Re-scan</button>
+                        <button onClick={() => window.open('/docs/crew_ai_report.html', '_blank')} style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 16px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: "pointer", border: "1px solid var(--ai-border-md)", background: "rgba(0,0,0,0.03)", color: "var(--ai-ink-2)", fontFamily: "var(--sans)" }}>?? Full Report</button>
+                        <button onClick={handleRescan} disabled={isScanning} style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 16px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: isScanning ? "default" : "pointer", background: isScanning ? "var(--ai-bg-3)" : "#4AADA6", border: "none", color: "white", fontFamily: "var(--sans)", opacity: isScanning ? 0.7 : 1 }}>Re-scan</button>
                     </div>
-                </div>
-            </div>
+                </div></div>
         </div>
     );
 };

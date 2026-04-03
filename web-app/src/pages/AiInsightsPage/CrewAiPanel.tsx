@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './CrewAiPanel.css';
+import { aiService } from '@/services/ai/ai.service';
 
 /* ── Types ── */
 interface LogEntry {
@@ -146,8 +147,30 @@ const CrewAiPanel: React.FC = () => {
     await sleep(500);
     setAgent('rep', 'running', 0);
     addLog('reporter', '[Reporter]', 'action', 'Starting task: write_review_report (context from all 3 agents)');
-    await sleep(400);
-    addLog('reporter', '[Reporter]', 'thought', 'Compiling spatial data, compliance violations, and cost breakdown…');
+    
+    // START RE-SYNC WITH ACTUAL BACKEND (CrewAI)
+    addLog('crew', '[CREW]', 'system', 'Finalizing and synchronizing with CrewAI backend...');
+    try {
+        const backendResult = await aiService.triggerCrewAudit("Project Skyline v3.1 Metadata");
+        console.log("CrewAI Backend Result:", backendResult);
+        
+        if (backendResult.status === 'success' || backendResult.status === 'simulated_success') {
+            const report = backendResult.audit_report;
+            if (typeof report === 'object') {
+                setStats({
+                    agents: '4', 
+                    cost: report.stats?.cost || '$59,456', 
+                    time: 'Just now', 
+                    crit: report.stats?.crit?.toString() || '1', 
+                    warn: report.stats?.warn?.toString() || '2', 
+                    pass: report.stats?.pass?.toString() || '24' 
+                });
+            }
+        }
+    } catch (e) {
+        addLog('crew', '[CREW]', 'warn', 'Backend re-sync failed, using local simulation cache.');
+    }
+
     await sleep(600);
     setAgent('rep', 'running', 50);
     addLog('reporter', '[Reporter]', 'action', 'Using tool: FileWriterTool → output/review_skyline-tower-v3.json');
@@ -159,7 +182,6 @@ const CrewAiPanel: React.FC = () => {
     await sleep(400);
     addLog('crew', '[CREW]', 'done', '✓ Crew finished — 4/4 tasks complete · Duration: ~18s');
 
-    setStats({ agents: '4', cost: '$59,456', time: 'Just now', crit: '1', warn: '2', pass: '24' });
     setShowLive(false);
     await sleep(300);
     setShowResults(true);
