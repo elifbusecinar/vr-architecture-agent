@@ -1,0 +1,28 @@
+design_audit_task:
+  description: >-
+    Perform a complete spatial analysis of the BIM project metadata: 
+    {model_metadata}. 
+    Focus on room sizes, accessibility, and the flow of movement 
+    within the 1:1 VR model. Identify at least 3 areas for improvement.
+  expected_output: >-
+    A detailed spatial audit report with a list of "High Priority Fixes" 
+    and "Aesthetic Recommendations" for the architect.
+
+safety_compliance_task:
+  description: >-
+    Review the BIM project data for fire safety paths, structural 
+    clashes, and local building code compliance. 
+    Pay special care to stairway dimensions and structural supports 
+    found in {model_metadata}.
+  expected_output: >-
+    A safety compliance report highlighting potential hazards or 
+    regulatory violations that must be fixed before client walkthrough.
+
+sustainability_report_task:
+  description: >-
+    Analyze the material list and energy data within {model_metadata}. 
+    Estimate a rough budget based on current market rates and propose 
+    at least 2 sustainable material alternatives.
+  expected_output: >-
+    A structured report containing a "Budget Overview", "Sustainability 
+    Score", and "Eco-Friendly Material Suggestions".
