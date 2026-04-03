@@ -10,7 +10,7 @@ import type { ProjectDetail, ProjectWaypoint } from '@/types/project.types';
 import type { Annotation } from '@/types/annotation.types';
 import HeatmapStats from '@/components/analytics/HeatmapStats';
 import { bimService } from '@/services/bim/bim.service';
-import { aiService } from '@/services/ai/ai.service';
+import { aiService, CritiqueResult } from '@/services/ai/ai.service';
 import { analyticsService } from '@/services/analytics/analytics.service';
 import { webrtcService } from '@/services/realtime/webrtc.service';
 
@@ -40,11 +40,15 @@ const ThreeDViewer: React.FC<ThreeDViewerProps> = ({ modelUrl, compareModelUrl, 
     const pinsRef = useRef<{ id: string, mesh: THREE.Mesh, ring: THREE.Mesh, ringMat: THREE.MeshBasicMaterial }[]>([]);
     const measureLineRef = useRef<THREE.Line | null>(null);
     const measurePointsMeshesRef = useRef<THREE.Mesh[]>([]);
+    
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const audioChunksRef = useRef<BlobPart[]>([]);
+    const [isRecording, setIsRecording] = useState(false);
 
     const [currentTool, setCurrentTool] = useState('orbit');
     const [isPanelOpen, setIsPanelOpen] = useState(true);
     const [panelTab, setPanelTab] = useState('props');
-    const [critiqueResult, setCritiqueResult] = useState<any>(null);
+    const [critiqueResult, setCritiqueResult] = useState<CritiqueResult | null>(null);
     const [isCritiquing, setIsCritiquing] = useState(false);
     const [ambientIntensity, setAmbientIntensity] = useState(65);
     const [sunIntensity, setSunIntensity] = useState(80);
@@ -1337,15 +1341,52 @@ const ThreeDViewer: React.FC<ThreeDViewerProps> = ({ modelUrl, compareModelUrl, 
                             }}
                             disabled={isTranscribing}
                             onClick={async () => {
-                                setIsTranscribing(true);
-                                try {
-                                    const result = await aiService.transcribeAudio('sample-audio-data');
-                                    setAnnotateText(prev => prev + (prev ? '\n' : '') + result.text);
-                                } catch (err) { console.error('STT failed:', err); }
-                                finally { setIsTranscribing(false); }
+                                if (isRecording) {
+                                    if (mediaRecorderRef.current) mediaRecorderRef.current.stop();
+                                    setIsRecording(false);
+                                } else {
+                                    try {
+                                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                                        const mediaRecorder = new MediaRecorder(stream);
+                                        mediaRecorderRef.current = mediaRecorder;
+                                        audioChunksRef.current = [];
+
+                                        mediaRecorder.ondataavailable = (event) => {
+                                            if (event.data.size > 0) audioChunksRef.current.push(event.data);
+                                        };
+
+                                        mediaRecorder.onstop = async () => {
+                                            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+                                            const reader = new FileReader();
+                                            reader.readAsDataURL(audioBlob);
+                                            reader.onloadend = async () => {
+                                                const base64Audio = (reader.result as string).split(',')[1];
+                                                setIsTranscribing(true);
+                                                try {
+                                                    const result = await aiService.transcribeAudio(base64Audio);
+                                                    setAnnotateText(prev => prev + (prev ? '\n' : '') + result.text);
+                                                } catch (err) { console.error('STT failed:', err); }
+                                                finally { setIsTranscribing(false); }
+                                            };
+                                            stream.getTracks().forEach(track => track.stop());
+                                        };
+
+                                        mediaRecorder.start();
+                                        setIsRecording(true);
+                                    } catch (err) {
+                                        console.error("Microphone access denied:", err);
+                                        alert("Microphone access is required for Voice Notes. (Simulation will run without it)");
+                                        // Optional simulation fallback
+                                        setIsTranscribing(true);
+                                        try {
+                                            const result = await aiService.transcribeAudio(`voice_note_${Date.now()}`);
+                                            setAnnotateText(prev => prev + (prev ? '\n' : '') + result.text);
+                                        } finally { setIsTranscribing(false); }
+                                    }
+                                }
                             }}
                         >
-                            {isTranscribing ? '⏳ Listening...' : '🎤 Voice Note'}
+                            {isRecording ? '⏹ Recording... (Click to stop)' : isTranscribing ? '⏳ Processing...' : '🎤 Voice Note'}
                         </button>
                         <button
                             className="btn"
