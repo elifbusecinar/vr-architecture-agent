@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useChat } from '@/context/ChatContext';
+import ReactMarkdown from 'react-markdown';
 import { aiService } from '@/services/ai/ai.service';
 import '@/styles/ai-assistant.css';
 
@@ -159,7 +160,13 @@ export default function AiAssistantPage() {
                                         <span className="mn">{m.role === 'u' ? 'You' : 'VRA Intelligence'}</span>
                                         <span className="mt">{m.time}</span>
                                     </div>
-                                    <div className="bubble" dangerouslySetInnerHTML={{ __html: m.text }} />
+                                    <div className="bubble">
+                                        {m.role === 'u' ? (
+                                            m.text
+                                        ) : (
+                                            <ReactMarkdown>{m.text}</ReactMarkdown>
+                                        )}
+                                    </div>
                                     {m.role === 'ai' && (
                                         <div className="macts">
                                             <button className="abt" onClick={(e) => copyToClipboard(m.text.replace(/<[^>]*>/g, ''), e)}>
