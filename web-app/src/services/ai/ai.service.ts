@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { MOCK_PROJECTS, MOCK_ACTIVITIES } from '../mockData';
 
 // Initialize Gemini SDK with API key from environment variables
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
@@ -16,9 +17,16 @@ export interface VisionAnalysisResult {
     confidence: number;
 }
 
+export interface CritiqueResult {
+    projectId: string;
+    summary: string;
+    findings: string[];
+    suggestedTheme: string;
+    safetyWarning: boolean;
+    source: string;
+}
+
 export const aiService = {
-    // Note: STT typically uses Whisper or Gemini Multimodal audio. 
-    // For this Lite version, we use a simulated response if no API key is present.
     transcribeAudio: async (base64Audio: string): Promise<STTResult> => {
         if (!API_KEY) {
             const responses = [
@@ -68,27 +76,57 @@ export const aiService = {
         };
     },
 
-    critiqueProject: async (projectId: string, bimSummary: string): Promise<any> => {
+    critiqueProject: async (projectId: string, bimSummary: string): Promise<CritiqueResult> => {
         if (!API_KEY) {
-            const critiques = [
-                "BIM data analyzed. Recommendation: Increase staircase clearance by 15cm to meet regional accessibility standards.",
-                "Structural conflict detected: HVAC ducting on Floor 2 intersects with primary load-bearing beam B-12.",
-                "Material efficiency tip: Swapping the current glazing for Triple-Low-E glass will reduce cooling load by 14%."
+            const project = MOCK_PROJECTS.data.find(p => p.id === projectId) || MOCK_PROJECTS.data[0];
+            
+            const results: CritiqueResult[] = [
+                {
+                    projectId: project.id,
+                    summary: `Spatial analysis for ${project.title} completed. Layout is efficient but circulation around the core could be optimized.`,
+                    findings: [
+                        "Staircase clearance in N-Wing is 5% below standard.",
+                        "North facade glazing ratio (34%) is high for the climate zone.",
+                        "HVAC routing in Floor 2 has minor structural clearance issues."
+                    ],
+                    suggestedTheme: "Optimized Brutalism",
+                    safetyWarning: true,
+                    source: "Archie Engine (Simulated)"
+                },
+                {
+                    projectId: project.id,
+                    summary: `Material study for ${project.title} suggests high sustainability potential.`,
+                    findings: [
+                        "Foundations exceed loading requirements by 12%.",
+                        "Material swap: Italian Marble ($185/m²) to Local Granite ($120/m²) saves $12k.",
+                        "Lighting levels in internal rooms depend heavily on active cooling."
+                    ],
+                    suggestedTheme: "Eco-Industrial",
+                    safetyWarning: false,
+                    source: "Archie Engine (Simulated)"
+                }
             ];
-            return {
-                projectId,
-                critique: critiques[Math.floor(Math.random() * critiques.length)],
-                source: "Gemini 1.5 Flash (Simulated)"
-            };
+
+            return results[Math.floor(Math.random() * results.length)];
         }
 
         const model = genAI.getGenerativeModel({ model: "gemini-pro-latest" });
-        const prompt = `As 'Archie', an AI Architecture Specialist, critique this BIM data summary for Project ${projectId}: ${bimSummary}`;
+        const prompt = `As 'Archie', an AI Architecture Specialist, critique this BIM data summary for Project ${projectId}: ${bimSummary}. 
+        Return a JSON object with: summary (string), findings (array of strings), suggestedTheme (string), and safetyWarning (boolean).`;
 
         const result = await model.generateContent(prompt);
+        let parsed;
+        try {
+            const text = result.response.text();
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : { summary: text, findings: [], suggestedTheme: "Modern", safetyWarning: false };
+        } catch (e) {
+            parsed = { summary: result.response.text(), findings: [], suggestedTheme: "Modern", safetyWarning: false };
+        }
+
         return {
+            ...parsed,
             projectId,
-            critique: result.response.text(),
             source: "Google Gemini"
         };
     },
@@ -98,22 +136,48 @@ export const aiService = {
         const lowerMsg = lastMsgText.toLowerCase();
 
         if (!API_KEY) {
+            // Context injection from mock data
             if (lowerMsg.includes("project")) {
-                return "You have 3 active projects: Skyline Tower, Villa Redux, and the Arctic Hub. Skyline Tower has the most recent activity (BIM update 2 hours ago).";
+                const names = MOCK_PROJECTS.data.map(p => p.title).join(", ");
+                const top = MOCK_PROJECTS.data[0].title;
+                return `You have ${MOCK_PROJECTS.data.length} active projects in your workspace: **${names}**. **${top}** has the most activity with ${MOCK_PROJECTS.data[0].progress}% completion.`;
             }
-            if (lowerMsg.includes("summarize") || lowerMsg.includes("overview")) {
-                return "Your workspace is healthy. 1 critical issue in Skyline Tower (staircase clearance) and 2 warnings in Villa Redux. Would you like me to generate a detailed compliance report?";
+            if (lowerMsg.includes("summarize") || lowerMsg.includes("overview") || lowerMsg.includes("status")) {
+                const total = MOCK_PROJECTS.data.length;
+                const active = MOCK_PROJECTS.data.filter(p => p.status === 'VRActive').length;
+                return `Your workspace summary:
+                - **Total Projects:** ${total}
+                - **VR Active:** ${active}
+                - **Recent Activity:** ${MOCK_ACTIVITIES[0].message}
+                - **Critical Issues:** 1 (Staircase clearance in Skyline Tower)
+                Would you like me to generate a detailed compliance report for your active projects?`;
             }
             if (lowerMsg.includes("hello") || lowerMsg.includes("hi")) {
-                return "Hello! I'm Archie, your VRA Intelligence assistant. I'm currently running in **Simulation Mode** because a Gemini API key isn't set, but I can still show you around your workspace!";
+                return "Hello! I'm Archie, your VRA Intelligence assistant. I've scanned your workspace and detected **${MOCK_PROJECTS.data.length} projects**. How can I assist you with your designs today?";
+            }
+            if (lowerMsg.includes("client")) {
+                const clients = Array.from(new Set(MOCK_PROJECTS.data.map(p => p.clientName))).join(", ");
+                return `Currently collaborating with: **${clients}**. Most active participant is Client John (42 sessions in Skyline Tower).`;
             }
 
-            return "I'm Archie, your AI assistant. (Simulation Mode). I can help you with BIM data, material suggestions, and code compliance. Try asking about your projects!";
+            return "I'm Archie, your AI assistant. I can help you with BIM data, material suggestions, and code compliance. Try asking about your projects, clients, or a workspace summary!";
         }
 
         const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        
+        // Inject workspace context into the first message if it's the start
+        const context = `Context: User has ${MOCK_PROJECTS.data.length} projects (${MOCK_PROJECTS.data.map(p => p.title).join(", ")}). 
+        Current active project with most revisions is ${MOCK_PROJECTS.data[0].title}.`;
+        
+        const systemPrompt = `You are Archie, a premium AI architecture assistant for VRA (VR Architecture). 
+        Help with BIM, compliance, and project management. ${context}`;
+
         const chat = model.startChat({
-            history: history.slice(0, -1),
+            history: [
+                { role: 'user', parts: [{ text: systemPrompt }] },
+                { role: 'model', parts: [{ text: "Understood. I am Archie, your architectural expert. How can I help with your projects today?" }] },
+                ...history.slice(0, -1)
+            ],
         });
 
         const result = await chat.sendMessage(lastMsgText);
@@ -130,14 +194,19 @@ export const aiService = {
             if (!response.ok) throw new Error('CrewAI Service Offline');
             return await response.json();
         } catch (err) {
-            // High-quality simulation fallback for presentation
-            await new Promise(res => setTimeout(res, 2000)); // Simulate thinking
+            // Strategic simulation for UI/UX
+            await new Promise(res => setTimeout(res, 2000));
             return {
                 status: "simulated_success",
-                audit_report: `### Archie Crew Audit Final Report
-1. **Architecture Auditor:** Spatial flow is excellent, but recommend 12% more glazing in North elevation.
-2. **Structural Analyst:** Verified load-bearing logic. Foundation depth meets 2024 compliance.
-3. **Sustainability Expert:** Swapping current insulation for 'Bio-Aerogel' will improve LEED score by 4 points.`
+                audit_report: {
+                    summary: "Multi-agent audit completed successfully.",
+                    results: [
+                        { agent: "BIM Analyst", result: "12 rooms parsed. All geometries manifold." },
+                        { agent: "Compliance", result: "3 violations found: Kitchen clearance (High), Railing height (Med), Glazing ratio (Low)." },
+                        { agent: "Cost Estimator", result: "Total estimated material cost: $59,456 USD." }
+                    ],
+                    stats: { crit: 1, warn: 2, pass: 24, score: 78 }
+                }
             };
         }
     }
