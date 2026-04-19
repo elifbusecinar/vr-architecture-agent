@@ -33,8 +33,15 @@ You can download the native Android version of the platform directly:
 This project is organized into a monorepo structure:
 
 - **`web-app/`**: The core web platform (React + Vite). High-end dashboard, project management, and AI assistant.
+- **`crew_ai_service/`**: Python-based AI service orchestrating multiple agents using **CrewAI** and **LangGraph**.
 - **`mobile-app/`**: Companion mobile application (Expo + React Native).
 - **`vr-client/`**: VR visualization specialized modules.
+
+## 🧠 AI Agent Architecture
+The system utilizes a hybrid AI architecture for architectural auditing:
+1.  **CrewAI**: Manages specialized agents (Auditor, Analyst, Expert) for detailed technical tasks.
+2.  **LangGraph**: Acts as the master orchestrator, managing stateful flows and a "Review-Refine" loop to ensure audit quality.
+3.  **LangSmith**: Integrated for full traceability and performance monitoring of agentic reasoning.
 - **`docs/`**: Internal architecture.
 ```text
 /
