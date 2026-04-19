@@ -271,6 +271,7 @@
 .log-agent.compliance { color: #4a7c59; }
 .log-agent.cost       { color: #E8BE72; }
 .log-agent.reporter   { color: #B87898; }
+.log-agent.langgraph  { color: #3a6fa8; font-weight: 700; }
 .log-agent.crew       { color: rgba(255,255,255,0.3); }
 
 .log-msg        { flex: 1; }

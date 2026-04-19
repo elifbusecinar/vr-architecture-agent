@@ -26,7 +26,7 @@ const INITIAL_AGENTS: Record<string, AgentState> = {
 };
 
 const INITIAL_STATS = {
-  agents: '—', cost: '—', time: 'Never', crit: '1', warn: '2', pass: '24',
+  agents: '—', cost: '—', time: 'Never', crit: '1', warn: '2', pass: '24', iterations: '0'
 };
 
 /* ── Helpers ── */
@@ -156,6 +156,10 @@ const CrewAiPanel: React.FC = () => {
         
         if (backendResult.status === 'success' || backendResult.status === 'simulated_success') {
             const report = backendResult.audit_report;
+            const iterations = backendResult.iterations || 1;
+            
+            addLog('langgraph', '[LANGGRAPH]', 'system', `Stateful orchestration complete. Total iterations: ${iterations}`);
+            
             if (typeof report === 'object') {
                 setStats({
                     agents: '4', 
@@ -163,8 +167,12 @@ const CrewAiPanel: React.FC = () => {
                     time: 'Just now', 
                     crit: report.stats?.crit?.toString() || '1', 
                     warn: report.stats?.warn?.toString() || '2', 
-                    pass: report.stats?.pass?.toString() || '24' 
+                    pass: report.stats?.pass?.toString() || '24',
+                    iterations: iterations.toString()
                 });
+            } else {
+                // If it's a string (which the real backend returns now)
+                setStats(prev => ({ ...prev, iterations: iterations.toString(), time: 'Just now' }));
             }
         }
     } catch (e) {
@@ -338,17 +346,10 @@ const CrewAiPanel: React.FC = () => {
                 <pre className="output-json">{`{
   "project_id": "skyline-tower-v3",
   "generated_at": "${new Date().toISOString().slice(0, 19)}Z",
+  "orchestrator": "LangGraph (Stateful)",
+  "iterations": ${stats.iterations},
   "crew_process": "sequential",
   "agents_used": 4,
-  "compliance": {
-    "violations": 3,
-    "critical": 1,
-    "passed_checks": 24
-  },
-  "cost_estimate": {
-    "grand_total_usd": 59456,
-    "currency": "USD"
-  },
   "status": "complete"
 }`}</pre>
               </div>
@@ -381,6 +382,7 @@ const CrewAiPanel: React.FC = () => {
             <div className="crewai-stat-row"><span className="crewai-sk">Critical issues</span><span className="crewai-sv" style={{ color: '#c0783a' }}>{stats.crit}</span></div>
             <div className="crewai-stat-row"><span className="crewai-sk">Warnings</span><span className="crewai-sv" style={{ color: '#c0783a' }}>{stats.warn}</span></div>
             <div className="crewai-stat-row"><span className="crewai-sk">Passed checks</span><span className="crewai-sv" style={{ color: '#4a7c59' }}>{stats.pass}</span></div>
+            <div className="crewai-stat-row"><span className="crewai-sk">Iterations</span><span className="crewai-sv" style={{ color: '#3a6fa8', fontWeight: 'bold' }}>{stats.iterations} (LangGraph)</span></div>
             <div className="crewai-stat-row"><span className="crewai-sk">Agents run</span><span className="crewai-sv">{stats.agents}</span></div>
             <div className="crewai-stat-row"><span className="crewai-sk">Cost estimate</span><span className="crewai-sv">{stats.cost}</span></div>
             <div className="crewai-stat-row"><span className="crewai-sk">Last audit</span><span className="crewai-sv">{stats.time}</span></div>
