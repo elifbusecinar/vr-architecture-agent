@@ -59,3 +59,29 @@ The system utilizes a hybrid AI architecture for architectural auditing:
 
 ---
 *Assignment: Web Development Fundamentals & AI System Planning*
+
+## ✅ CrewAI + LangGraph (runs locally)
+The monorepo includes a Python AI service in `crew_ai_service/` that runs **CrewAI** agents inside a **LangGraph** workflow.
+
+### 1) Start the AI service
+```bash
+cd crew_ai_service
+python -m venv .venv
+# Windows PowerShell:
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+uvicorn main:app --reload --port 8000
+```
+
+### 2) Call the LangGraph workflow
+```bash
+curl -X POST http://127.0.0.1:8000/audit -H "Content-Type: application/json" -d "{\"model_metadata\":\"3BR apartment, 120m2, seismic zone 2, budget 200k USD\"}"
+```
+
+### 3) LangSmith (optional but recommended)
+- Add `LANGCHAIN_API_KEY` to `crew_ai_service/.env`
+- Tracing is **enabled automatically only when** `LANGCHAIN_API_KEY` is present.
+
+## 🧾 Report (PDF submission)
+Fill out `REPORT.md`, paste screenshots, then export it to PDF for submission.

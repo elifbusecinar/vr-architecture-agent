@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# LangSmith Integration for tracing and debugging
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_PROJECT"] = "VR-Architecture-Audit-Flow"
-# Ensure LANGCHAIN_API_KEY is in your .env file
+# LangSmith Integration for tracing and debugging (opt-in)
+# If LANGCHAIN_API_KEY isn't set, we keep tracing disabled so local runs work
+# without requiring a LangSmith account.
+if os.getenv("LANGCHAIN_API_KEY"):
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ.setdefault("LANGCHAIN_PROJECT", "VR-Architecture-Audit-Flow")
 
 class GraphState(TypedDict):
     """
