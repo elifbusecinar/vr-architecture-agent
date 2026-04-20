@@ -1,7 +1,7 @@
 import os
 from typing import TypedDict, Dict, Any
 from langgraph.graph import StateGraph, END
-from crew import VRArcCrew
+from .crew import VRArcCrew
 from dotenv import load_dotenv
 
 load_dotenv()

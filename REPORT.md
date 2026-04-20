@@ -27,16 +27,15 @@ Add **LangGraph** to the existing project (alongside **CrewAI**) to orchestrate 
 From repo root:
 
 ```bash
-cd crew_ai_service
 python -m venv .venv
 # Windows PowerShell:
 .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r crew_ai_service/requirements.txt
 
 # Copy env template and fill keys
-copy .env.example .env
+copy crew_ai_service/.env.example crew_ai_service/.env
 
-uvicorn main:app --reload --port 8000
+uvicorn crew_ai_service.main:app --reload --port 8000
 ```
 
 Test request (example):

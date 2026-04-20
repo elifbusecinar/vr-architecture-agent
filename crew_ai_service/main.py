@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from crew import VRArcCrew
-from workflow import lang_graph_app
+from .workflow import lang_graph_app
 from dotenv import load_dotenv
 import os
 

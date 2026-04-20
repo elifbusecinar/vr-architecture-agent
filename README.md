@@ -65,13 +65,12 @@ The monorepo includes a Python AI service in `crew_ai_service/` that runs **Crew
 
 ### 1) Start the AI service
 ```bash
-cd crew_ai_service
 python -m venv .venv
 # Windows PowerShell:
 .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-copy .env.example .env
-uvicorn main:app --reload --port 8000
+pip install -r crew_ai_service/requirements.txt
+copy crew_ai_service/.env.example crew_ai_service/.env
+uvicorn crew_ai_service.main:app --reload --port 8000
 ```
 
 ### 2) Call the LangGraph workflow
