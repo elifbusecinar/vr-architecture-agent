@@ -1,5 +1,6 @@
 import os
 from crewai import Agent, Crew, Process, Task
+from crewai import LLM
 from crewai.project import CrewBase, agent, crew, task
 import yaml
 from dotenv import load_dotenv
@@ -10,20 +11,27 @@ load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
 
 def _build_llm():
 	"""
-	Create an LLM client for CrewAI.
+	Create an LLM config for CrewAI.
 	Priority: Gemini (GOOGLE_API_KEY) -> OpenAI (OPENAI_API_KEY)
 	"""
 	google_key = os.getenv("GOOGLE_API_KEY")
 	openai_key = os.getenv("OPENAI_API_KEY")
 
 	if google_key:
-		from langchain_google_genai import ChatGoogleGenerativeAI
-		# Fast + good for structured agentic work; change if you prefer a different model.
-		return ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.2)
+		return LLM(
+			provider="google",
+			model="gemini-1.5-flash",
+			api_key=google_key,
+			temperature=0.2,
+		)
 
 	if openai_key:
-		from langchain_openai import ChatOpenAI
-		return ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
+		return LLM(
+			provider="openai",
+			model="gpt-4o-mini",
+			api_key=openai_key,
+			temperature=0.2,
+		)
 
 	raise RuntimeError("Missing API Key in environment (set GOOGLE_API_KEY or OPENAI_API_KEY).")
 

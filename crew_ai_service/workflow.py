@@ -15,6 +15,9 @@ _ls_key = os.getenv("LANGCHAIN_API_KEY", "")
 if _ls_key and not _ls_key.lower().startswith("your_"):
     os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2", "true")
     os.environ.setdefault("LANGCHAIN_PROJECT", "VR-Architecture-Audit-Flow")
+else:
+    # Force-disable tracing if the repo .env contains placeholders like "your_langchain_api_key"
+    os.environ["LANGCHAIN_TRACING_V2"] = "false"
 
 class GraphState(TypedDict):
     """
