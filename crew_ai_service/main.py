@@ -1,12 +1,15 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load env + disable telemetry BEFORE importing CrewAI/LangGraph modules
+load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
+os.environ.setdefault("CREWAI_DISABLE_TELEMETRY", "true")
+os.environ.setdefault("OTEL_SDK_DISABLED", "true")
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from .workflow import lang_graph_app
-from dotenv import load_dotenv
-import os
-from pathlib import Path
-
-# Load env reliably even when uvicorn is run from repo root
-load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
 
 app = FastAPI(title="VR Architecture Crew AI Service")
 

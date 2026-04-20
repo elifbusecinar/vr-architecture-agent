@@ -19,16 +19,16 @@ def _build_llm():
 
 	if google_key:
 		return LLM(
-			provider="google",
-			model="gemini-1.5-flash",
+			# CrewAI expects provider/model format for Gemini API
+			# (avoids Google GenAI v1beta "models/..." 404 errors)
+			model=os.getenv("CREWAI_GEMINI_MODEL", "gemini/gemini-2.0-flash"),
 			api_key=google_key,
 			temperature=0.2,
 		)
 
 	if openai_key:
 		return LLM(
-			provider="openai",
-			model="gpt-4o-mini",
+			model=os.getenv("CREWAI_OPENAI_MODEL", "openai/gpt-4o-mini"),
 			api_key=openai_key,
 			temperature=0.2,
 		)
