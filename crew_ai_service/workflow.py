@@ -3,8 +3,10 @@ from typing import TypedDict, Dict, Any
 from langgraph.graph import StateGraph, END
 from .crew import VRArcCrew
 from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+# Load env reliably even when uvicorn is run from repo root
+load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
 
 # LangSmith Integration for tracing and debugging (opt-in)
 # If LANGCHAIN_API_KEY isn't set, we keep tracing disabled so local runs work

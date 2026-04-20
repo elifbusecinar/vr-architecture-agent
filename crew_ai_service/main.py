@@ -3,8 +3,10 @@ from pydantic import BaseModel
 from .workflow import lang_graph_app
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
-load_dotenv()
+# Load env reliably even when uvicorn is run from repo root
+load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
 
 app = FastAPI(title="VR Architecture Crew AI Service")
 
