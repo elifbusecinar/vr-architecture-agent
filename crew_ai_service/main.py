@@ -32,10 +32,11 @@ async def run_audit(request: AuditRequest):
         # Run the graph
         final_state = lang_graph_app.invoke(initial_state)
         
+        # Put iterations early so PowerShell displays it even if audit_report is long/truncated.
         return {
             "status": "success",
-            "audit_report": final_state["audit_report"],
-            "iterations": final_state["iterations"]
+            "iterations": int(final_state.get("iterations", 0)),
+            "audit_report": final_state.get("audit_report", "")
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
