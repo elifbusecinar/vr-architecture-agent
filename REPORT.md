@@ -1,9 +1,9 @@
 # VR Architecture Agent — LangGraph + CrewAI Report
 
-**Student**: <your name>  
-**Course / Section**: <course>  
-**Date**: 2026-04-20  
-**Repository**: <paste your GitHub repo link>
+**Student**: Elif Buse Çınar
+**Course / Section**: Advanced Web Programming
+**Date**: 2026-04-19 
+**Repository**: https://github.com/elifbusecinar/vr-architecture-agent.git
 
 ## 1) Goal
 Add **LangGraph** to the existing project (alongside **CrewAI**) to orchestrate a stateful audit flow with a review/refine loop, with optional **LangSmith** tracing.
