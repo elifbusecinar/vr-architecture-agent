@@ -9,10 +9,11 @@ from pathlib import Path
 load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
 
 # LangSmith Integration for tracing and debugging (opt-in)
-# If LANGCHAIN_API_KEY isn't set, we keep tracing disabled so local runs work
-# without requiring a LangSmith account.
-if os.getenv("LANGCHAIN_API_KEY"):
-    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+# We only enable tracing when LANGCHAIN_API_KEY looks real (not a placeholder),
+# so local runs won't spam 403 errors.
+_ls_key = os.getenv("LANGCHAIN_API_KEY", "")
+if _ls_key and not _ls_key.lower().startswith("your_"):
+    os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2", "true")
     os.environ.setdefault("LANGCHAIN_PROJECT", "VR-Architecture-Audit-Flow")
 
 class GraphState(TypedDict):
