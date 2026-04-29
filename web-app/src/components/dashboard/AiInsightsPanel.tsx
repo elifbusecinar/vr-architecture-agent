@@ -120,11 +120,11 @@ const AiInsightsPanel: React.FC = () => {
                         </div>
                     </div>
                     <div style={{ display: "flex", gap: 6 }}>
-                        <button onClick={() => window.open('/docs/crew_ai_report.html', '_blank')} style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 16px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: "pointer", border: "1px solid var(--ai-border-md)", background: "rgba(0,0,0,0.03)", color: "var(--ai-ink-2)", fontFamily: "var(--sans)" }}>?? Full Report</button>
+                        <button onClick={() => window.open('/docs/crew_ai_report.html', '_blank')} style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 16px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: "pointer", border: "1px solid var(--ai-border-md)", background: "rgba(0,0,0,0.03)", color: "var(--ai-ink-2)", fontFamily: "var(--sans)" }}>✨ Full Report</button>
                         <button onClick={handleRescan} disabled={isScanning} style={{ flex: 1, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 16px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: isScanning ? "default" : "pointer", background: isScanning ? "var(--ai-bg-3)" : "#4AADA6", border: "none", color: "white", fontFamily: "var(--sans)", opacity: isScanning ? 0.7 : 1 }}>Re-scan</button>
                     </div>
-                </div></div>
-        </div>
+                </div>
+            </div>
     );
 };
 
