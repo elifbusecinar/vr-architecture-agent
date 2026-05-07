@@ -438,6 +438,15 @@ const CrewAiPanel: React.FC = () => {
       88 - Number(stats.crit || '0') * 8 - Number(stats.warn || '0') * 2
     )
   );
+  const scoreCircumference = 2 * Math.PI * 34;
+  const scoreArc = (designScore / 100) * scoreCircumference;
+  const scoreGrade =
+    designScore >= 90 ? 'A' :
+    designScore >= 80 ? 'A-' :
+    designScore >= 75 ? 'B+' :
+    designScore >= 70 ? 'B' :
+    designScore >= 65 ? 'B-' :
+    designScore >= 60 ? 'C+' : 'C';
 
   return (
     <div className="crewai-wrap">
@@ -653,7 +662,7 @@ const CrewAiPanel: React.FC = () => {
             <svg viewBox="0 0 80 80" width="80" height="80">
               <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(26,25,23,0.08)" strokeWidth="7" />
               <circle cx="40" cy="40" r="34" fill="none" stroke="url(#scoreGrad)" strokeWidth="7"
-                strokeDasharray="166 48" strokeDashoffset="53" strokeLinecap="round" />
+                strokeDasharray={`${scoreArc} ${Math.max(scoreCircumference - scoreArc, 0)}`} strokeDashoffset="53" strokeLinecap="round" />
               <defs>
                 <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#4a7c59" />
@@ -664,7 +673,7 @@ const CrewAiPanel: React.FC = () => {
             <div className="crewai-score-num">{designScore}</div>
           </div>
           <div className="crewai-score-label">Design Score</div>
-          <div className="crewai-score-grade"><em>Grade B+</em></div>
+          <div className="crewai-score-grade"><em>Grade {scoreGrade}</em></div>
           <div className="crewai-stat-rows">
             <div className="crewai-stat-row"><span className="crewai-sk">Critical issues</span><span className="crewai-sv" style={{ color: '#c0783a' }}>{stats.crit}</span></div>
             <div className="crewai-stat-row"><span className="crewai-sk">Warnings</span><span className="crewai-sv" style={{ color: '#c0783a' }}>{stats.warn}</span></div>
