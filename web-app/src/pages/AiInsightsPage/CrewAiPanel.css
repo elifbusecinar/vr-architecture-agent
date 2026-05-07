@@ -9,6 +9,13 @@
   grid-template-columns: 1fr 260px;
   gap: 20px;
   animation: crewFadeUp 0.35s ease both;
+  width: 100%;
+  max-width: 100%;
+}
+
+.crewai-main,
+.crewai-sidebar {
+  min-width: 0;
 }
 
 @keyframes crewFadeUp {
@@ -354,6 +361,7 @@
   gap: 10px;
   align-items: flex-start;
   margin-bottom: 2px;
+  min-width: 0;
 }
 
 .log-ts {
@@ -377,7 +385,7 @@
 .log-agent.langgraph  { color: #3a6fa8; font-weight: 700; }
 .log-agent.crew       { color: rgba(255,255,255,0.3); }
 
-.log-msg        { flex: 1; }
+.log-msg        { flex: 1; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
 .log-msg.system { color: rgba(255,255,255,0.2); font-style: italic; }
 .log-msg.thought{ color: rgba(255,255,255,0.45); }
 .log-msg.action { color: rgba(255,255,255,0.7); }
@@ -501,7 +509,10 @@
   color: #D4D4D4;
   line-height: 1.7;
   overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
   margin: 0;
 }
 
@@ -667,7 +678,7 @@
 .crewai-action-btn:disabled { opacity: 0.5; cursor: default; }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .crewai-wrap { grid-template-columns: 1fr; }
   .crewai-chips { grid-template-columns: repeat(2, 1fr); }
 }

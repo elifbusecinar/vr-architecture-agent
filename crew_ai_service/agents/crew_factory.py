@@ -21,7 +21,7 @@ def _build_llm():
     if google_key:
         return LLM(
             # CrewAI expects provider/model format for Gemini API.
-            model=os.getenv("CREWAI_GEMINI_MODEL", "gemini/gemini-2.0-flash"),
+            model=os.getenv("CREWAI_GEMINI_MODEL", "gemini/gemini-2.5-flash"),
             api_key=google_key,
             temperature=0.2,
         )
