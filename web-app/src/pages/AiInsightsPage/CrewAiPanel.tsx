@@ -18,6 +18,19 @@ interface AgentState {
   progress: number;
 }
 
+interface ViolationItem {
+  level: 'HIGH' | 'MED' | 'LOW';
+  text: string;
+  room: string;
+}
+
+interface DemoScenario {
+  id: string;
+  label: string;
+  summary: string;
+  metadata: Record<string, unknown>;
+}
+
 const INITIAL_AGENTS: Record<string, AgentState> = {
   bim:  { status: 'idle', progress: 0 },
   comp: { status: 'idle', progress: 0 },
@@ -29,6 +42,152 @@ const INITIAL_STATS = {
   agents: '—', cost: '—', time: 'Never', crit: '1', warn: '2', pass: '24', iterations: '0'
 };
 
+const deriveStatsFromReportText = (reportText: string) => {
+  const highCount = (reportText.match(/\bHIGH\b/gi) || []).length;
+  const mediumCount = (reportText.match(/\bMED(?:IUM)?\b/gi) || []).length;
+  const lowCount = (reportText.match(/\bLOW\b/gi) || []).length;
+  const warningCount = mediumCount + lowCount;
+
+  const passMatch = reportText.match(/(\d+)\s*checks?\s*passed/i);
+  const passValue = passMatch ? passMatch[1] : '24';
+
+  const costMatch = reportText.match(/\$[\d,]+(?:\.\d+)?/);
+  const costValue = costMatch ? costMatch[0] : '—';
+
+  return {
+    crit: String(highCount || 1),
+    warn: String(warningCount || 2),
+    pass: passValue,
+    cost: costValue,
+  };
+};
+
+const deriveViolationsFromReportText = (reportText: string): ViolationItem[] => {
+  const lines = reportText
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const violations: ViolationItem[] = [];
+  for (const line of lines) {
+    const upper = line.toUpperCase();
+    if (!line.startsWith('-') && !line.startsWith('1)') && !line.startsWith('2)') && !line.startsWith('3)')) {
+      continue;
+    }
+    if (upper.includes('HIGH')) {
+      violations.push({ level: 'HIGH', text: line.replace(/^-+\s*/, ''), room: 'Auto-detected from audit report' });
+    } else if (upper.includes('MEDIUM') || upper.includes('MED')) {
+      violations.push({ level: 'MED', text: line.replace(/^-+\s*/, ''), room: 'Auto-detected from audit report' });
+    } else if (upper.includes('LOW')) {
+      violations.push({ level: 'LOW', text: line.replace(/^-+\s*/, ''), room: 'Auto-detected from audit report' });
+    }
+  }
+
+  if (violations.length > 0) return violations.slice(0, 3);
+  return [
+    { level: 'HIGH', text: 'Kitchen island clearance below recommended minimum.', room: 'GF · Kitchen · Zone B' },
+    { level: 'MED', text: 'Staircase railing below recommended range.', room: '1F · Staircase · N-Wing' },
+    { level: 'LOW', text: 'North facade glazing ratio is above target.', room: 'All floors · North elevation' },
+  ];
+};
+
+const DEMO_SCENARIOS: DemoScenario[] = [
+  {
+    id: 'highrise-residential',
+    label: 'Skyline Tower v3',
+    summary: '24-story mixed-use tower with dense circulation and strict compliance constraints.',
+    metadata: {
+      project_id: 'skyline-tower-v3',
+      typology: 'mixed-use highrise',
+      location: { city: 'Istanbul', seismic_zone: 3, climate_zone: 'temperate-humid' },
+      dimensions: { gross_area_m2: 38400, floors: 24, basement_levels: 3 },
+      occupancy: { residential_units: 126, retail_units: 8, daily_peak_users: 980 },
+      core_systems: {
+        structure: 'rc core + steel perimeter',
+        hvac: 'vrf + heat-recovery',
+        fire_egress_stairs: 3,
+        elevator_count: 11
+      },
+      materials: [
+        { name: 'Italian Marble', area_m2: 1420, unit_cost_usd: 185, embodied_carbon_kgco2e_m2: 63 },
+        { name: 'White Oak', area_m2: 890, unit_cost_usd: 94, embodied_carbon_kgco2e_m2: 27 },
+        { name: 'Low-E Glazing', area_m2: 2140, unit_cost_usd: 220, shgc: 0.28 }
+      ],
+      compliance_targets: {
+        min_corridor_width_m: 1.2,
+        stair_railing_height_m: [1.0, 1.2],
+        max_north_glazing_ratio_pct: 22
+      },
+      risk_flags: [
+        'kitchen-clearance-zone-b',
+        'north-facade-overglazing',
+        'stair-railing-under-height'
+      ],
+      budget: { capex_limit_usd: 18200000, contingency_pct: 8 }
+    }
+  },
+  {
+    id: 'hospital-campus',
+    label: 'Marmara Health Campus',
+    summary: 'Hospital block prioritizing life safety, circulation, and resilient MEP systems.',
+    metadata: {
+      project_id: 'marmara-health-campus',
+      typology: 'healthcare',
+      location: { city: 'Ankara', seismic_zone: 2, climate_zone: 'continental' },
+      dimensions: { gross_area_m2: 51200, floors: 12, emergency_blocks: 2 },
+      occupancy: { beds: 420, operating_rooms: 18, daily_peak_users: 2200 },
+      core_systems: {
+        structure: 'seismic isolated frame',
+        hvac: 'dedicated oa units + hepa zoning',
+        backup_power_hours: 48
+      },
+      materials: [
+        { name: 'Antimicrobial Vinyl', area_m2: 9800, unit_cost_usd: 46 },
+        { name: 'Epoxy Flooring', area_m2: 4200, unit_cost_usd: 59 },
+        { name: 'High-performance Concrete', area_m2: 11200, unit_cost_usd: 71 }
+      ],
+      compliance_targets: {
+        max_evacuation_time_min: 8,
+        fire_compartment_integrity_minutes: 120,
+        critical_corridor_clear_width_m: 2.4
+      },
+      risk_flags: ['icu-egress-bottleneck', 'oxygen-room-ventilation-check', 'helipad-access-route'],
+      budget: { capex_limit_usd: 42600000, contingency_pct: 10 }
+    }
+  },
+  {
+    id: 'eco-campus',
+    label: 'Green Loop Education Hub',
+    summary: 'Low-carbon campus focused on passive design and lifecycle-cost optimization.',
+    metadata: {
+      project_id: 'green-loop-education-hub',
+      typology: 'education campus',
+      location: { city: 'Izmir', seismic_zone: 2, climate_zone: 'mediterranean' },
+      dimensions: { gross_area_m2: 28600, blocks: 6, floors_max: 5 },
+      occupancy: { students: 3400, staff: 420, shared_studios: 58 },
+      sustainability: {
+        target_certification: 'LEED Gold',
+        renewable_share_target_pct: 38,
+        annual_eui_target_kwh_m2: 72
+      },
+      materials: [
+        { name: 'CLT Panels', area_m2: 7600, unit_cost_usd: 132, recycled_content_pct: 34 },
+        { name: 'Recycled Steel', area_m2: 4100, unit_cost_usd: 98, recycled_content_pct: 68 },
+        { name: 'Cellulose Insulation', area_m2: 9400, unit_cost_usd: 22, recycled_content_pct: 82 }
+      ],
+      compliance_targets: {
+        daylight_autonomy_target_pct: 55,
+        max_summer_overheat_hours: 120,
+        water_reuse_target_pct: 35
+      },
+      risk_flags: ['atrium-shading-control', 'acoustic-separation-music-labs', 'rainwater-tank-sizing'],
+      budget: { capex_limit_usd: 24800000, contingency_pct: 7 }
+    }
+  }
+];
+
+const AI_SERVICE_BASE_URL = import.meta.env.VITE_AI_SERVICE_URL || 'http://localhost:8000';
+
 /* ── Helpers ── */
 const getTimestamp = () => new Date().toTimeString().slice(0, 8);
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
@@ -37,6 +196,9 @@ const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
    CREW AI PANEL — Full multi-agent audit dashboard
 ════════════════════════════════════════════════════════════ */
 const CrewAiPanel: React.FC = () => {
+  const [scenarios, setScenarios] = useState<DemoScenario[]>(DEMO_SCENARIOS);
+  const [selectedScenarioId, setSelectedScenarioId] = useState(DEMO_SCENARIOS[0].id);
+  const [showScenarioDetails, setShowScenarioDetails] = useState(false);
   const [running, setRunning] = useState(false);
   const [logs, setLogs] = useState<LogEntry[]>([
     { ts: '--:--:--', agentClass: 'crew', agentLabel: '[CREW]', msgClass: 'system', msg: 'Waiting for kickoff… press "Multi-Agent Audit" to start.' }
@@ -45,12 +207,34 @@ const CrewAiPanel: React.FC = () => {
   const [showResults, setShowResults] = useState(false);
   const [showLive, setShowLive] = useState(false);
   const [stats, setStats] = useState(INITIAL_STATS);
+  const [backendReportText, setBackendReportText] = useState('');
+  const [backendViolations, setBackendViolations] = useState<ViolationItem[]>([]);
   const logRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
 
   useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
+  }, []);
+
+  useEffect(() => {
+    const loadScenarios = async () => {
+      try {
+        const response = await fetch(`${AI_SERVICE_BASE_URL}/demo-scenarios`);
+        if (!response.ok) return;
+        const payload = await response.json();
+        if (payload?.status === 'success' && Array.isArray(payload.scenarios) && payload.scenarios.length > 0) {
+          setScenarios(payload.scenarios as DemoScenario[]);
+          setSelectedScenarioId((current) => {
+            const exists = payload.scenarios.some((item: DemoScenario) => item.id === current);
+            return exists ? current : payload.scenarios[0].id;
+          });
+        }
+      } catch {
+        // Keep bundled fallback scenarios for offline/demo resilience.
+      }
+    };
+    loadScenarios();
   }, []);
 
   useEffect(() => {
@@ -67,6 +251,10 @@ const CrewAiPanel: React.FC = () => {
     setAgents(prev => ({ ...prev, [id]: { status, progress } }));
   }, []);
 
+  const selectedScenario =
+    scenarios.find((scenario) => scenario.id === selectedScenarioId) || scenarios[0];
+  const selectedMeta = (selectedScenario?.metadata || {}) as Record<string, any>;
+
   /* ── MAIN CREW RUNNER ── */
   const startCrew = async () => {
     if (running) return;
@@ -76,13 +264,15 @@ const CrewAiPanel: React.FC = () => {
     setShowLive(true);
     setAgents(INITIAL_AGENTS);
     setStats(prev => ({ ...prev, agents: '—', cost: '—', time: 'Running…' }));
+    setBackendReportText('');
+    setBackendViolations([]);
 
     /* KICKOFF */
     addLog('crew', '[CREW]', 'system', 'Initialising crew — Process.sequential');
     await sleep(400);
     addLog('crew', '[CREW]', 'system', 'LLM: gemini/gemini-1.5-pro · Memory: enabled · Agents: 4');
     await sleep(500);
-    addLog('crew', '[CREW]', 'action', 'kickoff(inputs={"project_id": "skyline-tower-v3", "bim_file": "data/skyline.json"})');
+    addLog('crew', '[CREW]', 'action', `kickoff(inputs={"scenario": "${selectedScenario.label}", "project_id": "${String(selectedScenario.metadata.project_id || '')}"})`);
 
     /* AGENT 1: BIM ANALYST */
     await sleep(600);
@@ -151,16 +341,27 @@ const CrewAiPanel: React.FC = () => {
     // START RE-SYNC WITH ACTUAL BACKEND (CrewAI)
     addLog('crew', '[CREW]', 'system', 'Finalizing and synchronizing with CrewAI backend...');
     try {
-        const backendResult = await aiService.triggerCrewAudit("Project Skyline v3.1 Metadata");
+        const backendResult = await aiService.triggerCrewAudit(JSON.stringify(selectedScenario.metadata, null, 2));
         console.log("CrewAI Backend Result:", backendResult);
         
         if (backendResult.status === 'success' || backendResult.status === 'simulated_success') {
             const report = backendResult.audit_report;
             const iterations = backendResult.iterations || 1;
+            const metrics = backendResult.audit_metrics;
             
             addLog('langgraph', '[LANGGRAPH]', 'system', `Stateful orchestration complete. Total iterations: ${iterations}`);
-            
-            if (typeof report === 'object') {
+
+            if (metrics && typeof metrics === 'object') {
+                setStats({
+                    agents: '4',
+                    cost: metrics.cost || '—',
+                    time: 'Just now',
+                    crit: String(metrics.crit ?? '1'),
+                    warn: String(metrics.warn ?? '2'),
+                    pass: String(metrics.pass ?? '24'),
+                    iterations: iterations.toString()
+                });
+            } else if (typeof report === 'object') {
                 setStats({
                     agents: '4', 
                     cost: report.stats?.cost || '$59,456', 
@@ -171,8 +372,24 @@ const CrewAiPanel: React.FC = () => {
                     iterations: iterations.toString()
                 });
             } else {
-                // If it's a string (which the real backend returns now)
-                setStats(prev => ({ ...prev, iterations: iterations.toString(), time: 'Just now' }));
+                // Real backend often returns plain text, so derive useful KPIs from it.
+                const parsed = deriveStatsFromReportText(report || '');
+                setStats(prev => ({
+                  ...prev,
+                  agents: '4',
+                  cost: parsed.cost,
+                  crit: parsed.crit,
+                  warn: parsed.warn,
+                  pass: parsed.pass,
+                  iterations: iterations.toString(),
+                  time: 'Just now'
+                }));
+            }
+            if (typeof report === 'string') {
+              setBackendReportText(report);
+              setBackendViolations(deriveViolationsFromReportText(report));
+            } else {
+              setBackendReportText(JSON.stringify(report, null, 2));
             }
         }
     } catch (e) {
@@ -203,6 +420,8 @@ const CrewAiPanel: React.FC = () => {
     setShowResults(false);
     setShowLive(false);
     setStats(INITIAL_STATS);
+    setBackendReportText('');
+    setBackendViolations([]);
   };
 
   const agentMeta: Record<string, { emoji: string; name: string; role: string; color: string }> = {
@@ -212,10 +431,77 @@ const CrewAiPanel: React.FC = () => {
     rep:  { emoji: '📋', name: 'Reporter',         role: 'report_writer',      color: 'rgba(140,137,131,0.12)' },
   };
 
+  const designScore = Math.max(
+    50,
+    Math.min(
+      98,
+      88 - Number(stats.crit || '0') * 8 - Number(stats.warn || '0') * 2
+    )
+  );
+
   return (
     <div className="crewai-wrap">
       {/* ── LEFT: MAIN CONTENT ── */}
       <div className="crewai-main">
+        <div className="crewai-scenario-card">
+          <div className="crewai-scenario-head">
+            <div className="crewai-scenario-title">Demo Scenario Dataset</div>
+            <div className="crewai-scenario-meta">Rich BIM-style metadata for agents</div>
+          </div>
+          <div className="crewai-scenario-controls">
+            <select
+              className="crewai-scenario-select"
+              value={selectedScenarioId}
+              onChange={(e) => setSelectedScenarioId(e.target.value)}
+              disabled={running}
+            >
+              {scenarios.map((scenario) => (
+                <option key={scenario.id} value={scenario.id}>
+                  {scenario.label}
+                </option>
+              ))}
+            </select>
+            <div className="crewai-scenario-badge">
+              {Object.keys(selectedScenario.metadata).length} metadata blocks
+            </div>
+            <button
+              type="button"
+              className="crewai-scenario-toggle"
+              onClick={() => setShowScenarioDetails((v) => !v)}
+            >
+              {showScenarioDetails ? 'Hide details' : 'View details'}
+            </button>
+          </div>
+          <div className="crewai-scenario-summary">{selectedScenario.summary}</div>
+          {showScenarioDetails && (
+            <div className="crewai-scenario-details">
+              <div className="crewai-scenario-detail-row">
+                <span>Typology</span>
+                <strong>{String(selectedMeta.typology || '-')}</strong>
+              </div>
+              <div className="crewai-scenario-detail-row">
+                <span>Location</span>
+                <strong>{String(selectedMeta.location?.city || '-')} · SZ-{String(selectedMeta.location?.seismic_zone || '-')}</strong>
+              </div>
+              <div className="crewai-scenario-detail-row">
+                <span>Gross Area</span>
+                <strong>{String(selectedMeta.dimensions?.gross_area_m2 || '-')} m2</strong>
+              </div>
+              <div className="crewai-scenario-detail-row">
+                <span>Floors</span>
+                <strong>{String(selectedMeta.dimensions?.floors || selectedMeta.dimensions?.floors_max || '-')}</strong>
+              </div>
+              <div className="crewai-scenario-detail-row">
+                <span>Peak Users</span>
+                <strong>{String(selectedMeta.occupancy?.daily_peak_users || selectedMeta.occupancy?.students || '-')}</strong>
+              </div>
+              <div className="crewai-scenario-detail-row">
+                <span>Capex Limit</span>
+                <strong>${String(selectedMeta.budget?.capex_limit_usd || '-')}</strong>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* TRIGGER BUTTON */}
         <button
@@ -288,27 +574,17 @@ const CrewAiPanel: React.FC = () => {
                 <span className="crewai-result-agent">compliance_checker</span>
               </div>
               <div className="crewai-result-body">
-                <div className="viol-item">
-                  <span className="viol-sev sev-high">HIGH</span>
-                  <div>
-                    <div className="viol-text">Kitchen island clearance 700mm — below ADA minimum 900mm.</div>
-                    <div className="viol-room">GF · Kitchen · Zone B · ADA §4.3.3</div>
+                {(backendViolations.length ? backendViolations : deriveViolationsFromReportText('')).map((violation, idx) => (
+                  <div className="viol-item" key={`${violation.level}-${idx}`}>
+                    <span className={`viol-sev ${violation.level === 'HIGH' ? 'sev-high' : violation.level === 'MED' ? 'sev-medium' : 'sev-low'}`}>
+                      {violation.level}
+                    </span>
+                    <div>
+                      <div className="viol-text">{violation.text}</div>
+                      <div className="viol-room">{violation.room}</div>
+                    </div>
                   </div>
-                </div>
-                <div className="viol-item">
-                  <span className="viol-sev sev-medium">MED</span>
-                  <div>
-                    <div className="viol-text">Staircase railing at 950mm — EN ISO 14122 recommends 1000–1200mm.</div>
-                    <div className="viol-room">1F · Staircase · N-Wing · EN ISO 14122-3</div>
-                  </div>
-                </div>
-                <div className="viol-item">
-                  <span className="viol-sev sev-low">LOW</span>
-                  <div>
-                    <div className="viol-text">North facade glazing ratio 34% — recommend 18–22% for energy optimisation.</div>
-                    <div className="viol-room">All floors · North elevation · Energy</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -320,18 +596,18 @@ const CrewAiPanel: React.FC = () => {
                 <span className="crewai-result-agent">cost_estimator</span>
               </div>
               <div className="crewai-result-body">
-                <table className="cost-tbl">
-                  <thead>
-                    <tr><th>Material</th><th>Area (m²)</th><th>$/m²</th><th>Subtotal</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr><td className="cost-mat">Italian Marble</td><td className="cost-num">142</td><td className="cost-num">$185</td><td className="cost-num">$26,270</td></tr>
-                    <tr><td className="cost-mat">White Oak Flooring</td><td className="cost-num">89</td><td className="cost-num">$94</td><td className="cost-num">$8,366</td></tr>
-                    <tr><td className="cost-mat">Polished Concrete</td><td className="cost-num">210</td><td className="cost-num">$48</td><td className="cost-num">$10,080</td></tr>
-                    <tr><td className="cost-mat">Structural Glass</td><td className="cost-num">67</td><td className="cost-num">$220</td><td className="cost-num">$14,740</td></tr>
-                    <tr className="cost-row-total"><td colSpan={3} className="cost-mat" style={{ fontWeight: 700 }}>Grand Total</td><td className="cost-total">$59,456</td></tr>
-                  </tbody>
-                </table>
+                <div style={{ display: 'grid', gap: 10 }}>
+                  <div className="viol-item">
+                    <span className="viol-sev sev-low">INFO</span>
+                    <div>
+                      <div className="viol-text">Estimated total material budget from backend audit.</div>
+                      <div className="viol-room">Live metric from /audit endpoint</div>
+                    </div>
+                  </div>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: 18, color: 'var(--ink)', fontWeight: 700 }}>
+                    {stats.cost}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -350,8 +626,19 @@ const CrewAiPanel: React.FC = () => {
   "iterations": ${stats.iterations},
   "crew_process": "sequential",
   "agents_used": 4,
+  "metrics": {
+    "crit": ${stats.crit},
+    "warn": ${stats.warn},
+    "pass": ${stats.pass},
+    "cost": "${stats.cost}"
+  },
   "status": "complete"
 }`}</pre>
+                {backendReportText && (
+                  <pre className="output-json" style={{ marginTop: 10, maxHeight: 180, overflow: 'auto' }}>
+{backendReportText}
+                  </pre>
+                )}
               </div>
             </div>
           </div>
@@ -374,7 +661,7 @@ const CrewAiPanel: React.FC = () => {
                 </linearGradient>
               </defs>
             </svg>
-            <div className="crewai-score-num">78</div>
+            <div className="crewai-score-num">{designScore}</div>
           </div>
           <div className="crewai-score-label">Design Score</div>
           <div className="crewai-score-grade"><em>Grade B+</em></div>

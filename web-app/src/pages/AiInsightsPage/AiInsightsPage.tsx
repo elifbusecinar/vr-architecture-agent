@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AiInsightsPage.css";
 import CrewAiPanel from "./CrewAiPanel";
+import { aiService } from "@/services/ai/ai.service";
 import {
   MOCK_PROJECTS,
   MOCK_ACTIVITIES,
@@ -14,6 +15,10 @@ const AiInsightsPage: React.FC = () => {
     "insights",
   );
   const [period, setPeriod] = useState("month");
+  const [mcpLoading, setMcpLoading] = useState(false);
+  const [mcpError, setMcpError] = useState<string | null>(null);
+  const [mcpResult, setMcpResult] = useState<any>(null);
+  const [mcpCopied, setMcpCopied] = useState(false);
 
   const totalProjects = MOCK_PROJECTS.data.length;
   const activeProjects = MOCK_PROJECTS.data.filter(
@@ -93,6 +98,39 @@ const AiInsightsPage: React.FC = () => {
     }
   }, []);
 
+  const runMcpDemo = async () => {
+    setMcpLoading(true);
+    setMcpError(null);
+    try {
+      const response = await aiService.triggerMcpDemo();
+      setMcpResult(response);
+    } catch (error) {
+      setMcpError(
+        error instanceof Error ? error.message : "MCP demo could not be started.",
+      );
+    } finally {
+      setMcpLoading(false);
+    }
+  };
+
+  const copyMcpOutput = async () => {
+    if (!mcpResult?.mcp_demo) return;
+    const payload = {
+      server: mcpResult.mcp_demo.server || "server.py",
+      tools: (mcpResult.mcp_demo.tools || []).map((tool: any) => tool.name),
+      risk_level: mcpResult.mcp_demo.risk_level || "N/A",
+      risk_result: mcpResult.mcp_demo.risk_result || "",
+      action_result: mcpResult.mcp_demo.action_result || "",
+    };
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+      setMcpCopied(true);
+      window.setTimeout(() => setMcpCopied(false), 1600);
+    } catch {
+      setMcpError("Clipboard access failed. Please copy manually.");
+    }
+  };
+
   return (
     <div className="ai-insights-root page">
       {/* Header */}
@@ -166,7 +204,80 @@ const AiInsightsPage: React.FC = () => {
       </div>
 
       {/* Crew AI Tab */}
-      {activeTab === "crew" && <CrewAiPanel />}
+      {activeTab === "crew" && (
+        <>
+          <div className="card mcp-demo-card">
+            <div className="card-header">
+              <div className="card-title">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 6h8M8 12h8M8 18h8M4 6h.01M4 12h.01M4 18h.01" />
+                </svg>
+                MCP Live Demo
+              </div>
+              <span className="tab-new-badge">Protocol</span>
+            </div>
+            <div className="mcp-demo-desc">
+              Connection + tool discovery + execution flow from the live MCP server.
+            </div>
+            <button
+              className={`crew-btn ${mcpLoading ? "loading" : ""}`}
+              onClick={runMcpDemo}
+              disabled={mcpLoading}
+              style={{ marginBottom: 12 }}
+            >
+              {mcpLoading ? "Running MCP..." : "Run MCP Demo"}
+            </button>
+
+            {mcpError && <div className="mcp-demo-error">{mcpError}</div>}
+
+            {mcpResult?.mcp_demo && (
+              <div className="mcp-demo-result">
+                <div className="mcp-demo-server">
+                  {mcpResult.mcp_demo.server || "server.py"}
+                </div>
+                <div className="mcp-demo-line">
+                  <strong>Risk:</strong> {mcpResult.mcp_demo.risk_level || "N/A"}
+                </div>
+                <div className="mcp-demo-risk">
+                  {mcpResult.mcp_demo.risk_result || "No risk result returned."}
+                </div>
+                <div className="mcp-demo-line">
+                  <strong>Action:</strong>{" "}
+                  {mcpResult.mcp_demo.action_result ||
+                    "No action suggestion returned."}
+                </div>
+                <div className="mcp-demo-tools">
+                  {(mcpResult.mcp_demo.tools || []).map((tool: any) => (
+                    <span key={tool.name} className="mcp-demo-tool-pill">
+                      {tool.name}
+                    </span>
+                  ))}
+                </div>
+                <div className="mcp-demo-actions">
+                  <button className="h-view-btn" onClick={copyMcpOutput}>
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    >
+                      <rect x="5" y="5" width="9" height="9" rx="1.5" />
+                      <path d="M3 11H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v1" />
+                    </svg>
+                    Copy demo output
+                  </button>
+                  {mcpCopied && (
+                    <span className="mcp-copy-ok">Copied to clipboard</span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          <CrewAiPanel />
+        </>
+      )}
 
       {/* History Tab */}
       {activeTab === "history" && (

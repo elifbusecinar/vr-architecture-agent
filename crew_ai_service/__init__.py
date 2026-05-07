@@ -1,2 +1,4 @@
-# Package marker for crew_ai_service
+"""VR Architecture Crew AI Service package."""
+
+from .api import app
 

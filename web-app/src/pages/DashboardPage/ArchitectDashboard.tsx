@@ -481,6 +481,7 @@ const OverviewPage: React.FC<{
                             <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--ink-3)" }}>Capacity data not available</div>
                         </div>
                     </Panel>
+
                 </div>
             </div>
         </div>

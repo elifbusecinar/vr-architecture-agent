@@ -84,3 +84,41 @@ curl -X POST http://127.0.0.1:8000/audit -H "Content-Type: application/json" -d 
 
 ## 🧾 Report (PDF submission)
 Fill out `REPORT.md`, paste screenshots, then export it to PDF for submission.
+
+## 🔌 MCP Demo (for class)
+The repository includes a runnable **Model Context Protocol (MCP)** demo that shows connection, tool discovery, tool calls, and outputs.
+
+```bash
+cd crew_ai_service
+pip install -r requirements.txt
+python -m crew_ai_service.mcp.client_runner
+```
+
+Or via API:
+
+```bash
+uvicorn crew_ai_service.main:app --reload --port 8000
+# GET http://127.0.0.1:8000/mcp-tools
+```
+
+Rich scenario dataset endpoint (for Crew Audit demo):
+
+```bash
+# GET http://127.0.0.1:8000/demo-scenarios
+```
+
+Presentation guide: `crew_ai_service/docs/MCP_GUIDE.md`
+
+### Crew AI Service folder map
+
+```text
+crew_ai_service/
+├── api/                # FastAPI routes and HTTP entrypoints
+├── agents/             # CrewAI agent factory and role wiring
+├── orchestration/      # LangGraph workflow/state orchestration
+├── mcp/                # MCP server/client integration layer
+├── data/               # Demo scenario datasets
+├── docs/               # Service-specific documentation
+├── config/             # Agent/task YAML configs
+└── main.py             # Compatibility entrypoint (imports api.app)
+```

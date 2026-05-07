@@ -3,6 +3,7 @@ import { MOCK_PROJECTS, MOCK_ACTIVITIES } from '../mockData';
 
 // Initialize Gemini SDK with API key from environment variables
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const AI_SERVICE_BASE_URL = import.meta.env.VITE_AI_SERVICE_URL || 'http://localhost:8000';
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export interface STTResult {
@@ -186,7 +187,7 @@ export const aiService = {
 
     triggerCrewAudit: async (modelMetadata: string): Promise<any> => {
         try {
-            const response = await fetch('http://localhost:8000/audit', {
+            const response = await fetch(`${AI_SERVICE_BASE_URL}/audit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model_metadata: modelMetadata })
@@ -198,6 +199,8 @@ export const aiService = {
             await new Promise(res => setTimeout(res, 2000));
             return {
                 status: "simulated_success",
+                iterations: 1,
+                audit_metrics: { crit: 1, warn: 2, pass: 24, cost: "$59,456", score: 78 },
                 audit_report: {
                     summary: "Multi-agent audit completed successfully.",
                     results: [
@@ -206,6 +209,32 @@ export const aiService = {
                         { agent: "Cost Estimator", result: "Total estimated material cost: $59,456 USD." }
                     ],
                     stats: { crit: 1, warn: 2, pass: 24, score: 78 }
+                }
+            };
+        }
+    },
+
+    triggerMcpDemo: async (): Promise<any> => {
+        try {
+            const response = await fetch(`${AI_SERVICE_BASE_URL}/mcp-tools`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (!response.ok) throw new Error('MCP Demo Service Offline');
+            return await response.json();
+        } catch (_err) {
+            await new Promise(res => setTimeout(res, 900));
+            return {
+                status: "simulated_success",
+                mcp_demo: {
+                    server: "server.py",
+                    tools: [
+                        { name: "estimate_project_risk", description: "Estimate design risk level from simple project inputs." },
+                        { name: "suggest_next_action", description: "Suggest one practical next step based on risk level." }
+                    ],
+                    risk_result: "Risk Level: HIGH\n- Seismic Zone: 3\n- Floors: 12\n- Sustainability Score: 55\n- Risk Points: 5",
+                    risk_level: "HIGH",
+                    action_result: "Run full structural simulation and hold design review this week."
                 }
             };
         }

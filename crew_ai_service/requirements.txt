@@ -7,3 +7,4 @@ pydantic
 langgraph
 langsmith
 langchain-openai
+fastmcp
