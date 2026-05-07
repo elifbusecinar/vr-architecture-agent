@@ -39,7 +39,7 @@ const INITIAL_AGENTS: Record<string, AgentState> = {
 };
 
 const INITIAL_STATS = {
-  agents: '—', cost: '—', time: 'Never', crit: '1', warn: '2', pass: '24', iterations: '0'
+  agents: '—', cost: '—', time: 'Never', crit: '—', warn: '—', pass: '—', iterations: '0'
 };
 
 const deriveStatsFromReportText = (reportText: string) => {
@@ -431,16 +431,16 @@ const CrewAiPanel: React.FC = () => {
     rep:  { emoji: '📋', name: 'Reporter',         role: 'report_writer',      color: 'rgba(140,137,131,0.12)' },
   };
 
-  const designScore = Math.max(
-    50,
-    Math.min(
-      98,
-      88 - Number(stats.crit || '0') * 8 - Number(stats.warn || '0') * 2
-    )
-  );
+  const hasAuditResult = stats.time !== 'Never';
+  const numericCrit = Number(stats.crit || 0);
+  const numericWarn = Number(stats.warn || 0);
+  const designScore = hasAuditResult
+    ? Math.max(50, Math.min(98, 88 - numericCrit * 8 - numericWarn * 2))
+    : null;
   const scoreCircumference = 2 * Math.PI * 34;
-  const scoreArc = (designScore / 100) * scoreCircumference;
+  const scoreArc = designScore !== null ? (designScore / 100) * scoreCircumference : 0;
   const scoreGrade =
+    designScore === null ? '—' :
     designScore >= 90 ? 'A' :
     designScore >= 80 ? 'A-' :
     designScore >= 75 ? 'B+' :
@@ -670,7 +670,7 @@ const CrewAiPanel: React.FC = () => {
                 </linearGradient>
               </defs>
             </svg>
-            <div className="crewai-score-num">{designScore}</div>
+            <div className="crewai-score-num">{designScore ?? '—'}</div>
           </div>
           <div className="crewai-score-label">Design Score</div>
           <div className="crewai-score-grade"><em>Grade {scoreGrade}</em></div>
